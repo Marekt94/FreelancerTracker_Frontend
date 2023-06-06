@@ -1,0 +1,19 @@
+  div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+  }
+
+  label{
+    margin: 5px;
+  }
+
+  input{
+    margin: 5px;
+  }
+
+  button{
+    margin: 5px;
+  }

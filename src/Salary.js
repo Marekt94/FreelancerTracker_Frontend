@@ -48,11 +48,27 @@ export function TakeSalary(props){
   const [formaOpodatkowania, setFormaOpodatkowania] = useState([{}]);
   const [salary, setSalary] = useState(defSalary);
 
-  async function btnDajOdcinek(){
+  async function onDajOdcinekClick(){
     let json = await fetch("http://localhost:8080/salary/" + salary.id).then((object) => object.json());
 
     setSalary(json);
   }
+
+  async function onZapiszClick(){
+    salary.rok = year;
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify(salary)
+    };
+
+    let obj = await fetch('http://localhost:8080/save_salary', requestOptions);
+    let json =  await obj.json();
+    console.log(json);
+    salary.id = json.id;
+    let tempSalary = {...salary};
+    tempSalary.id = json.id;
+    setSalary(tempSalary);
+  }  
 
   function onChangeEdit(event){
     let tempSalary = {...salary};
@@ -74,7 +90,7 @@ export function TakeSalary(props){
     setSalary(tempSalary);
   }  
 
-  async function btnClickEvaluate(){
+  async function onEvaluateClick(){
     let tempFormaOpodatkowania = formaOpodatkowania.find(obj => obj.id === salary.idFormyOpodatkowania);
     salary.formaOpodatkowania = {id : tempFormaOpodatkowania.id, nazwa : tempFormaOpodatkowania.value, wysokoscPodatkuList : tempFormaOpodatkowania.wysokoscPodatku};
     const requestOptions = {
@@ -111,9 +127,8 @@ export function TakeSalary(props){
       <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" onChange={onChangeEdit}/>
-      <button onClick={btnDajOdcinek}>Daj odcinek z wypłaty</button>
-      <button onClick={btnDajOdcinek}>Zapisz</button>
-      <button onClick={btnClickEvaluate}>Oblicz</button>
+      <button onClick={onZapiszClick}>Zapisz</button>
+      <button onClick={onEvaluateClick}>Oblicz</button>
     </>
   );
 }

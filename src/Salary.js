@@ -1,5 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
-import "./Main.css"
+import "./Main.css";
+import "./SalaryAPICLient";
+import SalaryAPICLient from "./SalaryAPICLient";
 
 const defSalary = {
   id : 0,
@@ -48,10 +50,8 @@ export function TakeSalary(props){
   const [formaOpodatkowania, setFormaOpodatkowania] = useState([{}]);
   const [salary, setSalary] = useState(defSalary);
 
-  async function onDajOdcinekClick(){
-    let json = await fetch("http://localhost:8080/salary/" + salary.id).then((object) => object.json());
-
-    setSalary(json);
+  function onDajOdcinekClick(){
+    return SalaryAPICLient.GetSalary(salary.id, setSalary);
   }
 
   async function onZapiszClick(){
@@ -103,12 +103,14 @@ export function TakeSalary(props){
     setSalary(json);
   }
 
-  async function GetDataForNewSalary(){
-    let json = await fetch('http://localhost:8080/get_data_for_new_salary/' + year).then(obj => obj.json());
+  function AfterFetchDataForNewSalary(json){
     let tempFormaOpodatkowania = json.miesiace.map(obj => ({id : obj.iD, value : obj.monthName}));
     let tempMiesiace = json.formaOpodatkowania.map(obj => ({id : obj.id, value : obj.nazwa, wysokoscPodatku : obj.wysokoscPodatkuList}));
     setMiesiace([{id : 0, value : ""}, ...tempFormaOpodatkowania]);
     setFormaOpodatkowania([{id : 0, value : ""}, ...tempMiesiace]);
+  }
+  function GetDataForNewSalary(){
+    return SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary);
   }
 
   useEffect(() => {GetDataForNewSalary()},[year]);

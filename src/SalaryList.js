@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import "./Main.css";
 import {months} from "./Dictionaries";
+import "./SalaryAPICLient";
+import SalaryAPIClient from "./SalaryAPICLient";
 
 function SalaryList(props) {
     const [salaries, setSalaries] = useState("");
@@ -9,16 +11,16 @@ function SalaryList(props) {
 
     function onEditClick(event){
         setID(event.target.getAttribute("id"));
-    }    
-    
-    async function onGetItemsClick(){
-        let json = await fetch("http://localhost:8080/salaries/" + year).then((obj) => obj.json());
+    }   
 
-        console.log(json);
-
+    function updateSalaries(json){
         setSalaries(json.map((salary) =>
             <li key={salary.id}>{months.find(element => element.id === salary.miesiac).value}: stawka godzinowa - {salary.stawka}, netto = {salary.netto}<button id={salary.id} onClick={onEditClick}>Edytuj</button></li>
         ))
+    } 
+    
+    function onGetItemsClick(){
+        SalaryAPIClient.GetSalaries(year, updateSalaries);
     }
 
     return(

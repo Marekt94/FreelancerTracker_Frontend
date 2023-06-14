@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import "./Main.css";
 import "./SalaryAPICLient";
 import SalaryAPICLient from "./SalaryAPICLient";
+import {months} from "./Dictionaries";
 
 const defSalary = {
   id : 0,
@@ -29,15 +30,12 @@ function Edit({caption, value, name, readonly = false, onChange = null}){
   );
 }
 
-function Combo({caption, value, name, dictionary, readonly = false, onChange = null}){
+function Combo({caption, value, name, dictionary, defaultValue = null, readonly = false, onChange = null}){
   return(
     <div style={{flexDirection : "row"}}>
         <label>{caption}</label>
-        <select name={name} readonly={readonly} onChange={onChange}>
-          ({value === 0
-            ? dictionary.map((slownik) => <option>{slownik.value}</option>)
-            : dictionary.filter((slownik) => (slownik.id === value)).map((x) => (<option>{x.value}</option>))}
-          )
+        <select value={defaultValue} name={name} readonly={readonly} onChange={onChange}>
+          {dictionary.map((slownik) => <option>{slownik.value}</option>)}
         </select>
     </div>    
   );
@@ -46,13 +44,14 @@ function Combo({caption, value, name, dictionary, readonly = false, onChange = n
 export function TakeSalary(props){
   const isNew = props.new;
   const year  = props.year;
+  const [defId, setDefId] = useState(props.id);
   const [miesiace, setMiesiace] = useState([{}]);
   const [formaOpodatkowania, setFormaOpodatkowania] = useState([{}]);
   const [salary, setSalary] = useState(defSalary);
-
-  function onDajOdcinekClick(){
-    return SalaryAPICLient.GetSalary(salary.id, setSalary);
-  }
+  const [defMiesiacIFormaOpodatkowania, setDefMiesiacIFormaOpodatkowania] = useState(
+    {miesiac : null,
+    formaOpodatkowania : null}
+  );
 
   async function onZapiszClick(){
     salary.rok = year;
@@ -109,18 +108,33 @@ export function TakeSalary(props){
     setMiesiace([{id : 0, value : ""}, ...tempFormaOpodatkowania]);
     setFormaOpodatkowania([{id : 0, value : ""}, ...tempMiesiace]);
   }
-  function GetDataForNewSalary(){
-    return SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary);
+
+  function InitSalary(json){
+    setSalary(json);
+    let miesiacIFormaOpodtkowania = {
+      miesiac : (months.find(x => x.id === json.miesiac).value),
+      formaOpodatkowania : json.formaOpodatkowania.nazwa
+    };
+    setDefMiesiacIFormaOpodatkowania(miesiacIFormaOpodtkowania);
   }
 
-  useEffect(() => {GetDataForNewSalary()},[year]);
+  function Init(){
+    if (isNew){
+      return SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary);
+    }
+    else{
+      return SalaryAPICLient.GetSalary(defId, SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary)).then(InitSalary);
+    }
+  }
+
+  useEffect(() => {Init()},[year]);
   return (
     <>
       <Edit caption="Id" value={salary.id} name="id" readonly="true" onChange={onChangeEdit}/>
-      <Combo caption="Miesiąc" value={salary.miesiac} name="miesiac" dictionary={miesiace} readonly="true" onChange={onMiesiacChange}/>
+      <Combo caption="Miesiąc" value={salary.miesiac} name="miesiac" dictionary={miesiace} defaultValue={defMiesiacIFormaOpodatkowania.miesiac} readonly="true" onChange={onMiesiacChange}/>
       <Edit caption="Stawka dzienna netto" value={salary.stawka} name="stawka" onChange={onChangeEdit}/>
       <Edit caption="Dni robocze w miesiącu" value={salary.dniRoboczych} name="dniRoboczych" onChange={onChangeEdit}/>
-      <Combo caption="Forma opodatkowania" value={salary.idFormyOpodatkowania} name="idFormyOpodatkowania" dictionary={formaOpodatkowania} onChange={onFormaPodatkowaChange}/>
+      <Combo caption="Forma opodatkowania" value={salary.idFormyOpodatkowania} name="idFormyOpodatkowania" dictionary={formaOpodatkowania} defaultValue={defMiesiacIFormaOpodatkowania.formaOpodatkowania} onChange={onFormaPodatkowaChange}/>
       <Edit caption="Dni przepracowane" value={salary.dniPrzepracowanych} name="dniPrzepracowanych" onChange={onChangeEdit}/>
       <Edit caption="Składka zdrowotna" value={salary.skladkaZdrowotna} name="skladkaZdrowotna" onChange={onChangeEdit}/>
       <Edit caption="Składka ZUS" value={salary.zUS} name="zUS" onChange={onChangeEdit}/>  

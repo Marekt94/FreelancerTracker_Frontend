@@ -9,25 +9,25 @@ const Years = [{year: 2022},
 
 function MainView(){
   const [year, setYear] = useState(Years[1].year); 
+  const [view, setView] = useState(createView()[0]);
 
   function createView(){
     const viewList = [{
-      id : 0,
-      view : <SalaryList year={year}/>,
-      backButtonCaption : "Dodaj nowy odcinek"
-    },{
-      id : 1,
-      view : <TakeSalary new="true" year={year}/>,
-      backButtonCaption : "Wróć do listy odcinków"
-    }
+        id : 0,
+        view : <SalaryList year={year}/>,
+        backButtonCaption : "Dodaj nowy odcinek"
+      },{
+        id : 1,
+        view : <TakeSalary new={true} year={year}/>,
+        backButtonCaption : "Wróć do listy odcinków"
+      }
     ]; 
     return(viewList);
   }
-  const [view, setView] = useState(createView()[0]);
 
-  function updateView(){
+  function updateView(id){
     const viewList = createView(); 
-    return(viewList[view.id]);
+    return(viewList[id]);
   }
 
   function onBackButtonClick(){
@@ -55,7 +55,7 @@ function MainView(){
       <select defaultValue={year} onChange={onChangeYear}>
         {Years.map((obj) => <option>{obj.year}</option>)}
       </select>        
-      {updateView().view}
+      {updateView(view.id).view}
       <button onClick={onBackButtonClick}>{view.backButtonCaption}</button> 
     </>
   )

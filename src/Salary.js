@@ -79,6 +79,8 @@ export function TakeSalary(props){
     let tempSalary = {...salary};
     let tempFormaOpodatkowania = formaOpodatkowania.find(obj => obj.value === event.target.value);
     tempSalary[event.target.name] = tempFormaOpodatkowania.id;
+    tempSalary.zUS = tempFormaOpodatkowania.zUS;
+    tempSalary.skladkaZdrowotna = tempFormaOpodatkowania.skladkaZdrowotna;
     setSalary(tempSalary);
   }
 
@@ -104,7 +106,7 @@ export function TakeSalary(props){
 
   function AfterFetchDataForNewSalary(json){
     let tempFormaOpodatkowania = json.miesiace.map(obj => ({id : obj.iD, value : obj.monthName}));
-    let tempMiesiace = json.formaOpodatkowania.map(obj => ({id : obj.id, value : obj.nazwa, wysokoscPodatku : obj.wysokoscPodatkuList}));
+    let tempMiesiace = json.formaOpodatkowania.map(obj => ({id : obj.id, value : obj.nazwa, wysokoscPodatku : obj.wysokoscPodatkuList, zUS : obj.zUS, skladkaZdrowotna : obj.skladkaZdrowotna}));
     setMiesiace([{id : 0, value : ""}, ...tempFormaOpodatkowania]);
     setFormaOpodatkowania([{id : 0, value : ""}, ...tempMiesiace]);
   }

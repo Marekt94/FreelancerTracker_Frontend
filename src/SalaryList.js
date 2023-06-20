@@ -4,6 +4,7 @@ import {months} from "./Dictionaries";
 import "./SalaryAPICLient";
 import SalaryAPIClient from "./SalaryAPICLient";
 import TakeSalary from "./Salary";
+import {useEffect} from "react";
 
 function SalaryList(props) {
     const [salaries, setSalaries] = useState("");
@@ -17,31 +18,40 @@ function SalaryList(props) {
     }   
 
     function updateSalaries(json){
-        setSalaries(json.map((salary) =>
-            <li key={salary.id}>{months.find(element => element.id === salary.miesiac).value}: stawka godzinowa - {salary.stawka}, netto = {salary.netto}<button id={salary.id} onClick={onEditClick}>Edytuj</button></li>
+        const salary = json.sort((x, y) => x.miesiac > y.miesiac ? 1 : -1); 
+        setSalaries(salary.map((obj) =>
+            <li key={obj.id}>{months.find(element => element.id === obj.miesiac).value}: stawka godzinowa - {obj.stawka}, netto = {obj.netto}<button id={obj.id} onClick={onEditClick}>Edytuj</button></li>
         ))
-        setViewID(0);
     } 
+
+    function onClickBack(){
+      Init();
+      setViewID(0);
+    }
 
     function updateView(){
         switch (viewID){
           case 0:
             return <ul>{salaries}</ul>;
           case 1:
-            return <TakeSalary new={false} year={year} id={id}/>;
+            return(
+            <>
+              <TakeSalary new={false} year={year} id={id}/>
+              <button onClick={onClickBack}>Wróć</button> 
+            </>)
           default:
             return <ul>{salaries}</ul>;  
         }
     }
     
-    function onGetItemsClick(){
+    function Init(){
         SalaryAPIClient.GetSalaries(year, updateSalaries).then(updateView);
     }
 
+    useEffect(() => {Init()},[year]);
     return(
         <>    
-          {updateView()}
-          <button onClick={onGetItemsClick}>Pobierz odcinki z wypłat</button>          
+          {updateView()}        
         </>
     )
 }

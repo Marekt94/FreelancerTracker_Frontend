@@ -53,6 +53,16 @@ export function TakeSalary(props){
     formaOpodatkowania : null}
   );
 
+  function Init(){
+    if (isNew){
+      return SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary);
+    }
+    else{
+      return SalaryAPICLient.GetSalary(defId, SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary)).then(InitSalary);
+    }
+  }
+  useEffect(() => {Init()},[year]);  
+
   async function onZapiszClick(){
     salary.rok = year;
     const requestOptions = {
@@ -120,16 +130,6 @@ export function TakeSalary(props){
     setDefMiesiacIFormaOpodatkowania(miesiacIFormaOpodtkowania);
   }
 
-  function Init(){
-    if (isNew){
-      return SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary);
-    }
-    else{
-      return SalaryAPICLient.GetSalary(defId, SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary)).then(InitSalary);
-    }
-  }
-
-  useEffect(() => {Init()},[year]);
   return (
     <>
       <Edit caption="Id" value={salary.id} name="id" readonly="true" onChange={onChangeEdit}/>

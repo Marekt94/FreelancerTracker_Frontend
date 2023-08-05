@@ -7,10 +7,15 @@ import TakeSalary from "./Salary";
 import {useEffect} from "react";
 
 function SalaryList(props) {
+    const year = props.year;  
     const [salaries, setSalaries] = useState("");
     const [id, setID] = useState(null);
-    const year = props.year;
     const [viewID, setViewID] = useState(0);
+
+    function Init(){
+      SalaryAPIClient.GetSalaries(year, updateSalaries).then(updateView);
+    }
+    useEffect(() => {Init()},[year]);
 
     function onEditClick(event){
         setViewID(1);
@@ -44,11 +49,6 @@ function SalaryList(props) {
         }
     }
     
-    function Init(){
-        SalaryAPIClient.GetSalaries(year, updateSalaries).then(updateView);
-    }
-
-    useEffect(() => {Init()},[year]);
     return(
         <>    
           {updateView()}        

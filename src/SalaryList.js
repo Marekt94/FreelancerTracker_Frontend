@@ -5,6 +5,7 @@ import "./SalaryAPICLient";
 import SalaryAPIClient from "./SalaryAPICLient";
 import TakeSalary from "./Salary";
 import {useEffect} from "react";
+import {FETCH_COMM} from "./Constants";
 
 function SalaryList(props) {
     const year = props.year;  
@@ -12,10 +13,17 @@ function SalaryList(props) {
     const [id, setID] = useState(null);
     const [viewID, setViewID] = useState(0);
 
-    function Init(){
-      SalaryAPIClient.GetSalaries(year, updateSalaries).then(updateView);
-    }
-    useEffect(() => {Init()},[year]);
+    useEffect(() => {
+      let ignore = false;
+      SalaryAPIClient.GetSalaries(year, (obj) => {
+        if (!ignore){
+          console.log(FETCH_COMM, "GetSalaries")
+          updateSalaries(obj);
+          updateView();
+        }
+      })
+      return () => {ignore = true}
+    },[year]);
 
     function onEditClick(event){
         setViewID(1);
@@ -30,7 +38,7 @@ function SalaryList(props) {
     } 
 
     function onClickBack(){
-      Init();
+      SalaryAPIClient.GetSalaries(year, updateSalaries).then(updateView);
       setViewID(0);
     }
 

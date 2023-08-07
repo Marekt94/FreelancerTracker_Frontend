@@ -3,6 +3,7 @@ import "./Main.css";
 import "./SalaryAPICLient";
 import SalaryAPICLient from "./SalaryAPICLient";
 import {months} from "./Dictionaries";
+import {FETCH_COMM} from "./Constants";
 
 const defSalary = {
   id : 0,
@@ -61,7 +62,26 @@ export function TakeSalary(props){
       return SalaryAPICLient.GetSalary(defId, SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary)).then(InitSalary);
     }
   }
-  useEffect(() => {Init()},[year]);  
+  useEffect(() => {
+    let ignore = false;
+    if (isNew){
+      SalaryAPICLient.GetDataForNewSalary(year, (obj) => {
+        if (!ignore){
+          console.log(FETCH_COMM, "GetDataForNewSalary")
+          AfterFetchDataForNewSalary(obj)
+        }
+      });
+    }
+    else{
+      SalaryAPICLient.GetSalary(defId, (obj) => {
+        if (!ignore){
+          console.log(FETCH_COMM, "GetSalary")
+          SalaryAPICLient.GetDataForNewSalary(year, AfterFetchDataForNewSalary).then(() => {InitSalary(obj)});
+        }
+      });
+    }
+    return () => {ignore = true}
+  },[year]);  
 
   async function onZapiszClick(){
     salary.rok = year;

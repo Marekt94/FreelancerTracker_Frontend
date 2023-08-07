@@ -1,9 +1,14 @@
-const serverAdress = "http://localhost:8080/";
+import {API_ACCESS, SERVER_ADRESS} from "./Constants";
+
 
 class SalaryAPIClient {
 
     static InternalFetch(URL, successfullCallback){
-        return fetch(serverAdress + URL).then((obj) => obj.json()).then(successfullCallback).catch((e)=> alert(e));
+        let adress = SERVER_ADRESS + URL;
+        return fetch(adress).then((obj) => obj.json()).then((json) => {
+            console.log(API_ACCESS, adress);
+            successfullCallback(json)
+        }).catch((e)=> alert(e));
     }
 
     static GetSalaries(year, successfullCallback){

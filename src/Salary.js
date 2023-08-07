@@ -83,20 +83,20 @@ export function TakeSalary(props){
     return () => {ignore = true}
   },[year]);  
 
-  async function onZapiszClick(){
+  function onZapiszClick(){
     salary.rok = year;
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify(salary)
     };
 
-    let obj = await fetch('http://localhost:8080/save_salary', requestOptions);
-    let json =  await obj.json();
-    console.log(json);
-    salary.id = json.id;
-    let tempSalary = {...salary};
-    tempSalary.id = json.id;
-    setSalary(tempSalary);
+    SalaryAPICLient.SaveSalary(requestOptions, (json) => {
+      console.log(json);
+      salary.id = json.id;
+      let tempSalary = {...salary};
+      tempSalary.id = json.id;
+      setSalary(tempSalary);      
+    })
   }  
 
   function onChangeEdit(event){
@@ -121,7 +121,7 @@ export function TakeSalary(props){
     setSalary(tempSalary);
   }  
 
-  async function onEvaluateClick(){
+  function onEvaluateClick(){
     let tempFormaOpodatkowania = formaOpodatkowania.find(obj => obj.id === salary.idFormyOpodatkowania);
     salary.formaOpodatkowania = {id : tempFormaOpodatkowania.id, nazwa : tempFormaOpodatkowania.value, wysokoscPodatkuList : tempFormaOpodatkowania.wysokoscPodatku};
     const requestOptions = {
@@ -129,9 +129,7 @@ export function TakeSalary(props){
       body: JSON.stringify(salary)
     };
 
-    let obj = await fetch('http://localhost:8080/evaluate', requestOptions);
-    let json =  await obj.json();
-    setSalary(json);
+    SalaryAPICLient.Evaluate(requestOptions, (json) => setSalary(json));
   }
 
   function AfterFetchDataForNewSalary(json){

@@ -1,4 +1,4 @@
-export const months = [
+export const MONTHS = [
     {id : 1,
     value : "styczeń"},
     {id : 2,

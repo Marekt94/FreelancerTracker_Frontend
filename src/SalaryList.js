@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import "./Main.css";
-import {months} from "./Dictionaries";
+import {MONTHS} from "./Dictionaries";
 import "./SalaryAPICLient";
 import SalaryAPIClient from "./SalaryAPICLient";
 import TakeSalary from "./Salary";
@@ -33,7 +33,7 @@ function SalaryList(props) {
     function updateSalaries(json){
         const salary = json.sort((x, y) => x.miesiac > y.miesiac ? 1 : -1); 
         setSalaries(salary.map((obj) =>
-            <li key={obj.id}>{months.find(element => element.id === obj.miesiac).value}: stawka godzinowa - {obj.stawka}, netto = {obj.netto}<button id={obj.id} onClick={onEditClick}>Edytuj</button></li>
+            <li key={obj.id}>{MONTHS.find(element => element.id === obj.miesiac).value}: stawka godzinowa - {obj.stawka}, netto = {obj.netto}<button id={obj.id} onClick={onEditClick}>Edytuj</button></li>
         ))
     } 
 

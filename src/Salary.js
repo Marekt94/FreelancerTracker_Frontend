@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Main.css";
 import "./SalaryAPICLient";
 import SalaryAPICLient from "./SalaryAPICLient";

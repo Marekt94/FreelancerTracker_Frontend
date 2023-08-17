@@ -4,6 +4,7 @@ import "./SalaryAPICLient";
 import SalaryAPICLient from "./SalaryAPICLient";
 import {months} from "./Dictionaries";
 import {FETCH_COMM} from "./Constants";
+import { useParams } from "react-router-dom";
 
 const defSalary = {
   id : 0,
@@ -42,10 +43,10 @@ function Combo({caption, value, name, dictionary, defaultValue = null, readonly 
   );
 }
 
-export function TakeSalary(props){
-  const isNew = props.new;
-  const year  = props.year;
-  const [defId, setDefId] = useState(props.id);
+export function TakeSalary(){
+  const isNew = (typeof useParams().id === 'undefined') ? 'true' : false;
+  const year  = useParams().year;
+  const [defId, setDefId] = useState(useParams().id);
   const [miesiace, setMiesiace] = useState([{}]);
   const [formaOpodatkowania, setFormaOpodatkowania] = useState([{}]);
   const [salary, setSalary] = useState(defSalary);
@@ -163,8 +164,6 @@ export function TakeSalary(props){
       <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" onChange={onChangeEdit}/>
-      <button onClick={onZapiszClick}>Zapisz</button>
-      <button onClick={onEvaluateClick}>Oblicz</button>
     </>
   );
 }

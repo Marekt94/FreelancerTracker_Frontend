@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Main from './Main';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import SalaryList from './SalaryList';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <Main />
+  <React.StrictMode> 
+    <BrowserRouter>        
+      <Main/>         
+    </BrowserRouter>        
   </React.StrictMode>
 );
 

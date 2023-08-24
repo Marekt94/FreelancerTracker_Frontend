@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Main.css";
 import "./SalaryAPICLient";
 import SalaryAPICLient from "./SalaryAPICLient";
-import {months} from "./Dictionaries";
+import {MONTHS} from "./Dictionaries";
 import {FETCH_COMM} from "./Constants";
 
 const defSalary = {
@@ -32,10 +32,14 @@ function Edit({caption, value, name, readonly = false, onChange = null}){
 }
 
 function Combo({caption, value, name, dictionary, defaultValue = null, readonly = false, onChange = null}){
+  let dictPosition = dictionary.find(x => x.id === value); 
+  if (dictPosition === undefined){
+    dictPosition = {id : -1, value : defaultValue}
+  }
   return(
     <div style={{flexDirection : "row"}}>
         <label>{caption}</label>
-        <select value={defaultValue} name={name} readonly={readonly} onChange={onChange}>
+        <select value={dictPosition.value} name={name} readonly={readonly} onChange={onChange}>
           {dictionary.map((slownik) => <option>{slownik.value}</option>)}
         </select>
     </div>    
@@ -46,7 +50,7 @@ export function TakeSalary(props){
   const isNew = props.new;
   const year  = props.year;
   const [defId, setDefId] = useState(props.id);
-  const [miesiace, setMiesiace] = useState([{}]);
+  var [miesiace, setMiesiace] = useState([{}]);
   const [formaOpodatkowania, setFormaOpodatkowania] = useState([{}]);
   const [salary, setSalary] = useState(defSalary);
   const [defMiesiacIFormaOpodatkowania, setDefMiesiacIFormaOpodatkowania] = useState(
@@ -133,16 +137,24 @@ export function TakeSalary(props){
   }
 
   function AfterFetchDataForNewSalary(json){
-    let tempFormaOpodatkowania = json.miesiace.map(obj => ({id : obj.iD, value : obj.monthName}));
-    let tempMiesiace = json.formaOpodatkowania.map(obj => ({id : obj.id, value : obj.nazwa, wysokoscPodatku : obj.wysokoscPodatkuList, zUS : obj.zUS, skladkaZdrowotna : obj.skladkaZdrowotna}));
-    setMiesiace([{id : 0, value : ""}, ...tempFormaOpodatkowania]);
-    setFormaOpodatkowania([{id : 0, value : ""}, ...tempMiesiace]);
+    miesiace = json.miesiace.map(obj => ({id : obj.iD, value : obj.monthName}));
+    let tempFormaOpodatkowania = json.formaOpodatkowania.map(obj => ({id : obj.id, value : obj.nazwa, wysokoscPodatku : obj.wysokoscPodatkuList, zUS : obj.zUS, skladkaZdrowotna : obj.skladkaZdrowotna}));
+    miesiace = [{id : 0, value : ""}, ...miesiace];
+    setMiesiace(miesiace);
+    setFormaOpodatkowania([{id : 0, value : ""}, ...tempFormaOpodatkowania]);
   }
 
   function InitSalary(json){
     setSalary(json);
+    let miesiac = miesiace.find(x => x.id === json.miesiac);
+    if (miesiac === undefined) {
+      miesiac = MONTHS.find(x => x.id === json.miesiac);
+      miesiace = [miesiac, ...miesiace];
+      miesiace.sort((a, b) => a.id - b.id);
+      setMiesiace(miesiace);
+    }
     let miesiacIFormaOpodtkowania = {
-      miesiac : (months.find(x => x.id === json.miesiac).value),
+      miesiac : miesiac.value,
       formaOpodatkowania : json.formaOpodatkowania.nazwa
     };
     setDefMiesiacIFormaOpodatkowania(miesiacIFormaOpodtkowania);

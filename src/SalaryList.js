@@ -3,10 +3,10 @@ import "./Main.css";
 import {months} from "./Dictionaries";
 import "./SalaryAPICLient";
 import SalaryAPIClient from "./SalaryAPICLient";
-import TakeSalary from "./Salary";
 import {useEffect} from "react";
 import {FETCH_COMM} from "./Constants";
 import { useParams, useNavigate, generatePath } from "react-router-dom";
+import PATHS from "./SalaryClientURL";
 
 function SalaryList() {
     const year = useParams().year;  
@@ -29,7 +29,7 @@ function SalaryList() {
     function onEditClick(event){
         setViewID(1);
         setID(event.target.getAttribute("id"));
-        navigate(generatePath("/salary/:year/:id?", {year: year, id: event.target.getAttribute("id")}), {relative: "path"});
+        navigate(generatePath(PATHS.salaryPath, {year: year, id: event.target.getAttribute("id")}));
     }   
 
     function updateSalaries(json){

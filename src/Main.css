@@ -78,6 +78,7 @@ ul:hover{
 	background-color: var(--background-color-active);
 	color: var(--font-color-active);
 	border-radius: 10px;
+	text-decoration: none;
 }
 
 ol{

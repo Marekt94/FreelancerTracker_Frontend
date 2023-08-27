@@ -176,6 +176,8 @@ export function TakeSalary(){
       <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" onChange={onChangeEdit}/>
+      <button onClick={onZapiszClick}>Zapisz</button>
+      <button onClick={onEvaluateClick}>Oblicz</button>
     </>
   );
 }

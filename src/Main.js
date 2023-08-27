@@ -3,7 +3,7 @@ import SalaryList from "./SalaryList";
 import TakeSalary from "./Salary";
 import "./Main.css";
 import PATHS from "./SalaryClientURL";
-import {NavLink, Routes, Route, generatePath, useNavigate} from 'react-router-dom';
+import {Routes, Route, generatePath, useNavigate} from 'react-router-dom';
 
 function MainView(){
   const Years = [{year: 2022}, 
@@ -20,7 +20,12 @@ function MainView(){
   function onChangeYear(event){
     setYear(event.target.value);
     navigate(generatePath(lastPath, {year: event.target.value}))
-  }  
+  }
+  
+  function onClick(path, year){
+    setLastPath(path);
+    navigate(generatePath(path, {year: year}))
+  }
 
   return(
     <>
@@ -30,12 +35,12 @@ function MainView(){
       <div class='workspace'>
         <div class='sidebar'>
         <ol>
-          <ul onClick={()=>setLastPath(PATHS.salariesPath)}><NavLink class="NavLink" to={generatePath(PATHS.salariesPath, {year: year})}>Wróć do listy odcinków</NavLink></ul>		
-          <ul onClick={()=>setLastPath(PATHS.salaryPath)}><NavLink  class="NavLink" to={generatePath(PATHS.salaryPath, {year: year})}>Dodaj</NavLink></ul>  
+          <ul onClick={()=>onClick(PATHS.salariesPath, year)}>Wróć do listy odcinków</ul>		
+          <ul onClick={()=>onClick(PATHS.salaryPath, year)}>Dodaj</ul>  
         </ol>
         </div>
         <div class='content'>
-          <select align='center' defaultValue={year} onChange={onChangeYear}>
+          <select class='select' align='center' defaultValue={year} onChange={onChangeYear}>
             {Years.map((obj) => <option>{obj.year}</option>)}
           </select>            
           <Routes>

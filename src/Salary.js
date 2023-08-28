@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Main.css";
 import "./SalaryAPICLient";
 import SalaryAPICLient from "./SalaryAPICLient";
@@ -25,7 +25,7 @@ const defSalary = {
 
 function Edit({caption, value, name, readonly = false, onChange = null}){
   return(
-    <div style={{flexDirection : "row"}}>
+    <div>
         <label>{caption}</label>
         <input readonly={readonly} name={name} value={value} defaultValue={value} onChange={onChange}/>   
     </div>
@@ -163,6 +163,7 @@ export function TakeSalary(){
 
   return (
     <>
+      <form>
       <Edit caption="Id" value={salary.id} name="id" readonly="true" onChange={onChangeEdit}/>
       <Combo caption="Miesiąc" value={salary.miesiac} name="miesiac" dictionary={miesiace} defaultValue={defMiesiacIFormaOpodatkowania.miesiac} readonly="true" onChange={onMiesiacChange}/>
       <Edit caption="Stawka dzienna netto" value={salary.stawka} name="stawka" onChange={onChangeEdit}/>
@@ -178,6 +179,8 @@ export function TakeSalary(){
       <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" onChange={onChangeEdit}/>
       <button onClick={onZapiszClick}>Zapisz</button>
       <button onClick={onEvaluateClick}>Oblicz</button>
+      {(isNew) ? <></> : (<button>Usuń</button>)}
+      </form>
     </>
   );
 }

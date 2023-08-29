@@ -21,8 +21,6 @@ body{
 	border-radius: 10px;
 	margin-left: 5%;
 	margin-right: 5%;
-	display: flex;
-	flex-direction: row;		
 }
 
 .myheader{
@@ -37,16 +35,18 @@ body{
 }
 
 .sidebar{
+	padding-left: 10px;
+	padding-right: 10px;
 	margin: 6px;
 	background-color: var(--background-color-standby);	
 	border: 1px solid var(--background-color-active);
 	border-radius: 10px;
-	width: 300px;
 	min-height: 0px;
 	box-shadow: 6px 6px 12px var(--background-color-standby)
 }
 
 .content{
+	padding: 5px;
 	margin: 6px;
  	font-size: 24px;
 	background-color: var(--background-color-standby);	
@@ -89,11 +89,23 @@ ul:hover{
 	text-shadow: none;
 }
 
-ol{
-	margin: 10px;
+.sidebar > ol{
+	margin-left: auto;
+	margin-right: auto;
 	padding-left: 0px;
 	padding-right: 0px;
-  	text-align: left;	
+  	text-align: center;	
+	display: flex;
+	justify-content: center;
+}
+
+.sidebar > ol > ul{
+	border-left: solid;
+	width: 300px;
+}
+
+.sidebar > ol > ul:last-child{
+	border-right: solid;
 }
 
 button {

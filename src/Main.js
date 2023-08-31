@@ -1,62 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SalaryList from "./SalaryList";
 import TakeSalary from "./Salary";
-
-const Years = [{year: 2022}, 
-  {year : 2023},
-  {year : 2024}
-];
+import "./Main.css";
+import PATHS from "./SalaryClientURL";
+import {Routes, Route, generatePath, useNavigate} from 'react-router-dom';
 
 function MainView(){
+  const Years = [{year: 2022}, 
+    {year : 2023},
+    {year : 2024}
+  ]; 
+
   const [year, setYear] = useState(Years[1].year); 
-  const [view, setView] = useState(createView()[0]);
+  const [lastPath, setLastPath] = useState(PATHS.salariesPath);
+  const navigate = useNavigate();  
 
-  function createView(){
-    const viewList = [{
-        id : 0,
-        view : <SalaryList year={year}/>,
-        backButtonCaption : "Dodaj nowy odcinek"
-      },{
-        id : 1,
-        view : <TakeSalary new={true} year={year}/>,
-        backButtonCaption : "Wróć do listy odcinków"
-      }
-    ]; 
-    return(viewList);
-  }
-
-  function updateView(id){
-    const viewList = createView(); 
-    return(viewList[id]);
-  }
-
-  function onBackButtonClick(){
-    const viewList = createView(); 
-    let viewTemp;
-    switch (view.id){
-      case 0:
-        viewTemp = viewList[1]
-      break
-      case 1:
-        viewTemp = viewList[0]
-      break
-      default:
-        viewTemp = viewList[0]
-    }
-    setView(viewTemp);
-  }  
+  useEffect(()=>{navigate(generatePath(lastPath, {year: year}))},[null]);
 
   function onChangeYear(event){
     setYear(event.target.value);
-  }  
+    navigate(generatePath(lastPath, {year: event.target.value}))
+  }
+  
+  function onClick(path, year){
+    setLastPath(path);
+    navigate(generatePath(path, {year: year}))
+  }
 
   return(
     <>
-      <select defaultValue={year} onChange={onChangeYear}>
-        {Years.map((obj) => <option>{obj.year}</option>)}
-      </select>        
-      {updateView(view.id).view}
-      <button onClick={onBackButtonClick}>{view.backButtonCaption}</button> 
+      <header class='myheader'>
+        Lista odcinków wypłat
+      </header> 
+      <div class='workspace'>
+        <div class='sidebar'>
+        <ol>
+          <ul onClick={()=>onClick(PATHS.salariesPath, year)}>Wróć do listy odcinków</ul>		
+          <ul onClick={()=>onClick(PATHS.salaryPath, year)}>Dodaj</ul>  
+        </ol>
+        </div>
+        <div class='content'>
+          <select class='select' align='center' defaultValue={year} onChange={onChangeYear}>
+            {Years.map((obj) => <option>{obj.year}</option>)}
+          </select>            
+          <Routes>
+            <Route path="/">
+              <Route path={PATHS.salariesPath} element={<SalaryList/>} loader={(params) => {params.year = year}}/>
+              <Route path={PATHS.salaryPath} element={<TakeSalary/>} loader={(params) => {params.year = year}}/>
+            </Route>
+          </Routes>        
+        </div>
+      </div>                 
     </>
   )
 }

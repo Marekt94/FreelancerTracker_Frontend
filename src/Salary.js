@@ -4,6 +4,7 @@ import "./SalaryAPICLient";
 import SalaryAPICLient from "./SalaryAPICLient";
 import {MONTHS} from "./Dictionaries";
 import {FETCH_COMM} from "./Constants";
+import { useParams } from "react-router-dom";
 
 const defSalary = {
   id : 0,
@@ -24,7 +25,7 @@ const defSalary = {
 
 function Edit({caption, value, name, readonly = false, onChange = null}){
   return(
-    <div style={{flexDirection : "row"}}>
+    <div>
         <label>{caption}</label>
         <input readonly={readonly} name={name} value={value} defaultValue={value} onChange={onChange}/>   
     </div>
@@ -46,10 +47,10 @@ function Combo({caption, value, name, dictionary, defaultValue = null, readonly 
   );
 }
 
-export function TakeSalary(props){
-  const isNew = props.new;
-  const year  = props.year;
-  const [defId, setDefId] = useState(props.id);
+export function TakeSalary(){
+  const isNew = (typeof useParams().id === 'undefined') ? 'true' : false;
+  const year  = useParams().year;
+  const [defId, setDefId] = useState(useParams().id);
   var [miesiace, setMiesiace] = useState([{}]);
   const [formaOpodatkowania, setFormaOpodatkowania] = useState([{}]);
   const [salary, setSalary] = useState(defSalary);
@@ -162,6 +163,7 @@ export function TakeSalary(props){
 
   return (
     <>
+      <form>
       <Edit caption="Id" value={salary.id} name="id" readonly="true" onChange={onChangeEdit}/>
       <Combo caption="Miesiąc" value={salary.miesiac} name="miesiac" dictionary={miesiace} defaultValue={defMiesiacIFormaOpodatkowania.miesiac} readonly="true" onChange={onMiesiacChange}/>
       <Edit caption="Stawka dzienna netto" value={salary.stawka} name="stawka" onChange={onChangeEdit}/>
@@ -177,6 +179,8 @@ export function TakeSalary(props){
       <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" onChange={onChangeEdit}/>
       <button onClick={onZapiszClick}>Zapisz</button>
       <button onClick={onEvaluateClick}>Oblicz</button>
+      {(isNew) ? <></> : (<button>Usuń</button>)}
+      </form>
     </>
   );
 }

@@ -4,6 +4,7 @@ import TakeSalary from "./Salary";
 import "./Main.css";
 import PATHS from "./SalaryClientURL";
 import {Routes, Route, generatePath, useNavigate} from 'react-router-dom';
+import SalaryAPIClient from "./SalaryAPICLient";
 
 function MainView(){
   const Years = [{year: 2022}, 
@@ -12,19 +13,23 @@ function MainView(){
   ]; 
 
   const [year, setYear] = useState(Years[1].year); 
-  const [lastPath, setLastPath] = useState(PATHS.salariesPath);
   const navigate = useNavigate();  
 
-  useEffect(()=>{navigate(generatePath(lastPath, {year: year}))},[null]);
+  useEffect(()=>{
+    console.log('useEffect w Main');
+    navigate(generatePath(PATHS.salariesPath));
+  },[]);
 
   function onChangeYear(event){
-    setYear(event.target.value);
-    navigate(generatePath(lastPath, {year: event.target.value}))
+    setYear(event.target.value);      
   }
-  
-  function onClick(path, year){
-    setLastPath(path);
-    navigate(generatePath(path, {year: year}))
+
+  function onListaOdcinkowClick(){
+    navigate(generatePath(PATHS.salariesPath));     
+  }
+
+  function onDodajClick(){
+    navigate(generatePath(PATHS.salaryPath));
   }
 
   return(
@@ -35,8 +40,8 @@ function MainView(){
       <div class='workspace'>
         <div class='sidebar'>
         <ol>
-          <ul onClick={()=>onClick(PATHS.salariesPath, year)}>Wróć do listy odcinków</ul>		
-          <ul onClick={()=>onClick(PATHS.salaryPath, year)}>Dodaj</ul>  
+          <ul onClick={onListaOdcinkowClick}>Wróć do listy odcinków</ul>		
+          <ul onClick={onDodajClick}>Dodaj</ul>  
         </ol>
         </div>
         <div class='content'>
@@ -44,10 +49,9 @@ function MainView(){
             {Years.map((obj) => <option>{obj.year}</option>)}
           </select>            
           <Routes>
-            <Route path="/">
-              <Route path={PATHS.salariesPath} element={<SalaryList/>} loader={(params) => {params.year = year}}/>
-              <Route path={PATHS.salaryPath} element={<TakeSalary/>} loader={(params) => {params.year = year}}/>
-            </Route>
+              <Route path={PATHS.salariesPath} element={<SalaryList year={year}/>}/>
+              <Route path={PATHS.salaryPath} element={<TakeSalary year={year}/>}/>
+              {/* <Route path="*" element={navigate(PATHS.salariesPath)}/> */}
           </Routes>        
         </div>
       </div>                 

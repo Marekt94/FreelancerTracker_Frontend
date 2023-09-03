@@ -30,6 +30,10 @@ class SalaryAPIClient {
     static Evaluate(requestOptions, successfullCallback){
         return SalaryAPIClient.InternalFetch("evaluate", successfullCallback, requestOptions)
     }
+
+    static DeleteSalary(id, successfullCallback){
+        return SalaryAPIClient.InternalFetch("delete_salary/" + id, successfullCallback);        
+    }
 }
 
 export default SalaryAPIClient;

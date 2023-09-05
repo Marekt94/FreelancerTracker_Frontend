@@ -28,7 +28,7 @@ function Edit({caption, value, name, readonly = false, onChange = null}){
   return(
     <div>
         <label>{caption}</label>
-        <input readonly={readonly} name={name} value={value} defaultValue={value} onChange={onChange}/>   
+        <input readonly={readonly} name={name} value={value === undefined ? 0 : value} defaultValue={value} onChange={onChange}/>   
     </div>
   );
 }
@@ -49,6 +49,7 @@ function Combo({caption, value, name, dictionary, defaultValue = null, readonly 
 }
 
 export function TakeSalary(props){
+  let params = useParams();
   const [id, setID] = useState(useParams().id);
   const year  = props.year;  
   const [salary, setSalary] = useState(defSalary);
@@ -57,9 +58,10 @@ export function TakeSalary(props){
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("useEffect w take salary");
+      let id = params.id;
+      console.log("useEffect w take salary");
       SalaryAPIClient.GetDataForNewSalary(year, obj => {InitSalary(obj, id)});
-    },[year]);
+    },[year, params.id]);
     
   function InitSalary(json, id){
     let miesiace = json.miesiace.map(obj => ({id : obj.iD, value : obj.monthName}));
@@ -79,7 +81,8 @@ export function TakeSalary(props){
     }
     setMiesiace([{id: "0", value: ""}, ...miesiace]);
     setFormaOpodatkowania([{id: "0", value: ""}, ...formaOpodatkowania]);
-    setSalary(json);
+    setSalary(defSalary);
+    setID(id);
   }    
 
   function onZapiszClick(){
@@ -93,8 +96,8 @@ export function TakeSalary(props){
       salary.id = json.id;
       let tempSalary = {...salary};
       tempSalary.id = json.id;
-      setID(json.id);
-      setSalary(tempSalary);      
+      setSalary(tempSalary); 
+      setID(json.id);   
     })
   }  
 

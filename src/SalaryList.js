@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Main.css";
 import {MONTHS} from "./Dictionaries";
 import "./SalaryAPICLient";
-import { useParams, useNavigate, generatePath } from "react-router-dom";
+import { useNavigate, generatePath } from "react-router-dom";
 import PATHS from "./SalaryClientURL";
 import SalaryAPIClient from "./SalaryAPICLient";
 

@@ -4,6 +4,7 @@ import TakeSalary from "./Salary";
 import "./Main.css";
 import PATHS from "./SalaryClientURL";
 import {Routes, Route, generatePath, useNavigate} from 'react-router-dom';
+import Login from "./Login";
 
 function MainView(){
   const Years = [{year: 2022}, 
@@ -16,7 +17,7 @@ function MainView(){
 
   useEffect(()=>{
     console.log('useEffect w Main');
-    navigate(generatePath(PATHS.salariesPath));
+    navigate('/login');
   },[]);
 
   function onChangeYear(event){
@@ -42,6 +43,7 @@ function MainView(){
           <Routes>
               <Route path={PATHS.salariesPath} element={<SalaryList year={year}/>}/>
               <Route path={PATHS.salaryPath} element={<TakeSalary year={year}/>}/>
+              <Route path='/login' element={<Login/>}/>
           </Routes>        
         </div>
       </div>                 

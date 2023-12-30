@@ -5,7 +5,15 @@ class SalaryAPIClient {
 
     static InternalFetch(URL, successfullCallback, requestOptions){
         let adress = SERVER_ADRESS + URL;
-        return fetch(adress, requestOptions).then((obj) => obj.json()).then((json) => {
+        requestOptions = {
+            ...requestOptions,
+            credentials: 'include',
+            mode: "cors"
+        };
+        return fetch(adress, requestOptions).then((obj) => {
+            // alert(obj.json());
+            return obj.json();
+        }).then((json) => {
             console.log(API_ACCESS, adress);
             successfullCallback(json)
         }).catch((e)=> alert(e));
@@ -33,6 +41,10 @@ class SalaryAPIClient {
 
     static DeleteSalary(id, successfullCallback){
         return SalaryAPIClient.InternalFetch("delete_salary/" + id, successfullCallback);        
+    }
+
+    static Login(requestOptions, successfullCallback){
+        return SalaryAPIClient.InternalFetch("login", successfullCallback, requestOptions);    
     }
 }
 

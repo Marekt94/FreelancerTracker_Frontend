@@ -16,6 +16,7 @@ function Login(){
               method: "POST",
               body: JSON.stringify({username: login, password: haslo})
             };        
+            setAuthorized(false);
             SalaryAPIClient.Login(requestOptions, () => setAuthorized(true))
           }}>Zaloguj</button> 
           {(authorized === true) ? <div><label>Zalogowano</label></div> : <></>}    

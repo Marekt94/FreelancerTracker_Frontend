@@ -5,6 +5,7 @@ import SalaryAPIClient from "./SalaryAPICLient";
 import {MONTHS} from "./Dictionaries";
 import { useParams } from "react-router-dom";
 import { useNavigate, generatePath } from "react-router-dom";
+import { Edit, Combo } from "./MyComponents";
 import PATHS from "./SalaryClientURL";
 
 const defSalary = {
@@ -22,30 +23,6 @@ const defSalary = {
   doWyplaty : 0,
   doRozdysponowania : 0,
   zablokowane : false
-}
-
-function Edit({caption, value, name, readonly = false, onChange = null}){
-  return(
-    <div>
-        <label>{caption}</label>
-        <input readonly={readonly} name={name} value={value === undefined ? 0 : value} defaultValue={value} onChange={onChange}/>   
-    </div>
-  );
-}
-
-function Combo({caption, value, name, dictionary, defaultValue = null, readonly = false, onChange = null}){
-  let dictPosition = dictionary.find(x => x.id === value); 
-  if (dictPosition === undefined){
-    dictPosition = {id : -1, value : defaultValue}
-  }
-  return(
-    <div style={{flexDirection : "row"}}>
-        <label>{caption}</label>
-        <select value={dictPosition.value} name={name} readonly={readonly} onChange={onChange}>
-          {dictionary.map((slownik) => <option>{slownik.value}</option>)}
-        </select>
-    </div>    
-  );
 }
 
 export function TakeSalary(props){

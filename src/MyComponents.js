@@ -1,8 +1,8 @@
-export function Edit({caption, value, name, readonly = false, onChange = null, whenUndefined = 0}){
+export function Edit({caption, value, name, readonly = false, onChange = null, whenUndefined = 0, password = false}){
     return(
       <div>
           <label>{caption}</label>
-          <input readonly={readonly} name={name} value={value === undefined ? whenUndefined : value} defaultValue={value} onChange={onChange}/>   
+          <input type={password ? "password" : "text"} readonly={readonly} name={name} value={value === undefined ? whenUndefined : value} defaultValue={value} onChange={onChange}/>   
       </div>
     );
 }

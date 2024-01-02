@@ -13,16 +13,7 @@ function MainView(){
   ]; 
 
   const [year, setYear] = useState(Years[1].year); 
-  const navigate = useNavigate();  
-
-  useEffect(()=>{
-    console.log('useEffect w Main');
-    navigate('/login');
-  },[]);
-
-  function onChangeYear(event){
-    setYear(event.target.value);      
-  };
+  const navigate = useNavigate();
 
   return(
     <>
@@ -32,18 +23,20 @@ function MainView(){
       <div class='workspace'>
         <div class='sidebar'>
         <ol>
+          <ul onClick={() => navigate(generatePath(PATHS.login))}>Logowanie</ul> 
           <ul onClick={() => navigate(generatePath(PATHS.salariesPath))}>Wróć do listy odcinków</ul>		
           <ul onClick={() => navigate(generatePath(PATHS.salaryPath))}>Dodaj</ul>  
         </ol>
         </div>
         <div class='content'>
-          <select class='select' align='center' defaultValue={year} onChange={onChangeYear}>
+          <select class='select' align='center' defaultValue={year} onChange={e => setYear(e.target.value)}>
             {Years.map((obj) => <option>{obj.year}</option>)}
           </select>            
           <Routes>
               <Route path={PATHS.salariesPath} element={<SalaryList year={year}/>}/>
               <Route path={PATHS.salaryPath} element={<TakeSalary year={year}/>}/>
-              <Route path='/login' element={<Login/>}/>
+              <Route path={PATHS.login} element={<Login/>}/>
+              <Route path='/' element={<Login/>}/>
           </Routes>        
         </div>
       </div>                 

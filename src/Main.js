@@ -5,6 +5,7 @@ import "./Main.css";
 import PATHS from "./SalaryClientURL";
 import {Routes, Route, generatePath, useNavigate} from 'react-router-dom';
 import Login from "./Login";
+import { CookiesProvider } from 'react-cookie';
 
 function MainView(){
   const Years = [{year: 2022}, 
@@ -31,13 +32,15 @@ function MainView(){
         <div class='content'>
           <select class='select' align='center' defaultValue={year} onChange={e => setYear(e.target.value)}>
             {Years.map((obj) => <option>{obj.year}</option>)}
-          </select>            
+          </select>     
+          <CookiesProvider>                 
           <Routes>
               <Route path={PATHS.salariesPath} element={<SalaryList year={year}/>}/>
               <Route path={PATHS.salaryPath} element={<TakeSalary year={year}/>}/>
               <Route path={PATHS.login} element={<Login/>}/>
               <Route path='/' element={<Login/>}/>
-          </Routes>        
+          </Routes>      
+          </CookiesProvider>            
         </div>
       </div>                 
     </>

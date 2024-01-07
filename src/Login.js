@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import SalaryAPIClient from "./SalaryAPICLient";
 import { Edit } from "./MyComponents";
 import { hashSync } from "bcryptjs";
+import { useCookies } from 'react-cookie';
 
 function Login(){
+    const [cookies] = useCookies();
     const [login, setLogin] = useState("");
     const [haslo, setHaslo] = useState("");
-    const [authorized, setAuthorized] = useState(false);
+    const [authorized, setAuthorized] = useState(cookies.sessionId !== undefined);
 
     return(
         <>    
@@ -21,6 +23,12 @@ function Login(){
             setAuthorized(false);
             SalaryAPIClient.Login(requestOptions, () => setAuthorized(true))
           }}>Zaloguj</button> 
+          <button onClick={() =>{
+            const requestOptions = {
+              method: "DELETE"
+            };
+            SalaryAPIClient.Logout(requestOptions, () => setAuthorized(false));  
+          }}>Wyloguj</button>
           {(authorized === true) ? <div><label>Zalogowano</label></div> : <></>}    
         </>
     )

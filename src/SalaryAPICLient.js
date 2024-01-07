@@ -50,6 +50,10 @@ class SalaryAPIClient {
     static Login(requestOptions, successfullCallback = () => {}){
         return SalaryAPIClient.InternalFetch("login", successfullCallback, requestOptions);    
     }
+
+    static Logout(requestOptions, successfullCallback = () => {}){
+        return SalaryAPIClient.InternalFetch("logout", successfullCallback, requestOptions);    
+    }    
 }
 
 export default SalaryAPIClient;

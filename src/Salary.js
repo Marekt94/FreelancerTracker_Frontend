@@ -22,7 +22,10 @@ const defSalary = {
   pelneNetto : 0,
   doWyplaty : 0,
   doRozdysponowania : 0,
-  zablokowane : false
+  zablokowane : false,
+  brutto : 0,
+  vat : 0,
+  podatek : 0
 }
 
 export function TakeSalary(props){
@@ -126,6 +129,8 @@ export function TakeSalary(props){
       <Edit caption="Dni przepracowane" value={salary.dniPrzepracowanych} name="dniPrzepracowanych" onChange={onChangeEdit}/>
       <Edit caption="Składka zdrowotna" value={salary.skladkaZdrowotna} name="skladkaZdrowotna" onChange={onChangeEdit}/>
       <Edit caption="Składka ZUS" value={salary.zUS} name="zUS" onChange={onChangeEdit}/>  
+      <Edit caption="Podatek" value={salary.podatek} name="podatek" onChange={onChangeEdit}/>
+      <Edit caption="Vat" value={salary.vat} name="vat" onChange={onChangeEdit}/>
       <br/>    
       <Edit caption="Netto" value={salary.netto} name="netto" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" onChange={onChangeEdit}/>

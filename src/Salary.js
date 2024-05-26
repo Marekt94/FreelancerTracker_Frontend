@@ -22,6 +22,7 @@ const defSalary = {
   pelneNetto : 0,
   doWyplaty : 0,
   doRozdysponowania : 0,
+  naUrlopowoChorobowe : 0,
   zablokowane : false,
   brutto : 0,
   vat : 0,
@@ -134,6 +135,7 @@ export function TakeSalary(props){
       <br/>    
       <Edit caption="Netto" value={salary.netto} name="netto" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" onChange={onChangeEdit}/>
+      <Edit caption="Na urlopowo-chorobowe" value={salary.naUrlopowoChorobowe} name="naUrlopowoChorobowe" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" onChange={onChangeEdit}/>
       <button onClick={onZapiszClick}>Zapisz</button>

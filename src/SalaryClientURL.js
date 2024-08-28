@@ -1,6 +1,7 @@
 const PATHS ={
     salaryPath  : "/salary/:id?",
-    salariesPath: "/salaries"
+    salariesPath: "/salaries",
+    login: "/login"
 }; 
 
 export default PATHS;

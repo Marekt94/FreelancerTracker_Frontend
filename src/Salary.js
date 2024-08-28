@@ -5,6 +5,7 @@ import SalaryAPIClient from "./SalaryAPICLient";
 import {MONTHS} from "./Dictionaries";
 import { useParams } from "react-router-dom";
 import { useNavigate, generatePath } from "react-router-dom";
+import { Edit, Combo } from "./MyComponents";
 import PATHS from "./SalaryClientURL";
 
 const defSalary = {
@@ -21,31 +22,11 @@ const defSalary = {
   pelneNetto : 0,
   doWyplaty : 0,
   doRozdysponowania : 0,
-  zablokowane : false
-}
-
-function Edit({caption, value, name, readonly = false, onChange = null}){
-  return(
-    <div>
-        <label>{caption}</label>
-        <input readonly={readonly} name={name} value={value === undefined ? 0 : value} defaultValue={value} onChange={onChange}/>   
-    </div>
-  );
-}
-
-function Combo({caption, value, name, dictionary, defaultValue = null, readonly = false, onChange = null}){
-  let dictPosition = dictionary.find(x => x.id === value); 
-  if (dictPosition === undefined){
-    dictPosition = {id : -1, value : defaultValue}
-  }
-  return(
-    <div style={{flexDirection : "row"}}>
-        <label>{caption}</label>
-        <select value={dictPosition.value} name={name} readonly={readonly} onChange={onChange}>
-          {dictionary.map((slownik) => <option>{slownik.value}</option>)}
-        </select>
-    </div>    
-  );
+  naUrlopowoChorobowe : 0,
+  zablokowane : false,
+  brutto : 0,
+  vat : 0,
+  podatek : 0
 }
 
 export function TakeSalary(props){
@@ -149,9 +130,12 @@ export function TakeSalary(props){
       <Edit caption="Dni przepracowane" value={salary.dniPrzepracowanych} name="dniPrzepracowanych" onChange={onChangeEdit}/>
       <Edit caption="Składka zdrowotna" value={salary.skladkaZdrowotna} name="skladkaZdrowotna" onChange={onChangeEdit}/>
       <Edit caption="Składka ZUS" value={salary.zUS} name="zUS" onChange={onChangeEdit}/>  
+      <Edit caption="Podatek" value={salary.podatek} name="podatek" onChange={onChangeEdit}/>
+      <Edit caption="Vat" value={salary.vat} name="vat" onChange={onChangeEdit}/>
       <br/>    
       <Edit caption="Netto" value={salary.netto} name="netto" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" onChange={onChangeEdit}/>
+      <Edit caption="Na urlopowo-chorobowe" value={salary.naUrlopowoChorobowe} name="naUrlopowoChorobowe" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" onChange={onChangeEdit}/>
       <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" onChange={onChangeEdit}/>
       <button onClick={onZapiszClick}>Zapisz</button>

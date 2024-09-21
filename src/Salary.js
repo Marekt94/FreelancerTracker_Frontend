@@ -7,11 +7,22 @@ import { useParams } from "react-router-dom";
 import { useNavigate, generatePath } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
 import PATHS from "./SalaryClientURL";
+import { defDict } from "./Dictionaries";
 
 const defSalary = {
   id: 0,
   idFormyOpodatkowania: 0,
-  formaOpodatkowania: {},
+  formaOpodatkowania: {
+    id: 0,
+    nazwa: "",
+    wysokoscPodatkuList: [
+      {
+        id: 0,
+        stwka: 0,
+        formaOpodatkowaniaId: 0,
+      },
+    ],
+  },
   miesiac: 0,
   stawka: 0,
   dniRoboczych: 0,
@@ -29,7 +40,11 @@ const defSalary = {
   podatek: 0,
 };
 
-const defDict = [{ id: 0, value: "" }];
+const TASK = {
+  SAVE: "save",
+  EVALUATE: "evaluate",
+  DELETE: "delete",
+};
 
 export function TakeSalary({ children, year }) {
   let params = useParams();
@@ -37,6 +52,8 @@ export function TakeSalary({ children, year }) {
   const [salary, setSalary] = useState(defSalary);
   const [miesiace, setMiesiace] = useState(defDict);
   const [formaOpodatkowania, setFormaOpodatkowania] = useState(defDict);
+  const [task, setTask] = useState(null);
+  const [readyForExecute, setReadyForExecute] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,7 +72,7 @@ export function TakeSalary({ children, year }) {
     const formaOpodatkowania = json.formaOpodatkowania.map((obj) => ({
       id: obj.id,
       value: obj.nazwa,
-      wysokoscPodtku: obj.wysokoscPodatkuList,
+      wysokoscPodatku: obj.wysokoscPodatkuList,
     }));
     id &&
       SalaryAPIClient.GetSalary(id, (obj) => {
@@ -65,6 +82,7 @@ export function TakeSalary({ children, year }) {
           miesiace = [miesiac, ...miesiace];
           miesiace.sort((a, b) => a.id - b.id);
         }
+        // console.log(`miesiac: ${miesiac}, miesiace: ${miesiace}`);
         setMiesiace([defDict, ...miesiace]);
         setFormaOpodatkowania([defDict, ...formaOpodatkowania]);
         setSalary(obj);
@@ -75,12 +93,11 @@ export function TakeSalary({ children, year }) {
     setID(id);
   }
 
-  function onZapiszClick() {
+  function Save() {
     salary.rok = year;
 
     SalaryAPIClient.SaveSalary(salary, (json) => {
       const tempSalary = { ...salary, id: json.id };
-      console.log(tempSalary);
       setSalary(tempSalary);
       setID(json.id);
     });
@@ -116,9 +133,13 @@ export function TakeSalary({ children, year }) {
     const newSalary = {
       ...salary,
       id: id,
-      miesiac: miesiacTemp.id,
-      idFormyOpodatkowania: formaOpodatkowaniaTemp.id,
-      formaOpodatkowania: formaOpodatkowaniaTemp,
+      miesiac: miesiacTemp?.id,
+      idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
+      formaOpodatkowania: {
+        id: formaOpodatkowaniaTemp?.id,
+        nazwa: formaOpodatkowaniaTemp?.value,
+        wysokoscPodatkuList: formaOpodatkowaniaTemp?.wysokoscPodatku,
+      },
       stawka: stawka,
       dniRoboczych: dniRoboczych,
       dniPrzepracowanych: dniPrzepracowanych,
@@ -132,21 +153,40 @@ export function TakeSalary({ children, year }) {
       doWyplaty: doWyplaty,
       doRozdysponowania: doRozdysponowania,
     };
-
-    console.log(newSalary);
     setSalary(newSalary);
+    setReadyForExecute(true);
   }
 
-  function onDeleteCLick() {
+  function DeleteSalary() {
     SalaryAPIClient.DeleteSalary(salary.id, () =>
       navigate(generatePath(PATHS.salariesPath, { year: year }))
     );
   }
 
-  function onEvaluateClick() {
+  function Evaluate() {
     SalaryAPIClient.Evaluate(salary, (json) => {
       setSalary(json);
     });
+  }
+
+  function ExecuteTask() {
+    setReadyForExecute(false);
+    switch (task) {
+      case TASK.DELETE:
+        console.log("delete");
+        DeleteSalary();
+        return 0;
+      case TASK.EVALUATE:
+        console.log("evaluate");
+        Evaluate();
+        return 0;
+      case TASK.SAVE:
+        console.log("save");
+        Save();
+        return 0;
+      default:
+        return 0;
+    }
   }
 
   return (
@@ -161,6 +201,12 @@ export function TakeSalary({ children, year }) {
           dictionary={miesiace}
           defaultValue={0}
           readonly="true"
+          onChange={(e) => {
+            setSalary({
+              ...salary,
+              miesiac: miesiace.find((obj) => obj.value === e.target.value)?.id,
+            });
+          }}
         />
         <Edit
           caption="Stawka godzinowa netto"
@@ -178,6 +224,17 @@ export function TakeSalary({ children, year }) {
           name="idFormyOpodatkowania"
           dictionary={formaOpodatkowania}
           defaultValue={0}
+          onChange={(e) => {
+            const formaOpodatkowaniaTemp = formaOpodatkowania.find(
+              (obj) => obj.value === e.target.value
+            );
+
+            setSalary({
+              ...salary,
+              idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
+              formaOpodatkowania: formaOpodatkowaniaTemp,
+            });
+          }}
         />
         <Edit
           caption="Dni przepracowane"
@@ -223,17 +280,18 @@ export function TakeSalary({ children, year }) {
           name="doRozdysponowania"
           readonly="true"
         />
-        <button type="submit" onClick={onZapiszClick}>
+        <button type="submit" onClick={() => setTask(TASK.SAVE)}>
           Zapisz
         </button>
-        <button type="submit" onClick={onEvaluateClick}>
+        <button type="submit" onClick={() => setTask(TASK.EVALUATE)}>
           Oblicz
         </button>
         {id && (
-          <button type="submit" onClick={onDeleteCLick}>
+          <button type="submit" onClick={() => setTask(TASK.DELETE)}>
             Usuń
           </button>
         )}
+        {readyForExecute && ExecuteTask()}
       </form>
     </>
   );

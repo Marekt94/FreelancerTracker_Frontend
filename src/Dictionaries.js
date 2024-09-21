@@ -12,3 +12,5 @@ export const MONTHS = [
   { id: 11, value: "listopad" },
   { id: 12, value: "grudzień" },
 ];
+
+export const defDict = [{ id: 0, value: "" }];

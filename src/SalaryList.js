@@ -14,6 +14,7 @@ function SalaryList(props) {
   useEffect(() => {
     console.log("useEffect in Salaries");
     SalaryAPIClient.GetSalaries(year, (obj) => {
+      console.log(obj);
       setSalaries(obj);
     });
   }, [year]);
@@ -27,20 +28,19 @@ function SalaryList(props) {
     );
   }
 
+  function createSalaryList(json) {
+    let salary = json.sort((x, y) => x.miesiac - y.miesiac);
+    return salary.map((obj) => (
+      <ul id={obj.id} onClick={onEditClick} key={obj.id}>
+        {MONTHS.find((element) => element.id === obj.miesiac).value}: stawka
+        godzinowa - {obj.stawka}, netto = {obj.netto}
+      </ul>
+    ));
+  }
+
   function updateSalaries(json) {
-    return json ? (
-      () => {
-        let salary = json.sort((x, y) => x.miesiac - y.miesiac);
-        return salary.map((obj) => (
-          <ul id={obj.id} onClick={onEditClick} key={obj.id}>
-            {MONTHS.find((element) => element.id === obj.miesiac).value}: stawka
-            godzinowa - {obj.stawka}, netto = {obj.netto}
-          </ul>
-        ));
-      }
-    ) : (
-      <></>
-    );
+    console.log(`json: ${json}`);
+    return json ? createSalaryList(json) : <></>;
   }
 
   return (

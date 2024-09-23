@@ -82,7 +82,6 @@ export function TakeSalary({ children, year }) {
           miesiace = [miesiac, ...miesiace];
           miesiace.sort((a, b) => a.id - b.id);
         }
-        // console.log(`miesiac: ${miesiac}, miesiace: ${miesiace}`);
         setMiesiace([defDict, ...miesiace]);
         setFormaOpodatkowania([defDict, ...formaOpodatkowania]);
         setSalary(obj);
@@ -298,10 +297,3 @@ export function TakeSalary({ children, year }) {
 }
 
 export default TakeSalary;
-
-/*
-TODO:
-+przerobić wszystkie onChange, żeby wartości się przepisywały przy submit, onSubmit bedzie dla evalute i dla save, bo wykonuje sie przed onClick, onSave, onEvaluate zostanie
-
-- wynieść default salary gdzieś wyżej i przekazywać jako parametr, żeby nie było pobierane za każdym razem
-*/

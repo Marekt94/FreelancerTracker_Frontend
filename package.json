@@ -7,6 +7,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "bcryptjs": "^2.4.3",
+    "json-server": "^1.0.0-beta.3",
     "react": "^18.2.0",
     "react-cookie": "^7.0.0",
     "react-dom": "^18.2.0",
@@ -16,9 +17,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "cross-env BROWSER='none' react-scripts start",
+    "start:browser": "start chrome.exe --disable-web-security --disable-gpu --user-data-dir=C:\\Users\\marek\\AppData\\Local\\Google\\chromeTemp http://localhost:3000/",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "fake-server": "json-server -p 8080 -h www.localhost fake_api/fake_api.json"
   },
   "eslintConfig": {
     "extends": "react-app",

@@ -8,6 +8,7 @@ import { useNavigate, generatePath } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
 import PATHS from "./SalaryClientURL";
 import { defDict } from "./Dictionaries";
+import { useSalary } from "./useSalary";
 
 const defSalary = {
   id: 0,
@@ -54,14 +55,20 @@ export function TakeSalary({ children, year }) {
   const [formaOpodatkowania, setFormaOpodatkowania] = useState(defDict);
   const [task, setTask] = useState(null);
   const [readyForExecute, setReadyForExecute] = useState(null);
+  const {getSalary} = useSalary();
   const navigate = useNavigate();
 
   useEffect(() => {
     const id = params.id;
-    console.log("useEffect w take salary");
-    SalaryAPIClient.GetDataForNewSalary(year, (obj) => {
-      InitSalary(obj, id);
-    });
+    async function fetchSalary(){
+      const data = await getSalary(params.id);
+      console.log(data);
+    }
+    // console.log("useEffect w take salary");
+    // SalaryAPIClient.GetDataForNewSalary(year, (obj) => {
+    //   InitSalary(obj, id);
+    // });
+    fetchSalary();
   }, [year, params.id]);
 
   function InitSalary(json, id) {

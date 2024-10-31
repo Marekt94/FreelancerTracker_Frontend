@@ -5,18 +5,28 @@ import "./SalaryAPICLient";
 import { useNavigate, generatePath } from "react-router-dom";
 import PATHS from "./SalaryClientURL";
 import SalaryAPIClient from "./SalaryAPICLient";
+import { useSalary } from "./useSalary";
 
 function SalaryList(props) {
   const year = props.year;
   const [salaries, setSalaries] = useState(undefined);
   const navigate = useNavigate();
+  const {getSalaries} = useSalary();
 
   useEffect(() => {
     console.log("useEffect in Salaries");
-    SalaryAPIClient.GetSalaries(year, (obj) => {
-      console.log(obj);
-      setSalaries(obj);
-    });
+    async function fetchSalaries(){
+      const temp = await getSalaries([
+        {name: 'year',
+         value: year
+        }]);
+      setSalaries(temp);
+    }
+    // SalaryAPIClient.GetSalaries(year, (obj) => {
+    //   console.log(obj);
+    //   setSalaries(obj);
+    // });
+    fetchSalaries();
   }, [year]);
 
   function onEditClick(event) {

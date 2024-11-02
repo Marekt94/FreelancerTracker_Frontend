@@ -51,11 +51,14 @@ const initialState = {
   salary: defSalary,
   miesiace: defDict,
   formaOpodatkowania: defDict,
+  task: null,
+  readyToExecute: false,
 }
 
 function reducer(state, action){
   switch (action.type){
     case "init":
+      console.log("init")
       const miesiace = action.payload.dataForNewSalary.miesiace.map((obj) => ({
         id: obj.iD,
         value: obj.monthName,
@@ -68,9 +71,27 @@ function reducer(state, action){
       }));
       
       return {...state, salary: action.payload.salary, miesiace: miesiace, formaOpodatkowania: formaOpodatkowania};
+
     case "setSalary":{
+      console.log("setSalary")
       return{...state, salary: action.payload};
     }
+
+    case "setTask":{
+      console.log("task set")
+      return {...state, task: action.payload};
+    }
+
+    case "submit":{
+      console.log("submit");
+      return {...state, readyToExecute: true, salary: action.payload};
+    }
+
+    case "afterSubmit":{
+      console.log("afterSubmit");
+      return{...state, readyToExecute: false}
+    }
+
     default:
       throw Error('Unknown action');
   }
@@ -78,10 +99,8 @@ function reducer(state, action){
 
 export function TakeSalary({ children, year }) {
   let params = useParams();
-  const [{salary, formaOpodatkowania, miesiace}, dispatch] = useReducer(reducer, initialState);
+  const [{salary, formaOpodatkowania, miesiace, task, readyToExecute}, dispatch] = useReducer(reducer, initialState);
   const [id, setID] = useState(useParams().id);
-  const [task, setTask] = useState(null);
-  const [readyForExecute, setReadyForExecute] = useState(null);
   const {getSalary, getDataForNewSalary} = useSalary();
   const navigate = useNavigate();
 
@@ -114,6 +133,31 @@ export function TakeSalary({ children, year }) {
     fetchData();
   }, [year, params.id]);
 
+  useEffect(()=>{
+    function execute(){
+      if (readyToExecute){
+        switch (task) {
+          case TASK.DELETE:
+            console.log("delete");
+            dispatch({type: "afterSubmit"});
+            return 0;
+          case TASK.EVALUATE:
+            console.log("evaluate");
+            dispatch({type: "afterSubmit"});
+            return 0;
+          case TASK.SAVE:
+            console.log("save");
+            dispatch({type: "afterSubmit"});
+            return 0;
+          default:
+            return 0;
+        }
+      }
+    }
+    
+    execute();
+  }, [readyToExecute])
+
   function Save() {
     salary.rok = year;
 
@@ -126,7 +170,7 @@ export function TakeSalary({ children, year }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log("handleSubmit");
+    console.log("handleSubmit " + task);
 
     const formData = new FormData(e.target);
 
@@ -174,41 +218,20 @@ export function TakeSalary({ children, year }) {
       doWyplaty: doWyplaty,
       doRozdysponowania: doRozdysponowania,
     };
-    dispatch({type: "setSalary", payload:newSalary});
-    setReadyForExecute(true);
+    dispatch({type: "submit", payload: newSalary});
   }
 
-  function DeleteSalary() {
-    SalaryAPIClient.DeleteSalary(salary.id, () =>
-      navigate(generatePath(PATHS.salariesPath, { year: year }))
-    );
-  }
+  // function DeleteSalary() {
+  //   SalaryAPIClient.DeleteSalary(salary.id, () =>
+  //     navigate(generatePath(PATHS.salariesPath, { year: year }))
+  //   );
+  // }
 
-  function Evaluate() {
-    SalaryAPIClient.Evaluate(salary, (json) => {
-      dispatch({type: "setSalary", payload: json})
-    });
-  }
-
-  function ExecuteTask() {
-    setReadyForExecute(false);
-    switch (task) {
-      case TASK.DELETE:
-        console.log("delete");
-        DeleteSalary();
-        return 0;
-      case TASK.EVALUATE:
-        console.log("evaluate");
-        Evaluate();
-        return 0;
-      case TASK.SAVE:
-        console.log("save");
-        Save();
-        return 0;
-      default:
-        return 0;
-    }
-  }
+  // function Evaluate() {
+  //   SalaryAPIClient.Evaluate(salary, (json) => {
+  //     dispatch({type: "setSalary", payload: json})
+  //   });
+  // }
 
   return (
     <>
@@ -222,7 +245,8 @@ export function TakeSalary({ children, year }) {
           dictionary={miesiace}
           defaultValue={0}
           readonly="true"
-          onChange={(e) => {
+          onChange={
+            (e) => {
             dispatch({type: "setSalary", payload: {
               ...salary,
               miesiac: miesiace.find((obj) => obj.value === e.target.value)?.id,
@@ -301,18 +325,18 @@ export function TakeSalary({ children, year }) {
           name="doRozdysponowania"
           readonly="true"
         />
-        <button type="submit" onClick={() => setTask(TASK.SAVE)}>
+        <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.SAVE})/*setTask(TASK.SAVE)*/}>
           Zapisz
         </button>
-        <button type="submit" onClick={() => setTask(TASK.EVALUATE)}>
+        <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.EVALUATE})/*setTask(TASK.EVALUATE)*/}>
           Oblicz
         </button>
         {id && (
-          <button type="submit" onClick={() => setTask(TASK.DELETE)}>
+          <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.DELETE})/*setTask(TASK.DELETE)*/}>
             Usuń
           </button>
         )}
-        {readyForExecute && ExecuteTask()}
+        {/* {readyForExecute && ExecuteTask()} */}
       </form>
     </>
   );

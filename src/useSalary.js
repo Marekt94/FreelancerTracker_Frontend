@@ -39,5 +39,17 @@ export function useSalary(){
     return data;
   }
 
+  async function saveSalary(salary){
+    const requestOptions = {
+      method: "POST",
+      body: JSON.stringify(salary),
+    };
+    const URL = SERVER_ADRESS + "save_salary";
+    console.log(URL);
+    const res = await fetch(URL);
+    const data = await res.json();
+    return data;   
+  }
+
   return {getSalaries, getSalary, getDataForNewSalary};
 }

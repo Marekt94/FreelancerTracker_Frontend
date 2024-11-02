@@ -16,10 +16,13 @@ function SalaryList(props) {
   useEffect(() => {
     console.log("useEffect in Salaries");
     async function fetchSalaries(){
-      const temp = await getSalaries([
+      const params = 
+      [
         {name: 'year',
          value: year
-        }]);
+        }
+      ]; 
+      const temp = await getSalaries(params);
       setSalaries(temp);
     }
     // SalaryAPIClient.GetSalaries(year, (obj) => {

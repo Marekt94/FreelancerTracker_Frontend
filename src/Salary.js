@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import "./index.css";
 import "./SalaryAPICLient";
 import SalaryAPIClient from "./SalaryAPICLient";
@@ -47,64 +47,79 @@ const TASK = {
   DELETE: "delete",
 };
 
+const initialState = {
+  salary: defSalary,
+  miesiace: defDict,
+  formaOpodatkowania: defDict,
+}
+
+function reducer(state, action){
+  switch (action.type){
+    case "init":
+      const miesiace = action.payload.dataForNewSalary.miesiace.map((obj) => ({
+        id: obj.iD,
+        value: obj.monthName,
+      }));      
+
+      const formaOpodatkowania = action.payload.dataForNewSalary.formaOpodatkowania.map((obj) => ({
+        id: obj.id,
+        value: obj.nazwa,
+        wysokoscPodatku: obj.wysokoscPodatkuList,
+      }));
+      
+      return {...state, salary: action.payload.salary, miesiace: miesiace, formaOpodatkowania: formaOpodatkowania};
+    case "setSalary":{
+      return{...state, salary: action.payload};
+    }
+    default:
+      throw Error('Unknown action');
+  }
+}
+
 export function TakeSalary({ children, year }) {
   let params = useParams();
+  const [{salary, formaOpodatkowania, miesiace}, dispatch] = useReducer(reducer, initialState);
   const [id, setID] = useState(useParams().id);
-  const [salary, setSalary] = useState(defSalary);
-  const [miesiace, setMiesiace] = useState(defDict);
-  const [formaOpodatkowania, setFormaOpodatkowania] = useState(defDict);
   const [task, setTask] = useState(null);
   const [readyForExecute, setReadyForExecute] = useState(null);
-  const {getSalary} = useSalary();
+  const {getSalary, getDataForNewSalary} = useSalary();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const id = params.id;
-    async function fetchSalary(){
-      const data = await getSalary(params.id);
-      console.log(data);
-    }
-    // console.log("useEffect w take salary");
-    // SalaryAPIClient.GetDataForNewSalary(year, (obj) => {
-    //   InitSalary(obj, id);
-    // });
-    fetchSalary();
-  }, [year, params.id]);
+    const id = 2023;
+    
+    async function fetchSalary(id){
+      const data = await getSalary(id);
+      return data;
+    };
 
-  function InitSalary(json, id) {
-    let miesiace = json.miesiace.map((obj) => ({
-      id: obj.iD,
-      value: obj.monthName,
-    }));
-    const formaOpodatkowania = json.formaOpodatkowania.map((obj) => ({
-      id: obj.id,
-      value: obj.nazwa,
-      wysokoscPodatku: obj.wysokoscPodatkuList,
-    }));
-    id &&
-      SalaryAPIClient.GetSalary(id, (obj) => {
-        let miesiac = miesiace.find((x) => x.id === obj.miesiac);
-        if (miesiac === undefined) {
-          miesiac = MONTHS.find((x) => x.id === obj.miesiac);
-          miesiace = [miesiac, ...miesiace];
-          miesiace.sort((a, b) => a.id - b.id);
+    async function fetchDataForNewSalary(year){
+      const data = await getDataForNewSalary(year);
+      return data;
+    }
+
+    async function fetchData(){
+      const dataForNewSalary = await fetchDataForNewSalary(year);
+      const salary = await fetchSalary(id);
+      const action = {
+        type: "init", 
+        payload:{
+          salary: salary,
+          dataForNewSalary: dataForNewSalary,
         }
-        setMiesiace([defDict, ...miesiace]);
-        setFormaOpodatkowania([defDict, ...formaOpodatkowania]);
-        setSalary(obj);
-      });
-    setMiesiace([defDict, ...miesiace]);
-    setFormaOpodatkowania([defDict, ...formaOpodatkowania]);
-    setSalary(defSalary);
-    setID(id);
-  }
+      };
+      dispatch(action);
+    }
+
+    fetchData();
+  }, [year, params.id]);
 
   function Save() {
     salary.rok = year;
 
     SalaryAPIClient.SaveSalary(salary, (json) => {
       const tempSalary = { ...salary, id: json.id };
-      setSalary(tempSalary);
+      dispatch({type: "setSalary", payload: tempSalary});
       setID(json.id);
     });
   }
@@ -159,7 +174,7 @@ export function TakeSalary({ children, year }) {
       doWyplaty: doWyplaty,
       doRozdysponowania: doRozdysponowania,
     };
-    setSalary(newSalary);
+    dispatch({type: "setSalary", payload:newSalary});
     setReadyForExecute(true);
   }
 
@@ -171,7 +186,7 @@ export function TakeSalary({ children, year }) {
 
   function Evaluate() {
     SalaryAPIClient.Evaluate(salary, (json) => {
-      setSalary(json);
+      dispatch({type: "setSalary", payload: json})
     });
   }
 
@@ -208,10 +223,10 @@ export function TakeSalary({ children, year }) {
           defaultValue={0}
           readonly="true"
           onChange={(e) => {
-            setSalary({
+            dispatch({type: "setSalary", payload: {
               ...salary,
               miesiac: miesiace.find((obj) => obj.value === e.target.value)?.id,
-            });
+            }});
           }}
         />
         <Edit
@@ -235,11 +250,11 @@ export function TakeSalary({ children, year }) {
               (obj) => obj.value === e.target.value
             );
 
-            setSalary({
+            dispatch({type:"setSalary", payload:{
               ...salary,
               idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
               formaOpodatkowania: formaOpodatkowaniaTemp,
-            });
+            }});
           }}
         />
         <Edit

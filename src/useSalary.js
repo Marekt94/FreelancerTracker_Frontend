@@ -18,10 +18,10 @@ export function useSalary(){
 
   async function getSalary(id){
     //NEW
-    // const URL = SERVER_ADRESS + "/salaries" + (id ? `/${id}` : '');
+    const URL = SERVER_ADRESS + "/salaries" + (id ? `/${id}` : '');
     //OLD
-    const URL = SERVER_ADRESS + "/salary" + (id ? `/${id}` : '');
-    //zmienić na stare dopóki nie zmienie backendu
+    // const URL = SERVER_ADRESS + "/salary" + (id ? `/${id}` : '');
+    // zmienić na stare dopóki nie zmienie backendu
     console.log(URL);
     const res = await fetch(URL);
     const data = await res.json();
@@ -51,5 +51,25 @@ export function useSalary(){
     return data;   
   }
 
-  return {getSalaries, getSalary, getDataForNewSalary};
+  async function evaluate(salary){
+    const requestOptions = {
+      method: "POST",
+      body: JSON.stringify(salary),
+    };
+    const URL = SERVER_ADRESS + "evaluate";
+    console.log(URL);
+    const res = await fetch(URL);
+    const data = await res.json();
+    return data;       
+  }
+
+  async function deleteSalary(id){
+    const URL = SERVER_ADRESS + "delete_salary" + `/${id}`;
+    console.log(URL);
+    const res = await fetch(URL);
+    const data = await res.json();
+    return data;      
+  }
+
+  return {getSalaries, getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary};
 }

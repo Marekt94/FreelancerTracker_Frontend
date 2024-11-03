@@ -73,7 +73,7 @@ function reducer(state, action){
       return {...state, salary: action.payload.salary, miesiace: miesiace, formaOpodatkowania: formaOpodatkowania};
 
     case "setSalary":{
-      console.log("setSalary")
+      console.log("setSalary" + " " + JSON.stringify(action.payload));
       return{...state, salary: action.payload};
     }
 
@@ -99,13 +99,14 @@ function reducer(state, action){
 
 export function TakeSalary({ children, year }) {
   let params = useParams();
+  year = "1";
   const [{salary, formaOpodatkowania, miesiace, task, readyToExecute}, dispatch] = useReducer(reducer, initialState);
   const [id, setID] = useState(useParams().id);
-  const {getSalary, getDataForNewSalary} = useSalary();
+  const {getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary} = useSalary();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const id = 2023;
+    const id = year;
     
     async function fetchSalary(id){
       const data = await getSalary(id);
@@ -139,14 +140,17 @@ export function TakeSalary({ children, year }) {
         switch (task) {
           case TASK.DELETE:
             console.log("delete");
+            DeleteSalary();
             dispatch({type: "afterSubmit"});
             return 0;
           case TASK.EVALUATE:
             console.log("evaluate");
+            Evaluate();
             dispatch({type: "afterSubmit"});
             return 0;
           case TASK.SAVE:
             console.log("save");
+            Save();
             dispatch({type: "afterSubmit"});
             return 0;
           default:
@@ -158,14 +162,10 @@ export function TakeSalary({ children, year }) {
     execute();
   }, [readyToExecute])
 
-  function Save() {
-    salary.rok = year;
-
-    SalaryAPIClient.SaveSalary(salary, (json) => {
-      const tempSalary = { ...salary, id: json.id };
-      dispatch({type: "setSalary", payload: tempSalary});
-      setID(json.id);
-    });
+  async function Save() {
+    salary.rok = year
+    const data = await saveSalary(salary);
+    dispatch({type: "setSalary", payload: {...salary, id: data.id}});
   }
 
   function handleSubmit(e) {
@@ -221,17 +221,15 @@ export function TakeSalary({ children, year }) {
     dispatch({type: "submit", payload: newSalary});
   }
 
-  // function DeleteSalary() {
-  //   SalaryAPIClient.DeleteSalary(salary.id, () =>
-  //     navigate(generatePath(PATHS.salariesPath, { year: year }))
-  //   );
-  // }
+  async function DeleteSalary() {
+    await deleteSalary();
+    navigate(PATHS.salariesPath);
+  }
 
-  // function Evaluate() {
-  //   SalaryAPIClient.Evaluate(salary, (json) => {
-  //     dispatch({type: "setSalary", payload: json})
-  //   });
-  // }
+  async function Evaluate() {
+    const data = await evaluate(salary);
+    dispatch({type: "setSalary", payload: data});
+  }
 
   return (
     <>
@@ -325,18 +323,17 @@ export function TakeSalary({ children, year }) {
           name="doRozdysponowania"
           readonly="true"
         />
-        <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.SAVE})/*setTask(TASK.SAVE)*/}>
+        <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.SAVE})}>
           Zapisz
         </button>
-        <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.EVALUATE})/*setTask(TASK.EVALUATE)*/}>
+        <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.EVALUATE})}>
           Oblicz
         </button>
         {id && (
-          <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.DELETE})/*setTask(TASK.DELETE)*/}>
+          <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.DELETE})}>
             Usuń
           </button>
         )}
-        {/* {readyForExecute && ExecuteTask()} */}
       </form>
     </>
   );

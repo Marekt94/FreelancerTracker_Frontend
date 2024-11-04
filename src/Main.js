@@ -13,11 +13,11 @@ function Sidebar() {
 
   return (
     <ol>
-      <ul onClick={() => navigate(generatePath(PATHS.login))}>Logowanie</ul>
-      <ul onClick={() => navigate(generatePath(PATHS.salariesPath))}>
+      <ul onClick={() => navigate(PATHS.login)}>Logowanie</ul>
+      <ul onClick={() => navigate(PATHS.salariesPath)}>
         Wróć do listy odcinków
       </ul>
-      <ul onClick={() => navigate(generatePath(PATHS.salaryPath))}>Dodaj</ul>
+      <ul onClick={() => navigate(PATHS.salaryPath)}>Dodaj</ul>
     </ol>
   );
 }

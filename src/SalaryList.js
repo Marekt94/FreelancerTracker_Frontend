@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { MONTHS } from "./Dictionaries";
-import "./SalaryAPICLient";
 import { useNavigate, generatePath } from "react-router-dom";
-import PATHS from "./SalaryClientURL";
-import SalaryAPIClient from "./SalaryAPICLient";
 import { useSalary } from "./useSalary";
+import PATHS from "./SalaryClientURL";
 
 function SalaryList(props) {
   const year = props.year;
@@ -25,10 +23,7 @@ function SalaryList(props) {
       const temp = await getSalaries(params);
       setSalaries(temp);
     }
-    // SalaryAPIClient.GetSalaries(year, (obj) => {
-    //   console.log(obj);
-    //   setSalaries(obj);
-    // });
+
     fetchSalaries();
   }, [year]);
 

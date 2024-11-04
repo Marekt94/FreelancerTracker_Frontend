@@ -1,8 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
 import "./index.css";
-import "./SalaryAPICLient";
-import SalaryAPIClient from "./SalaryAPICLient";
-import { MONTHS } from "./Dictionaries";
 import { useParams } from "react-router-dom";
 import { useNavigate, generatePath } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
@@ -11,7 +8,7 @@ import { defDict } from "./Dictionaries";
 import { useSalary } from "./useSalary";
 
 const defSalary = {
-  id: 0,
+  id: null,
   idFormyOpodatkowania: 0,
   formaOpodatkowania: {
     id: 0,
@@ -98,16 +95,12 @@ function reducer(state, action){
 }
 
 export function TakeSalary({ children, year }) {
-  let params = useParams();
-  year = "1";
+  const initID = useParams().id;
   const [{salary, formaOpodatkowania, miesiace, task, readyToExecute}, dispatch] = useReducer(reducer, initialState);
-  const [id, setID] = useState(useParams().id);
   const {getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary} = useSalary();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const id = year;
-    
     async function fetchSalary(id){
       const data = await getSalary(id);
       return data;
@@ -118,9 +111,9 @@ export function TakeSalary({ children, year }) {
       return data;
     }
 
-    async function fetchData(){
-      const dataForNewSalary = await fetchDataForNewSalary(year);
-      const salary = await fetchSalary(id);
+    async function fetchData(id){
+      const dataForNewSalary =  await fetchDataForNewSalary(year);
+      const salary = id ? await fetchSalary(id) : defSalary;
       const action = {
         type: "init", 
         payload:{
@@ -130,9 +123,9 @@ export function TakeSalary({ children, year }) {
       };
       dispatch(action);
     }
-
-    fetchData();
-  }, [year, params.id]);
+     
+    fetchData(initID);
+  }, [year, initID]);
 
   useEffect(()=>{
     function execute(){
@@ -140,7 +133,7 @@ export function TakeSalary({ children, year }) {
         switch (task) {
           case TASK.DELETE:
             console.log("delete");
-            DeleteSalary();
+            DeleteSalary(salary.id);
             dispatch({type: "afterSubmit"});
             return 0;
           case TASK.EVALUATE:
@@ -160,7 +153,18 @@ export function TakeSalary({ children, year }) {
     }
     
     execute();
-  }, [readyToExecute])
+  }, [readyToExecute, task, salary.id])
+
+
+  async function DeleteSalary(id) {
+    await deleteSalary(id);
+    navigate(PATHS.salariesPath);
+  }
+
+  async function Evaluate() {
+    const data = await evaluate(salary);
+    dispatch({type: "setSalary", payload: data});
+  }
 
   async function Save() {
     salary.rok = year
@@ -221,21 +225,11 @@ export function TakeSalary({ children, year }) {
     dispatch({type: "submit", payload: newSalary});
   }
 
-  async function DeleteSalary() {
-    await deleteSalary();
-    navigate(PATHS.salariesPath);
-  }
-
-  async function Evaluate() {
-    const data = await evaluate(salary);
-    dispatch({type: "setSalary", payload: data});
-  }
-
   return (
     <>
       {children}
       <form onSubmit={handleSubmit}>
-        <Edit caption="Id" value={id} name="id" readonly="true" />
+        <Edit caption="Id" value={salary.id} name="id" readonly="true" />
         <Combo
           caption="Miesiąc"
           value={salary.miesiac}
@@ -329,7 +323,7 @@ export function TakeSalary({ children, year }) {
         <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.EVALUATE})}>
           Oblicz
         </button>
-        {id && (
+        {salary.id && (
           <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.DELETE})}>
             Usuń
           </button>

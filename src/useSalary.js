@@ -5,6 +5,8 @@ function createQueryString(paramsList){
   return '?' + paramsList.map((param) => `${param.name}=${param.value}`).join('&'); 
 }
 
+//TODO - dorobić wersjonowanie API
+
 export function useSalary(){
   async function getSalaries(params){
     const paramsString = createQueryString(params);
@@ -69,31 +71,6 @@ export function useSalary(){
     const res = await fetch(URL);
     const data = await res.json();
     return data;      
-  }
-
-  async function login({login, password}){
-    const URL = SERVER_ADRESS + "login";
-
-    const requestOptions = {
-      method: "POST",
-      body: JSON.stringify({ username: login, password: password }),
-    };
-
-    const res = await fetch(URL);
-    const data = await res.json();
-    return data;
-  }
-
-  async function logout(){
-    const URL = SERVER_ADRESS + "logout";
-
-    const requestOptions = {
-      method: "DELETE",
-    };
-
-    const res = await fetch(URL);
-    const data = await res.json();
-    return data;
   }
 
   return {getSalaries, getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary, login, logout};

@@ -41,6 +41,7 @@ export default function Login() {
       <Edit
         caption="Hasło"
         name="haslo"
+        //TODO - whenUndefined? zastanowić się, czy potrzebne
         whenUndefined=""
         password="true"
       />

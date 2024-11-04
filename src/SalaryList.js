@@ -28,6 +28,7 @@ function SalaryList(props) {
   }, [year]);
 
   function onEditClick(event) {
+    //TODO - usunąć navigate, poprawić ścieżkę, wyodrębnić ścieżki do API i ścieżki dla Routes
     navigate(
       generatePath(PATHS.salaryPath, {
         year: year,

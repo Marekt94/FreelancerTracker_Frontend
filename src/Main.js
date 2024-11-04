@@ -12,6 +12,7 @@ function Sidebar() {
   const navigate = useNavigate();
 
   return (
+    //TODO - change to <NavLink>
     <ol>
       <ul onClick={() => navigate(PATHS.login)}>Logowanie</ul>
       <ul onClick={() => navigate(PATHS.salariesPath)}>

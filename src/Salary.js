@@ -7,6 +7,7 @@ import PATHS from "./SalaryClientURL";
 import { defDict } from "./Dictionaries";
 import { useSalary } from "./useSalary";
 
+// TODO - może trzeba do sobnego pliku?
 const defSalary = {
   id: null,
   idFormyOpodatkowania: 0,

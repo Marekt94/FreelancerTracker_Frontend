@@ -36,13 +36,10 @@ export default function Login() {
       <Edit
         caption="Login"
         name="login"
-        whenUndefined=""
       />
       <Edit
         caption="Hasło"
         name="haslo"
-        //TODO - whenUndefined? zastanowić się, czy potrzebne
-        whenUndefined=""
         password="true"
       />
       <button type="submit">{authorized ? "Wyloguj" : "Zaloguj"}</button>

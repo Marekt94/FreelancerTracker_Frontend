@@ -3,7 +3,7 @@ import "./index.css";
 import { MONTHS } from "./Dictionaries";
 import { useNavigate, generatePath } from "react-router-dom";
 import { useSalary } from "./useSalary";
-import PATHS from "./SalaryClientURL";
+import {BACKEND_PATHS} from "./SalaryClientURL";
 
 function SalaryList(props) {
   const year = props.year;
@@ -28,13 +28,8 @@ function SalaryList(props) {
   }, [year]);
 
   function onEditClick(event) {
-    //TODO - usunąć navigate, poprawić ścieżkę, wyodrębnić ścieżki do API i ścieżki dla Routes
-    navigate(
-      generatePath(PATHS.salaryPath, {
-        year: year,
-        id: event.target.getAttribute("id"),
-      })
-    );
+    const id = event.target.getAttribute("id");
+    id ? navigate(`${BACKEND_PATHS.salaryPath}/${id}`) : navigate(`${BACKEND_PATHS.salaryPath}`);
   }
 
   function createSalaryList(json) {

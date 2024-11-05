@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SalaryList from "./SalaryList";
 import TakeSalary from "./Salary";
 import "./index.css";
-import PATHS from "./SalaryClientURL";
+import {FRONTEND_PATHS} from "./SalaryClientURL";
 import { Routes, Route, generatePath, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import { CookiesProvider } from "react-cookie";
@@ -12,13 +12,13 @@ function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    //TODO - change to <NavLink>
+    //TODO - change to <NavLink> - nie da się, nieskończona pętla
     <ol>
-      <ul onClick={() => navigate(PATHS.login)}>Logowanie</ul>
-      <ul onClick={() => navigate(PATHS.salariesPath)}>
+      <ul onClick={() => navigate(FRONTEND_PATHS.login)}>Logowanie</ul>
+      <ul onClick={() => navigate(FRONTEND_PATHS.salariesPath)}>
         Wróć do listy odcinków
       </ul>
-      <ul onClick={() => navigate(PATHS.salaryPath)}>Dodaj</ul>
+      <ul onClick={() => navigate(FRONTEND_PATHS.newSalaryPath)}>Dodaj</ul>
     </ol>
   );
 }
@@ -34,7 +34,7 @@ function Content() {
     <CookiesProvider>
       <Routes>
         <Route
-          path={PATHS.salariesPath}
+          path={FRONTEND_PATHS.salariesPath}
           element={
             <SalaryList year={year}>
               <YearSelector
@@ -45,7 +45,7 @@ function Content() {
           }
         />
         <Route
-          path={PATHS.salaryPath}
+          path={FRONTEND_PATHS.salaryPath}
           element={
             <TakeSalary year={year}>
               <YearSelector
@@ -55,7 +55,18 @@ function Content() {
             </TakeSalary>
           }
         />
-        <Route path={PATHS.login} element={<Login />} />
+        <Route
+          path={FRONTEND_PATHS.newSalaryPath}
+          element={
+            <TakeSalary year={year}>
+              <YearSelector
+                currentYear={year}
+                onYearChange={handleYearChange}
+              />
+            </TakeSalary>
+          }
+        />        
+        <Route path={FRONTEND_PATHS.login} element={<Login />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </CookiesProvider>

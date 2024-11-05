@@ -3,7 +3,7 @@ import "./index.css";
 import { useParams } from "react-router-dom";
 import { useNavigate, generatePath } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
-import PATHS from "./SalaryClientURL";
+import {BACKEND_PATHS} from "./SalaryClientURL";
 import { defDict } from "./Dictionaries";
 import { useSalary } from "./useSalary";
 
@@ -159,7 +159,7 @@ export function TakeSalary({ children, year }) {
 
   async function DeleteSalary(id) {
     await deleteSalary(id);
-    navigate(PATHS.salariesPath);
+    navigate(BACKEND_PATHS.salariesPath);
   }
 
   async function Evaluate() {

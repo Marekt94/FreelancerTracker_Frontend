@@ -73,5 +73,5 @@ export function useSalary(){
     return data;      
   }
 
-  return {getSalaries, getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary, login, logout};
+  return {getSalaries, getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary};
 }

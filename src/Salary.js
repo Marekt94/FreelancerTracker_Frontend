@@ -47,6 +47,14 @@ const TASK = {
   DELETE: "delete",
 };
 
+const ACTION_TYPE = {
+  INIT: "init",
+  SET_SALARY: "setSalary",
+  SET_TASK: "setTask",
+  SUBMIT: "submit",
+  AFTER_SUBMIT: "afterSubmit",
+};
+
 const initialState = {
   salary: defSalary,
   miesiace: defDict,
@@ -57,8 +65,7 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    case "init":
-      console.log("init");
+    case ACTION_TYPE.INIT:
       let miesiace = action.payload.dataForNewSalary.miesiace.map((obj) => ({
         id: obj.iD,
         value: obj.monthName,
@@ -88,23 +95,19 @@ function reducer(state, action) {
         formaOpodatkowania: formaOpodatkowania,
       };
 
-    case "setSalary": {
-      console.log("setSalary" + " " + JSON.stringify(action.payload));
+    case ACTION_TYPE.SET_SALARY: {
       return { ...state, salary: action.payload };
     }
 
-    case "setTask": {
-      console.log("task set");
+    case ACTION_TYPE.SET_TASK: {
       return { ...state, task: action.payload };
     }
 
-    case "submit": {
-      console.log("submit");
+    case ACTION_TYPE.SUBMIT: {
       return { ...state, readyToExecute: true, salary: action.payload };
     }
 
-    case "afterSubmit": {
-      console.log("afterSubmit");
+    case ACTION_TYPE.AFTER_SUBMIT: {
       return { ...state, readyToExecute: false };
     }
 
@@ -139,7 +142,7 @@ export function TakeSalary({ children, year }) {
       const dataForNewSalary = await fetchDataForNewSalary(year);
       const salary = id ? await fetchSalary(id) : defSalary;
       const action = {
-        type: "init",
+        type: ACTION_TYPE.INIT,
         payload: {
           salary: salary,
           dataForNewSalary: dataForNewSalary,
@@ -158,17 +161,17 @@ export function TakeSalary({ children, year }) {
           case TASK.DELETE:
             console.log("delete");
             DeleteSalary(salary.id);
-            dispatch({ type: "afterSubmit" });
+            dispatch({ type: ACTION_TYPE.AFTER_SUBMIT });
             return 0;
           case TASK.EVALUATE:
             console.log("evaluate");
             Evaluate();
-            dispatch({ type: "afterSubmit" });
+            dispatch({ type: ACTION_TYPE.AFTER_SUBMIT });
             return 0;
           case TASK.SAVE:
             console.log("save");
             Save();
-            dispatch({ type: "afterSubmit" });
+            dispatch({ type: ACTION_TYPE.AFTER_SUBMIT });
             return 0;
           default:
             return 0;
@@ -186,13 +189,16 @@ export function TakeSalary({ children, year }) {
 
   async function Evaluate() {
     const data = await evaluate(salary);
-    dispatch({ type: "setSalary", payload: data });
+    dispatch({ type: ACTION_TYPE.SET_SALARY, payload: data });
   }
 
   async function Save() {
     salary.rok = year;
     const data = await saveSalary(salary);
-    dispatch({ type: "setSalary", payload: { ...salary, id: data.id } });
+    dispatch({
+      type: ACTION_TYPE.SET_SALARY,
+      payload: { ...salary, id: data.id },
+    });
   }
 
   function handleSubmit(e) {
@@ -245,7 +251,7 @@ export function TakeSalary({ children, year }) {
       doWyplaty: doWyplaty,
       doRozdysponowania: doRozdysponowania,
     };
-    dispatch({ type: "submit", payload: newSalary });
+    dispatch({ type: ACTION_TYPE.SUBMIT, payload: newSalary });
   }
 
   return !isLoading ? (
@@ -262,7 +268,7 @@ export function TakeSalary({ children, year }) {
           readonly="true"
           onChange={(e) => {
             dispatch({
-              type: "setSalary",
+              type: ACTION_TYPE.SET_SALARY,
               payload: {
                 ...salary,
                 miesiac: miesiace.find((obj) => obj.value === e.target.value)
@@ -293,7 +299,7 @@ export function TakeSalary({ children, year }) {
             );
 
             dispatch({
-              type: "setSalary",
+              type: ACTION_TYPE.SET_SALARY,
               payload: {
                 ...salary,
                 idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
@@ -348,20 +354,26 @@ export function TakeSalary({ children, year }) {
         />
         <button
           type="submit"
-          onClick={() => dispatch({ type: "setTask", payload: TASK.SAVE })}
+          onClick={() =>
+            dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.SAVE })
+          }
         >
           Zapisz
         </button>
         <button
           type="submit"
-          onClick={() => dispatch({ type: "setTask", payload: TASK.EVALUATE })}
+          onClick={() =>
+            dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.EVALUATE })
+          }
         >
           Oblicz
         </button>
         {salary.id && (
           <button
             type="submit"
-            onClick={() => dispatch({ type: "setTask", payload: TASK.DELETE })}
+            onClick={() =>
+              dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.DELETE })
+            }
           >
             Usuń
           </button>

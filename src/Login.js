@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Edit } from "./MyComponents";
 import { hashSync } from "bcryptjs";
 import { useCookies } from "react-cookie";
@@ -7,19 +7,19 @@ import Loading from "./Loading";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
-  function handleLoadingChange(isLoading) {
-    setIsLoading(isLoading);
-  }
-  const { authorize, logout } = useAuthorize(handleLoadingChange);
+  const { authorize, logout } = useAuthorize((state) => setIsLoading(state));
   const [cookies] = useCookies();
   const [authorized, setAuthorized] = useState(cookies.sessionId);
 
   async function AuthorizateUser(login, haslo) {
     const hashedPassword = hashSync(haslo, "$2a$10$birC1iSgCy1pF17Oa7HXl.");
     setAuthorized(false);
-    const res = await authorize(login, hashedPassword);
-    res && setAuthorized(true);
+    authorize(login, hashedPassword);
   }
+
+  useEffect(() => {
+    setAuthorized(cookies.sessionId);
+  }, [cookies.sessionId]);
 
   async function Logout() {
     await logout();

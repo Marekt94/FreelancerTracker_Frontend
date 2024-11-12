@@ -1,43 +1,34 @@
 import { SERVER_ADRESS } from "./Constants";
-import { useFetchInternal } from "./useFetchInternal";
-
-function createQueryString(paramsList) {
-  return (
-    "?" + paramsList.map((param) => `${param.name}=${param.value}`).join("&")
-  );
-}
+import { BACKEND_PATHS } from "./SalaryClientURL";
+import useFetchInternal from "./useFetchInternal";
 
 //TODO - dorobić wersjonowanie API
 
 export function useSalary() {
-  const { internalFetch } = useFetchInternal();
+  const { internalFetch, generateURL } = useFetchInternal();
 
   async function getSalaries(params) {
-    const paramsString = createQueryString(params);
-    const URL = SERVER_ADRESS + "/salaries" + paramsString;
+    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salariesPath, params);
     //zmienic na stare dopóki nie zmieni się backend
-    console.log(URL);
     const data = await internalFetch(URL);
     return data;
   }
 
   async function getSalary(id) {
     //NEW
-    const URL = SERVER_ADRESS + "/salaries" + (id ? `/${id}` : "");
+    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salariesPath + (id ? `/${id}` : ""));
     //OLD
     // const URL = SERVER_ADRESS + "/salary" + (id ? `/${id}` : '');
     // zmienić na stare dopóki nie zmienie backendu
-    console.log(URL);
     const data = await internalFetch(URL);
     return data;
   }
 
   async function getDataForNewSalary(params) {
     //OLD
-    const URL = SERVER_ADRESS + "get_data_for_new_salary/" + params;
+    const URL = generateURL(SERVER_ADRESS, `${BACKEND_PATHS.getDataForNewSalary}/${params}`)
     //new
-    //const URL = SERVER_ADRESS + "get_data_for_new_salary" + createQueryString;
-    console.log(URL);
+    // const URL = SERVER_ADRESS + "get_data_for_new_salary" + createQueryString;
     const data = await internalFetch(URL);
     return data;
   }
@@ -47,8 +38,7 @@ export function useSalary() {
       method: "POST",
       body: JSON.stringify(salary),
     };
-    const URL = SERVER_ADRESS + "save_salary";
-    console.log(URL);
+    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.saveSalary);
     const data = await internalFetch(URL);
     return data;
   }
@@ -58,15 +48,13 @@ export function useSalary() {
       method: "POST",
       body: JSON.stringify(salary),
     };
-    const URL = SERVER_ADRESS + "evaluate";
-    console.log(URL);
+    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.evaluate);
     const data = await internalFetch(URL);
     return data;
   }
 
   async function deleteSalary(id) {
-    const URL = SERVER_ADRESS + "delete_salary" + `/${id}`;
-    console.log(URL);
+    const URL = generateURL(SERVER_ADRESS, `${BACKEND_PATHS.deleteSalary}/${id}`);
     const data = await internalFetch(URL);
     return data;
   }

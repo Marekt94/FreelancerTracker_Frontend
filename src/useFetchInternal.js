@@ -1,4 +1,18 @@
-export function useFetchInternal() {
+export default function useFetchInternal() {
+  function createQueryString(paramsList) {
+    return (
+      "?" + paramsList.map((param) => `${param.name}=${param.value}`).join("&")
+    );
+  }
+  
+  function generateURL(serverAdress, endpoint, params = ""){
+    const lServerAdress = serverAdress.endsWith('/') ? serverAdress : serverAdress + "/";
+    const lEndpoint = endpoint.startsWith("/") ? endpoint.slice(1, endpoint.length) : endpoint;
+    const lURL = lServerAdress + lEndpoint + (params ? createQueryString(params) : ""); 
+    console.log("URL: " + lURL);
+    return lURL; 
+  }
+
   async function internalFetch(URL, requestOptions) {
     try {
       const opt = {
@@ -18,5 +32,5 @@ export function useFetchInternal() {
     }
   }
 
-  return { internalFetch };
+  return { internalFetch, generateURL };
 }

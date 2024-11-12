@@ -3,9 +3,10 @@ import "./index.css";
 import { useParams } from "react-router-dom";
 import { useNavigate, generatePath } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
-import {BACKEND_PATHS} from "./SalaryClientURL";
+import { BACKEND_PATHS } from "./SalaryClientURL";
 import { defDict } from "./Dictionaries";
 import { useSalary } from "./useSalary";
+import { MONTHS } from "./Dictionaries";
 
 // TODO - może trzeba do sobnego pliku?
 const defSalary = {
@@ -51,111 +52,130 @@ const initialState = {
   formaOpodatkowania: defDict,
   task: null,
   readyToExecute: false,
-}
+};
 
-function reducer(state, action){
-  switch (action.type){
+function reducer(state, action) {
+  switch (action.type) {
     case "init":
-      console.log("init")
-      const miesiace = action.payload.dataForNewSalary.miesiace.map((obj) => ({
+      console.log("init");
+      let miesiace = action.payload.dataForNewSalary.miesiace.map((obj) => ({
         id: obj.iD,
         value: obj.monthName,
-      }));      
-
-      const formaOpodatkowania = action.payload.dataForNewSalary.formaOpodatkowania.map((obj) => ({
-        id: obj.id,
-        value: obj.nazwa,
-        wysokoscPodatku: obj.wysokoscPodatkuList,
       }));
-      
-      return {...state, salary: action.payload.salary, miesiace: miesiace, formaOpodatkowania: formaOpodatkowania};
+      if (action.payload.salary.miesiac) {
+        const currMiesiac = MONTHS.find(
+          (obj) => obj.id === action.payload.salary.miesiac
+        );
+        miesiace = [
+          ...miesiace,
+          { id: currMiesiac.id, value: currMiesiac.value },
+        ];
+      }
+      miesiace.sort((a, b) => a.id - b.id);
 
-    case "setSalary":{
+      const formaOpodatkowania =
+        action.payload.dataForNewSalary.formaOpodatkowania.map((obj) => ({
+          id: obj.id,
+          value: obj.nazwa,
+          wysokoscPodatku: obj.wysokoscPodatkuList,
+        }));
+
+      return {
+        ...state,
+        salary: action.payload.salary,
+        miesiace: miesiace,
+        formaOpodatkowania: formaOpodatkowania,
+      };
+
+    case "setSalary": {
       console.log("setSalary" + " " + JSON.stringify(action.payload));
-      return{...state, salary: action.payload};
+      return { ...state, salary: action.payload };
     }
 
-    case "setTask":{
-      console.log("task set")
-      return {...state, task: action.payload};
+    case "setTask": {
+      console.log("task set");
+      return { ...state, task: action.payload };
     }
 
-    case "submit":{
+    case "submit": {
       console.log("submit");
-      return {...state, readyToExecute: true, salary: action.payload};
+      return { ...state, readyToExecute: true, salary: action.payload };
     }
 
-    case "afterSubmit":{
+    case "afterSubmit": {
       console.log("afterSubmit");
-      return{...state, readyToExecute: false}
+      return { ...state, readyToExecute: false };
     }
 
     default:
-      throw Error('Unknown action');
+      throw Error("Unknown action");
   }
 }
 
 export function TakeSalary({ children, year }) {
   const initID = useParams().id;
-  const [{salary, formaOpodatkowania, miesiace, task, readyToExecute}, dispatch] = useReducer(reducer, initialState);
-  const {getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary} = useSalary();
+  const [
+    { salary, formaOpodatkowania, miesiace, task, readyToExecute },
+    dispatch,
+  ] = useReducer(reducer, initialState);
+  const { getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary } =
+    useSalary();
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchSalary(id){
+    async function fetchSalary(id) {
       const data = await getSalary(id);
       return data;
-    };
+    }
 
-    async function fetchDataForNewSalary(year){
+    async function fetchDataForNewSalary(year) {
       const data = await getDataForNewSalary(year);
       return data;
     }
 
-    async function fetchData(id){
-      const dataForNewSalary =  await fetchDataForNewSalary(year);
+    async function fetchData(id) {
+      const dataForNewSalary = await fetchDataForNewSalary(year);
       const salary = id ? await fetchSalary(id) : defSalary;
       const action = {
-        type: "init", 
-        payload:{
+        type: "init",
+        payload: {
           salary: salary,
           dataForNewSalary: dataForNewSalary,
-        }
+        },
       };
       dispatch(action);
     }
-     
+
     fetchData(initID);
   }, [year, initID]);
 
-  useEffect(()=>{
-    function execute(){
-      if (readyToExecute){
+  useEffect(() => {
+    function execute() {
+      if (readyToExecute) {
         switch (task) {
           case TASK.DELETE:
             console.log("delete");
             DeleteSalary(salary.id);
-            dispatch({type: "afterSubmit"});
+            dispatch({ type: "afterSubmit" });
             return 0;
           case TASK.EVALUATE:
             console.log("evaluate");
             Evaluate();
-            dispatch({type: "afterSubmit"});
+            dispatch({ type: "afterSubmit" });
             return 0;
           case TASK.SAVE:
             console.log("save");
             Save();
-            dispatch({type: "afterSubmit"});
+            dispatch({ type: "afterSubmit" });
             return 0;
           default:
             return 0;
         }
       }
     }
-    
-    execute();
-  }, [readyToExecute, task, salary.id])
 
+    execute();
+  }, [readyToExecute, task, salary.id]);
 
   async function DeleteSalary(id) {
     await deleteSalary(id);
@@ -164,13 +184,13 @@ export function TakeSalary({ children, year }) {
 
   async function Evaluate() {
     const data = await evaluate(salary);
-    dispatch({type: "setSalary", payload: data});
+    dispatch({ type: "setSalary", payload: data });
   }
 
   async function Save() {
-    salary.rok = year
+    salary.rok = year;
     const data = await saveSalary(salary);
-    dispatch({type: "setSalary", payload: {...salary, id: data.id}});
+    dispatch({ type: "setSalary", payload: { ...salary, id: data.id } });
   }
 
   function handleSubmit(e) {
@@ -223,7 +243,7 @@ export function TakeSalary({ children, year }) {
       doWyplaty: doWyplaty,
       doRozdysponowania: doRozdysponowania,
     };
-    dispatch({type: "submit", payload: newSalary});
+    dispatch({ type: "submit", payload: newSalary });
   }
 
   return (
@@ -238,12 +258,15 @@ export function TakeSalary({ children, year }) {
           dictionary={miesiace}
           defaultValue={0}
           readonly="true"
-          onChange={
-            (e) => {
-            dispatch({type: "setSalary", payload: {
-              ...salary,
-              miesiac: miesiace.find((obj) => obj.value === e.target.value)?.id,
-            }});
+          onChange={(e) => {
+            dispatch({
+              type: "setSalary",
+              payload: {
+                ...salary,
+                miesiac: miesiace.find((obj) => obj.value === e.target.value)
+                  ?.id,
+              },
+            });
           }}
         />
         <Edit
@@ -267,11 +290,14 @@ export function TakeSalary({ children, year }) {
               (obj) => obj.value === e.target.value
             );
 
-            dispatch({type:"setSalary", payload:{
-              ...salary,
-              idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
-              formaOpodatkowania: formaOpodatkowaniaTemp,
-            }});
+            dispatch({
+              type: "setSalary",
+              payload: {
+                ...salary,
+                idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
+                formaOpodatkowania: formaOpodatkowaniaTemp,
+              },
+            });
           }}
         />
         <Edit
@@ -318,14 +344,23 @@ export function TakeSalary({ children, year }) {
           name="doRozdysponowania"
           readonly="true"
         />
-        <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.SAVE})}>
+        <button
+          type="submit"
+          onClick={() => dispatch({ type: "setTask", payload: TASK.SAVE })}
+        >
           Zapisz
         </button>
-        <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.EVALUATE})}>
+        <button
+          type="submit"
+          onClick={() => dispatch({ type: "setTask", payload: TASK.EVALUATE })}
+        >
           Oblicz
         </button>
         {salary.id && (
-          <button type="submit" onClick={() => dispatch({type: "setTask", payload: TASK.DELETE})}>
+          <button
+            type="submit"
+            onClick={() => dispatch({ type: "setTask", payload: TASK.DELETE })}
+          >
             Usuń
           </button>
         )}

@@ -4,13 +4,18 @@ export default function useFetchInternal() {
       "?" + paramsList.map((param) => `${param.name}=${param.value}`).join("&")
     );
   }
-  
-  function generateURL(serverAdress, endpoint, params = ""){
-    const lServerAdress = serverAdress.endsWith('/') ? serverAdress : serverAdress + "/";
-    const lEndpoint = endpoint.startsWith("/") ? endpoint.slice(1, endpoint.length) : endpoint;
-    const lURL = lServerAdress + lEndpoint + (params ? createQueryString(params) : ""); 
+
+  function generateURL(serverAdress, endpoint, params = "") {
+    const lServerAdress = serverAdress.endsWith("/")
+      ? serverAdress
+      : serverAdress + "/";
+    const lEndpoint = endpoint.startsWith("/")
+      ? endpoint.slice(1, endpoint.length)
+      : endpoint;
+    const lURL =
+      lServerAdress + lEndpoint + (params ? createQueryString(params) : "");
     console.log("URL: " + lURL);
-    return lURL; 
+    return lURL;
   }
 
   async function internalFetch(URL, requestOptions) {
@@ -20,6 +25,7 @@ export default function useFetchInternal() {
         credentials: "include",
         mode: "cors",
       };
+      console.log(opt);
       const res = await fetch(URL, opt);
       if (res.status >= 200 && res.status <= 299) {
         const data = await res.json();

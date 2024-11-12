@@ -43,10 +43,10 @@
     ],
     "description": "React styled component"
   },
-  "string with variable":{
-    "prefix": "vrr",
-    "scope":"javascript,typescript,javascriptreact",
-    "body":["${$1}"],
-    "description":"variable inside a string"
+  "string with variable": {
+    "prefix": "v",
+    "scope": "javascript,typescript,javascriptreact",
+    "body": ["${$1}"],
+    "description": "variable inside a string"
   }
 }

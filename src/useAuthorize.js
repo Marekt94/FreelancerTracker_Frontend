@@ -1,12 +1,13 @@
 import { SERVER_ADRESS } from "./Constants";
-import { useFetchInternal } from "./useFetchInternal";
+import useFetchInternal from "./useFetchInternal";
+import { BACKEND_PATHS } from "./SalaryClientURL";
 
 export function useAuthorize() {
-  const { internalFetch } = useFetchInternal();
+  const { internalFetch, generateURL } = useFetchInternal();
 
   async function authorize(login, password) {
     console.log(`login ${login} haslo ${password}`);
-    const URL = SERVER_ADRESS + "login";
+    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.login);
 
     const requestOptions = {
       method: "POST",
@@ -18,7 +19,7 @@ export function useAuthorize() {
   }
 
   async function logout() {
-    const URL = SERVER_ADRESS + "logout";
+    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.logout);
 
     const requestOptions = {
       method: "DELETE",

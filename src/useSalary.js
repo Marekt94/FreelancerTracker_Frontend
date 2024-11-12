@@ -4,8 +4,9 @@ import useFetchInternal from "./useFetchInternal";
 
 //TODO - dorobić wersjonowanie API
 
-export function useSalary() {
-  const { internalFetch, generateURL } = useFetchInternal();
+//TODO - wyciągnąć loading do kontekstu
+export function useSalary(changeLoadingState) {
+  const { internalFetch, generateURL } = useFetchInternal(changeLoadingState);
 
   async function getSalaries(params) {
     //NEW

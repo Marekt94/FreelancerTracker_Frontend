@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { MONTHS } from "./Dictionaries";
-import { useNavigate, generatePath } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSalary } from "./useSalary";
-import {BACKEND_PATHS} from "./SalaryClientURL";
+import { BACKEND_PATHS } from "./SalaryClientURL";
+import Loading from "./Loading";
 
 function SalaryList(props) {
   const year = props.year;
+  const [isLoading, setIsLoading] = useState(false);
   const [salaries, setSalaries] = useState(undefined);
   const navigate = useNavigate();
-  const {getSalaries} = useSalary();
+  const { getSalaries } = useSalary((state) => setIsLoading(state));
 
   useEffect(() => {
     console.log("useEffect in Salaries");
-    async function fetchSalaries(){
-      const params = 
-      [
-        {name: 'year',
-         value: year
-        }
-      ]; 
+    async function fetchSalaries() {
+      const params = [{ name: "year", value: year }];
       const temp = await getSalaries(params);
       setSalaries(temp);
     }
@@ -29,7 +26,9 @@ function SalaryList(props) {
 
   function onEditClick(event) {
     const id = event.target.getAttribute("id");
-    id ? navigate(`${BACKEND_PATHS.salaryPath}/${id}`) : navigate(`${BACKEND_PATHS.salaryPath}`);
+    id
+      ? navigate(`${BACKEND_PATHS.salaryPath}/${id}`)
+      : navigate(`${BACKEND_PATHS.salaryPath}`);
   }
 
   function createSalaryList(json) {
@@ -47,11 +46,13 @@ function SalaryList(props) {
     return json ? createSalaryList(json) : <></>;
   }
 
-  return (
+  return !isLoading ? (
     <>
       {props.children}
       <ol>{updateSalaries(salaries)}</ol>
     </>
+  ) : (
+    <Loading />
   );
 }
 

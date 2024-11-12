@@ -2,8 +2,8 @@ import { SERVER_ADRESS } from "./Constants";
 import useFetchInternal from "./useFetchInternal";
 import { BACKEND_PATHS } from "./SalaryClientURL";
 
-export function useAuthorize() {
-  const { internalFetch, generateURL } = useFetchInternal();
+export function useAuthorize(changeLoading) {
+  const { internalFetch, generateURL } = useFetchInternal(changeLoading);
 
   async function authorize(login, password) {
     console.log(`login ${login} haslo ${password}`);

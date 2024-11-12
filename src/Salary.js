@@ -7,6 +7,7 @@ import { BACKEND_PATHS } from "./SalaryClientURL";
 import { defDict } from "./Dictionaries";
 import { useSalary } from "./useSalary";
 import { MONTHS } from "./Dictionaries";
+import Loading from "./Loading";
 
 // TODO - może trzeba do sobnego pliku?
 const defSalary = {
@@ -113,13 +114,14 @@ function reducer(state, action) {
 }
 
 export function TakeSalary({ children, year }) {
+  const [isLoading, setIsLoading] = useState(false);
   const initID = useParams().id;
   const [
     { salary, formaOpodatkowania, miesiace, task, readyToExecute },
     dispatch,
   ] = useReducer(reducer, initialState);
   const { getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary } =
-    useSalary();
+    useSalary((state) => setIsLoading(state));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -246,7 +248,7 @@ export function TakeSalary({ children, year }) {
     dispatch({ type: "submit", payload: newSalary });
   }
 
-  return (
+  return !isLoading ? (
     <>
       {children}
       <form onSubmit={handleSubmit}>
@@ -366,6 +368,8 @@ export function TakeSalary({ children, year }) {
         )}
       </form>
     </>
+  ) : (
+    <Loading />
   );
 }
 

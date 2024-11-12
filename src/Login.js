@@ -3,9 +3,14 @@ import { Edit } from "./MyComponents";
 import { hashSync } from "bcryptjs";
 import { useCookies } from "react-cookie";
 import { useAuthorize } from "./useAuthorize";
+import Loading from "./Loading";
 
 export default function Login() {
-  const { authorize, logout } = useAuthorize();
+  const [isLoading, setIsLoading] = useState(false);
+  function handleLoadingChange(isLoading) {
+    setIsLoading(isLoading);
+  }
+  const { authorize, logout } = useAuthorize(handleLoadingChange);
   const [cookies] = useCookies();
   const [authorized, setAuthorized] = useState(cookies.sessionId);
 
@@ -31,7 +36,7 @@ export default function Login() {
     authorized ? Logout() : AuthorizateUser(login, haslo);
   }
 
-  return (
+  return !isLoading ? (
     <form onSubmit={(e) => AuthorizeOrLogout(e, authorized)}>
       <Edit caption="Login" name="login" />
       <Edit caption="Hasło" name="haslo" password="true" />
@@ -42,5 +47,9 @@ export default function Login() {
         </div>
       )}
     </form>
+  ) : (
+    <>
+      <Loading />
+    </>
   );
 }

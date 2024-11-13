@@ -4,12 +4,13 @@ import { hashSync } from "bcryptjs";
 import { useCookies } from "react-cookie";
 import { useAuthorize } from "./useAuthorize";
 import Loading from "./Loading";
+import { useGlobalContext } from "./GlobalContext";
 
 export default function Login() {
-  const [isLoading, setIsLoading] = useState(false);
-  const { authorize, logout } = useAuthorize((state) => setIsLoading(state));
   const [cookies] = useCookies();
+  const { isLoading } = useGlobalContext();
   const [authorized, setAuthorized] = useState(cookies.sessionId);
+  const { authorize, logout } = useAuthorize(isLoading);
 
   async function AuthorizateUser(login, haslo) {
     const hashedPassword = hashSync(haslo, "$2a$10$birC1iSgCy1pF17Oa7HXl.");
@@ -23,7 +24,6 @@ export default function Login() {
 
   async function Logout() {
     await logout();
-    setAuthorized(false);
   }
 
   function AuthorizeOrLogout(e, authorized) {

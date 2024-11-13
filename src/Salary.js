@@ -230,7 +230,7 @@ export function TakeSalary({ children, year }) {
 
     const newSalary = {
       ...salary,
-      id: id,
+      id,
       miesiac: miesiacTemp?.id,
       idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
       formaOpodatkowania: {
@@ -238,19 +238,20 @@ export function TakeSalary({ children, year }) {
         nazwa: formaOpodatkowaniaTemp?.value,
         wysokoscPodatkuList: formaOpodatkowaniaTemp?.wysokoscPodatku,
       },
-      stawka: stawka,
-      dniRoboczych: dniRoboczych,
-      dniPrzepracowanych: dniPrzepracowanych,
-      skladkaZdrowotna: skladkaZdrowotna,
-      zUS: zUS,
-      podatek: podatek,
-      vat: vat,
-      netto: netto,
-      pelneNetto: pelneNetto,
-      naUrlopowoChorobowe: naUrlopowoChorobowe,
-      doWyplaty: doWyplaty,
-      doRozdysponowania: doRozdysponowania,
+      stawka,
+      dniRoboczych,
+      dniPrzepracowanych,
+      skladkaZdrowotna,
+      zUS,
+      podatek,
+      vat,
+      netto,
+      pelneNetto,
+      naUrlopowoChorobowe,
+      doWyplaty,
+      doRozdysponowania,
     };
+    console.log(`New salary: ${newSalary}`);
     dispatch({ type: ACTION_TYPE.SUBMIT, payload: newSalary });
   }
 

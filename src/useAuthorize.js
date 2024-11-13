@@ -1,9 +1,18 @@
 import { SERVER_ADRESS } from "./Constants";
 import useFetchInternal from "./useFetchInternal";
 import { BACKEND_PATHS } from "./SalaryClientURL";
+import { useGlobalContext } from "./GlobalContext";
 
-export function useAuthorize(changeLoading) {
-  const { internalFetch, generateURL } = useFetchInternal(changeLoading);
+export function useAuthorize() {
+  const { setLoadingState } = useGlobalContext();
+  const { internalFetch, generateURL } = useFetchInternal();
+
+  async function internalAuthFetch(URL, requestOptions) {
+    setLoadingState(true);
+    const dat = await internalFetch(URL, requestOptions);
+    setLoadingState(false);
+    return dat;
+  }
 
   async function authorize(login, password) {
     console.log(`login ${login} haslo ${password}`);
@@ -14,7 +23,7 @@ export function useAuthorize(changeLoading) {
       body: JSON.stringify({ username: login, password: password }),
     };
 
-    const data = await internalFetch(URL, requestOptions);
+    const data = await internalAuthFetch(URL, requestOptions);
     return data;
   }
 
@@ -25,7 +34,7 @@ export function useAuthorize(changeLoading) {
       method: "DELETE",
     };
 
-    const data = await internalFetch(URL, requestOptions);
+    const data = await internalAuthFetch(URL, requestOptions);
     return data;
   }
 

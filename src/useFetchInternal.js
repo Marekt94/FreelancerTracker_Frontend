@@ -1,7 +1,4 @@
-export default function useFetchInternal(changeLoadingState) {
-  function updateFetchStatus(state) {
-    changeLoadingState && changeLoadingState(state);
-  }
+export default function useFetchInternal() {
   function createQueryString(paramsList) {
     return (
       "?" + paramsList.map((param) => `${param.name}=${param.value}`).join("&")
@@ -22,7 +19,6 @@ export default function useFetchInternal(changeLoadingState) {
   }
 
   async function internalFetch(URL, requestOptions) {
-    updateFetchStatus(true);
     try {
       const opt = {
         ...requestOptions,
@@ -33,15 +29,12 @@ export default function useFetchInternal(changeLoadingState) {
       const res = await fetch(URL, opt);
       if (res.status >= 200 && res.status <= 299) {
         const data = await res.json();
-        updateFetchStatus(false);
         return data;
       } else {
         alert(`Code ${res.status}: ${res.statusText}`);
-        updateFetchStatus(false);
       }
     } catch (e) {
       alert(e);
-      updateFetchStatus(false);
     }
   }
 

@@ -8,6 +8,7 @@ import { defDict } from "./Dictionaries";
 import { useSalary } from "./useSalary";
 import { MONTHS } from "./Dictionaries";
 import Loading from "./Loading";
+import { useGlobalContext } from "./GlobalContext";
 
 // TODO - może trzeba do sobnego pliku?
 const defSalary = {
@@ -117,14 +118,14 @@ function reducer(state, action) {
 }
 
 export function TakeSalary({ children, year }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading } = useGlobalContext();
   const initID = useParams().id;
   const [
     { salary, formaOpodatkowania, miesiace, task, readyToExecute },
     dispatch,
   ] = useReducer(reducer, initialState);
   const { getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary } =
-    useSalary((state) => setIsLoading(state));
+    useSalary();
   const navigate = useNavigate();
 
   useEffect(() => {

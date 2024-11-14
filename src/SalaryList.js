@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./index.css";
 import { MONTHS } from "./Dictionaries";
 import { useNavigate } from "react-router-dom";
 import { useSalary } from "./useSalary";
 import { BACKEND_PATHS } from "./SalaryClientURL";
 import Loading from "./Loading";
+import { useGlobalContext } from "./GlobalContext";
 
 function SalaryList(props) {
   const year = props.year;
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading } = useGlobalContext();
   const [salaries, setSalaries] = useState(undefined);
   const navigate = useNavigate();
-  const { getSalaries } = useSalary((state) => setIsLoading(state));
+  const { getSalaries } = useSalary();
 
   useEffect(() => {
     console.log("useEffect in Salaries");

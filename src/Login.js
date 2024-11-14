@@ -8,9 +8,9 @@ import { useGlobalContext } from "./GlobalContext";
 
 export default function Login() {
   const [cookies] = useCookies();
-  const { isLoading } = useGlobalContext();
+  const { isLoading, setError } = useGlobalContext();
   const [authorized, setAuthorized] = useState(cookies.sessionId);
-  const { authorize, logout } = useAuthorize(isLoading);
+  const { authorize, logout } = useAuthorize(setError);
 
   async function AuthorizateUser(login, haslo) {
     const hashedPassword = hashSync(haslo, "$2a$10$birC1iSgCy1pF17Oa7HXl.");

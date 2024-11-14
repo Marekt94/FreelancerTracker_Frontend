@@ -1,4 +1,6 @@
-export default function useFetchInternal() {
+export const SERVER_ADRESS = process.env.REACT_APP_BACKEND_ADDRESS;
+
+export default function useFetchInternal(setError) {
   function createQueryString(paramsList) {
     return (
       "?" + paramsList.map((param) => `${param.name}=${param.value}`).join("&")
@@ -29,12 +31,17 @@ export default function useFetchInternal() {
       const res = await fetch(URL, opt);
       if (res.status >= 200 && res.status <= 299) {
         const data = await res.json();
+
         return data;
       } else {
-        alert(`Code ${res.status}: ${res.statusText}`);
+        setError
+          ? setError({ code: res.status, statusText: res.statusText })
+          : alert(res);
       }
     } catch (e) {
-      alert(e);
+      setError
+        ? setError({ code: "unhandled", statusText: e.message })
+        : alert(e);
     }
   }
 

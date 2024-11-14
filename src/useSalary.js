@@ -1,12 +1,20 @@
-import { SERVER_ADRESS } from "./Constants";
+import { useGlobalContext } from "./GlobalContext";
 import { BACKEND_PATHS } from "./SalaryClientURL";
-import useFetchInternal from "./useFetchInternal";
+import useFetchInternal, { SERVER_ADRESS } from "./useFetchInternal";
 
 //TODO - dorobić wersjonowanie API
 
 //TODO - wyciągnąć loading do kontekstu
-export function useSalary(changeLoadingState) {
-  const { internalFetch, generateURL } = useFetchInternal(changeLoadingState);
+export function useSalary() {
+  const { setLoadingState } = useGlobalContext();
+  const { internalFetch, generateURL } = useFetchInternal();
+
+  async function internalSalaryFetch(URL, requestOptions) {
+    setLoadingState(true);
+    const data = await internalFetch(URL, requestOptions);
+    setLoadingState(false);
+    return data;
+  }
 
   async function getSalaries(params) {
     //NEW
@@ -17,7 +25,7 @@ export function useSalary(changeLoadingState) {
       BACKEND_PATHS.salariesPath + `/${params[0].value}`
     );
     //zmienic na stare dopóki nie zmieni się backend
-    const data = await internalFetch(URL);
+    const data = await internalSalaryFetch(URL);
     return data;
   }
 
@@ -33,7 +41,7 @@ export function useSalary(changeLoadingState) {
       BACKEND_PATHS.salaryPath + (id ? `/${id}` : "")
     );
     // zmienić na stare dopóki nie zmienie backendu
-    const data = await internalFetch(URL);
+    const data = await internalSalaryFetch(URL);
     return data;
   }
 
@@ -45,7 +53,7 @@ export function useSalary(changeLoadingState) {
     );
     //new
     // const URL = SERVER_ADRESS + "get_data_for_new_salary" + createQueryString;
-    const data = await internalFetch(URL);
+    const data = await internalSalaryFetch(URL);
     return data;
   }
 
@@ -55,7 +63,7 @@ export function useSalary(changeLoadingState) {
       body: JSON.stringify(salary),
     };
     const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.saveSalary);
-    const data = await internalFetch(URL, requestOptions);
+    const data = await internalSalaryFetch(URL, requestOptions);
     return data;
   }
 
@@ -65,7 +73,7 @@ export function useSalary(changeLoadingState) {
       body: JSON.stringify(salary),
     };
     const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.evaluate);
-    const data = await internalFetch(URL, requestOptions);
+    const data = await internalSalaryFetch(URL, requestOptions);
     return data;
   }
 
@@ -74,7 +82,7 @@ export function useSalary(changeLoadingState) {
       SERVER_ADRESS,
       `${BACKEND_PATHS.deleteSalary}/${id}`
     );
-    const data = await internalFetch(URL);
+    const data = await internalSalaryFetch(URL);
     return data;
   }
 

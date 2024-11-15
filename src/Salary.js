@@ -118,14 +118,14 @@ function reducer(state, action) {
 }
 
 export function TakeSalary({ children, year }) {
-  const { isLoading } = useGlobalContext();
+  const { isLoading, setError } = useGlobalContext();
   const initID = useParams().id;
   const [
     { salary, formaOpodatkowania, miesiace, task, readyToExecute },
     dispatch,
   ] = useReducer(reducer, initialState);
   const { getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary } =
-    useSalary();
+    useSalary(setError);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import Error from "./Error";
 import { DEF_ERROR } from "./Const";
+import "./index.css";
 
 const GlobalContext = createContext();
 
@@ -13,9 +14,8 @@ function GlobalContextProvider({ children }) {
   }
 
   return (
-    //TODO - wyciągnąć obsługę errora wyżej
     <GlobalContext.Provider value={{ isLoading, setLoadingState, setError }}>
-      {!error.code ? children : <Error>{error}</Error>}
+      {!error.code ? children : <Error className="content">{error}</Error>}
     </GlobalContext.Provider>
   );
 }

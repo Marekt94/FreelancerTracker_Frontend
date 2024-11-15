@@ -1,3 +1,4 @@
+import { UNHANDLED_ERROR_CODE } from "./Const.js";
 export const SERVER_ADRESS = process.env.REACT_APP_BACKEND_ADDRESS;
 
 export default function useFetchInternal(setError) {
@@ -40,7 +41,7 @@ export default function useFetchInternal(setError) {
       }
     } catch (e) {
       setError
-        ? setError({ code: "unhandled", statusText: e.message })
+        ? setError({ code: UNHANDLED_ERROR_CODE, statusText: e.message })
         : alert(e);
     }
   }

@@ -9,10 +9,10 @@ import { useGlobalContext } from "./GlobalContext";
 
 function SalaryList(props) {
   const year = props.year;
-  const { isLoading } = useGlobalContext();
+  const { isLoading, setError } = useGlobalContext();
   const [salaries, setSalaries] = useState(undefined);
   const navigate = useNavigate();
-  const { getSalaries } = useSalary();
+  const { getSalaries } = useSalary(setError);
 
   useEffect(() => {
     console.log("useEffect in Salaries");

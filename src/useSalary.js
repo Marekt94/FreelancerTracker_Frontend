@@ -5,9 +5,9 @@ import useFetchInternal, { SERVER_ADRESS } from "./useFetchInternal";
 //TODO - dorobić wersjonowanie API
 
 //TODO - wyciągnąć loading do kontekstu
-export function useSalary() {
+export function useSalary(setError) {
   const { setLoadingState } = useGlobalContext();
-  const { internalFetch, generateURL } = useFetchInternal();
+  const { internalFetch, generateURL } = useFetchInternal(setError);
 
   async function internalSalaryFetch(URL, requestOptions) {
     setLoadingState(true);

@@ -33,45 +33,43 @@ function Content() {
 
   return (
     <CookiesProvider>
-      <GlobalContextProvider>
-        <Routes>
-          <Route
-            path={FRONTEND_PATHS.salariesPath}
-            element={
-              <SalaryList year={year}>
-                <YearSelector
-                  currentYear={year}
-                  onYearChange={handleYearChange}
-                />
-              </SalaryList>
-            }
-          />
-          <Route
-            path={FRONTEND_PATHS.salaryPath}
-            element={
-              <TakeSalary year={year}>
-                <YearSelector
-                  currentYear={year}
-                  onYearChange={handleYearChange}
-                />
-              </TakeSalary>
-            }
-          />
-          <Route
-            path={FRONTEND_PATHS.newSalaryPath}
-            element={
-              <TakeSalary year={year}>
-                <YearSelector
-                  currentYear={year}
-                  onYearChange={handleYearChange}
-                />
-              </TakeSalary>
-            }
-          />
-          <Route path={FRONTEND_PATHS.login} element={<Login />} />
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </GlobalContextProvider>
+      <Routes>
+        <Route
+          path={FRONTEND_PATHS.salariesPath}
+          element={
+            <SalaryList year={year}>
+              <YearSelector
+                currentYear={year}
+                onYearChange={handleYearChange}
+              />
+            </SalaryList>
+          }
+        />
+        <Route
+          path={FRONTEND_PATHS.salaryPath}
+          element={
+            <TakeSalary year={year}>
+              <YearSelector
+                currentYear={year}
+                onYearChange={handleYearChange}
+              />
+            </TakeSalary>
+          }
+        />
+        <Route
+          path={FRONTEND_PATHS.newSalaryPath}
+          element={
+            <TakeSalary year={year}>
+              <YearSelector
+                currentYear={year}
+                onYearChange={handleYearChange}
+              />
+            </TakeSalary>
+          }
+        />
+        <Route path={FRONTEND_PATHS.login} element={<Login />} />
+        <Route path="/" element={<Login />} />
+      </Routes>
     </CookiesProvider>
   );
 }
@@ -81,12 +79,14 @@ export default function MainView() {
     <>
       <header className="myheader">Lista odcinków wypłat</header>
       <div className="workspace">
-        <div className="sidebar">
-          <Sidebar />
-        </div>
-        <div className="content">
-          <Content />
-        </div>
+        <GlobalContextProvider>
+          <div className="sidebar">
+            <Sidebar />
+          </div>
+          <div className="content">
+            <Content />
+          </div>
+        </GlobalContextProvider>
       </div>
     </>
   );

@@ -7,9 +7,8 @@ import { BACKEND_PATHS } from "./SalaryClientURL";
 import Loading from "./Loading";
 import { useGlobalContext } from "./GlobalContext";
 
-function SalaryList(props) {
-  const year = props.year;
-  const { isLoading, setError } = useGlobalContext();
+function SalaryList({children}) {
+  const { isLoading, setError, year } = useGlobalContext();
   const [salaries, setSalaries] = useState(undefined);
   const navigate = useNavigate();
   const { getSalaries } = useSalary(setError);
@@ -49,7 +48,7 @@ function SalaryList(props) {
 
   return !isLoading ? (
     <>
-      {props.children}
+      {children}
       <ol>{updateSalaries(salaries)}</ol>
     </>
   ) : (

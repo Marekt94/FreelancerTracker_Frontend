@@ -1,4 +1,4 @@
-export const Years = [{ year: 2022 }, { year: 2023 }, { year: 2024 }];
+export const YEARS = [{ year: 2022 }, { year: 2023 }, { year: 2024 }];
 
 export default function YearSelector({ currentYear, onYearChange }) {
   return (
@@ -8,7 +8,7 @@ export default function YearSelector({ currentYear, onYearChange }) {
       defaultValue={currentYear}
       onChange={(e) => onYearChange(e.target.value)}
     >
-      {Years.map((obj) => (
+      {YEARS.map((obj) => (
         <option>{obj.year}</option>
       ))}
     </select>

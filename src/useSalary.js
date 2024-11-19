@@ -3,8 +3,6 @@ import { BACKEND_PATHS } from "./SalaryClientURL";
 import useFetchInternal, { SERVER_ADRESS } from "./useFetchInternal";
 
 //TODO - dorobić wersjonowanie API
-
-//TODO - wyciągnąć loading do kontekstu
 export function useSalary(setError) {
   const { setLoadingState } = useGlobalContext();
   const { internalFetch, generateURL } = useFetchInternal(setError);
@@ -17,13 +15,14 @@ export function useSalary(setError) {
   }
 
   async function getSalaries(params) {
-    //NEW
+    // NEW
     // const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salariesPath, params);
-    //OLD
-    const URL = generateURL(
-      SERVER_ADRESS,
-      BACKEND_PATHS.salariesPath + `/${params[0].value}`
-    );
+    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salariesPath);
+    // OLD
+    // const URL = generateURL(
+    //   SERVER_ADRESS,
+    //   BACKEND_PATHS.salariesPath + `/${params[0].value}`
+    // );
     //zmienic na stare dopóki nie zmieni się backend
     const data = await internalSalaryFetch(URL);
     return data;

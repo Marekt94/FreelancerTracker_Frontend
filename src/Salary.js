@@ -117,8 +117,8 @@ function reducer(state, action) {
   }
 }
 
-export function TakeSalary({ children, year }) {
-  const { isLoading, setError } = useGlobalContext();
+export function TakeSalary({ children }) {
+  const { isLoading, setError, year } = useGlobalContext();
   const initID = useParams().id;
   const [
     { salary, formaOpodatkowania, miesiace, task, readyToExecute },

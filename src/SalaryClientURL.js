@@ -4,7 +4,6 @@ export const  BACKEND_PATHS = {
     login: "/login",
     logout: "/logout",
     getDataForNewSalary: "/get_data_for_new_salary",
-    saveSalary: "/save_salary",
     evaluate: "/evaluate",
     deleteSalary: "delete_salary"
 };

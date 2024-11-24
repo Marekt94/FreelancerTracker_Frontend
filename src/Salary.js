@@ -3,7 +3,7 @@ import "./index.css";
 import { useParams } from "react-router-dom";
 import { useNavigate, generatePath } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
-import { BACKEND_PATHS } from "./SalaryClientURL";
+import { BACKEND_PATHS, FRONTEND_PATHS } from "./SalaryClientURL";
 import { defDict } from "./Dictionaries";
 import { useSalary } from "./useSalary";
 import { MONTHS } from "./Dictionaries";
@@ -11,6 +11,8 @@ import Loading from "./Loading";
 import { useGlobalContext } from "./GlobalContext";
 
 // TODO - może trzeba do sobnego pliku?
+//TODO - po zapisie updatować url o id
+//TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
 const defSalary = {
   id: null,
   idFormyOpodatkowania: 0,
@@ -200,6 +202,7 @@ export function TakeSalary({ children }) {
       type: ACTION_TYPE.SET_SALARY,
       payload: { ...salary, id: data.id },
     });
+    navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`);
   }
 
   function handleSubmit(e) {
@@ -370,7 +373,7 @@ export function TakeSalary({ children }) {
         >
           Oblicz
         </button>
-        {salary.id && (
+        {salary.id ? (
           <button
             type="submit"
             onClick={() =>
@@ -379,6 +382,8 @@ export function TakeSalary({ children }) {
           >
             Usuń
           </button>
+        ) : (
+          <></>
         )}
       </form>
     </>

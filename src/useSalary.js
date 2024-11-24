@@ -59,7 +59,7 @@ export function useSalary(setError) {
 
   async function deleteSalary(id) {
     const requestOptions = {
-      method: "DELETE",
+      method: "GET",
     };
     const URL = generateURL(
       SERVER_ADRESS,

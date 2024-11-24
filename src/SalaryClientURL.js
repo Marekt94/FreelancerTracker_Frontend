@@ -9,7 +9,7 @@ export const BACKEND_PATHS = {
   logout: "/logout",
   getDataForNewSalary: SALARY_VERSION + "/get_data_for_new_salary",
   evaluate: SALARY_VERSION + "/evaluate",
-  deleteSalary: SALARY_VERSION + "delete_salary",
+  deleteSalary: SALARY_VERSION + "/delete_salary",
 };
 
 export const FRONTEND_PATHS = {

@@ -20,19 +20,13 @@ export function useSalary(setError) {
   }
 
   async function getSalary(id) {
-    const URL = generateURL(
-      SERVER_ADRESS,
-      BACKEND_PATHS.salaryPath + (id ? `/${id}` : "`/0")
-    );
+    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salaryPath + (id ? `/${id}` : "`/0"));
     const data = await internalSalaryFetch(URL);
     return data;
   }
 
   async function getDataForNewSalary(year) {
-    const URL = generateURL(
-      SERVER_ADRESS,
-      `${BACKEND_PATHS.getDataForNewSalary}/${year}`
-    );
+    const URL = generateURL(SERVER_ADRESS, `${BACKEND_PATHS.getDataForNewSalary}/${year}`);
     const data = await internalSalaryFetch(URL);
     return data;
   }
@@ -61,10 +55,7 @@ export function useSalary(setError) {
     const requestOptions = {
       method: "GET",
     };
-    const URL = generateURL(
-      SERVER_ADRESS,
-      `${BACKEND_PATHS.deleteSalary}/${id}`
-    );
+    const URL = generateURL(SERVER_ADRESS, `${BACKEND_PATHS.deleteSalary}/${id}`);
     const data = await internalSalaryFetch(URL, requestOptions);
     return data;
   }

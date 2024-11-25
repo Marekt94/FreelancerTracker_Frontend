@@ -1,9 +1,9 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import "./index.css";
 import { useParams } from "react-router-dom";
-import { useNavigate, generatePath } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
-import { BACKEND_PATHS, FRONTEND_PATHS } from "./SalaryClientURL";
+import { BACKEND_PATHS } from "./SalaryClientURL";
 import { defDict } from "./Dictionaries";
 import { useSalary } from "./useSalary";
 import { MONTHS } from "./Dictionaries";
@@ -11,7 +11,6 @@ import Loading from "./Loading";
 import { useGlobalContext } from "./GlobalContext";
 
 // TODO - może trzeba do sobnego pliku?
-//TODO - po zapisie updatować url o id
 //TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
 const defSalary = {
   id: null,
@@ -74,22 +73,16 @@ function reducer(state, action) {
         value: obj.monthName,
       }));
       if (action.payload.salary.miesiac) {
-        const currMiesiac = MONTHS.find(
-          (obj) => obj.id === action.payload.salary.miesiac
-        );
-        miesiace = [
-          ...miesiace,
-          { id: currMiesiac.id, value: currMiesiac.value },
-        ];
+        const currMiesiac = MONTHS.find((obj) => obj.id === action.payload.salary.miesiac);
+        miesiace = [...miesiace, { id: currMiesiac.id, value: currMiesiac.value }];
       }
       miesiace.sort((a, b) => a.id - b.id);
 
-      const formaOpodatkowania =
-        action.payload.dataForNewSalary.formaOpodatkowania.map((obj) => ({
-          id: obj.id,
-          value: obj.nazwa,
-          wysokoscPodatku: obj.wysokoscPodatkuList,
-        }));
+      const formaOpodatkowania = action.payload.dataForNewSalary.formaOpodatkowania.map((obj) => ({
+        id: obj.id,
+        value: obj.nazwa,
+        wysokoscPodatku: obj.wysokoscPodatkuList,
+      }));
 
       return {
         ...state,
@@ -122,12 +115,8 @@ function reducer(state, action) {
 export function TakeSalary({ children }) {
   const { isLoading, setError, year } = useGlobalContext();
   const initID = useParams().id;
-  const [
-    { salary, formaOpodatkowania, miesiace, task, readyToExecute },
-    dispatch,
-  ] = useReducer(reducer, initialState);
-  const { getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary } =
-    useSalary(setError);
+  const [{ salary, formaOpodatkowania, miesiace, task, readyToExecute }, dispatch] = useReducer(reducer, initialState);
+  const { getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary } = useSalary(setError);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -157,6 +146,29 @@ export function TakeSalary({ children }) {
     fetchData(initID);
   }, [year, initID]);
 
+  const DeleteSalary = useCallback(
+    async (id) => {
+      await deleteSalary(id);
+      navigate(BACKEND_PATHS.salariesPath);
+    },
+    [deleteSalary, navigate]
+  );
+
+  const Evaluate = useCallback(async () => {
+    const data = await evaluate(salary);
+    dispatch({ type: ACTION_TYPE.SET_SALARY, payload: data });
+  }, [evaluate, dispatch, salary]);
+
+  const Save = useCallback(async () => {
+    salary.rok = year;
+    const data = await saveSalary(salary);
+    dispatch({
+      type: ACTION_TYPE.SET_SALARY,
+      payload: { ...salary, id: data.id },
+    });
+    navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`);
+  }, [navigate, salary, saveSalary, year]);
+
   useEffect(() => {
     function execute() {
       if (readyToExecute) {
@@ -183,27 +195,7 @@ export function TakeSalary({ children }) {
     }
 
     execute();
-  }, [readyToExecute, task, salary.id]);
-
-  async function DeleteSalary(id) {
-    await deleteSalary(id);
-    navigate(BACKEND_PATHS.salariesPath);
-  }
-
-  async function Evaluate() {
-    const data = await evaluate(salary);
-    dispatch({ type: ACTION_TYPE.SET_SALARY, payload: data });
-  }
-
-  async function Save() {
-    salary.rok = year;
-    const data = await saveSalary(salary);
-    dispatch({
-      type: ACTION_TYPE.SET_SALARY,
-      payload: { ...salary, id: data.id },
-    });
-    navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`);
-  }
+  }, [readyToExecute, task, salary.id, DeleteSalary, Evaluate, Save]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -227,9 +219,7 @@ export function TakeSalary({ children }) {
     const doWyplaty = formData.get("doWyplaty");
     const doRozdysponowania = formData.get("doRozdysponowania");
 
-    const formaOpodatkowaniaTemp = formaOpodatkowania.find(
-      (obj) => obj.value === currFormaOpodatkowania
-    );
+    const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.value === currFormaOpodatkowania);
     const miesiacTemp = miesiace.find((obj) => obj.value === miesiac);
 
     const newSalary = {
@@ -276,22 +266,13 @@ export function TakeSalary({ children }) {
               type: ACTION_TYPE.SET_SALARY,
               payload: {
                 ...salary,
-                miesiac: miesiace.find((obj) => obj.value === e.target.value)
-                  ?.id,
+                miesiac: miesiace.find((obj) => obj.value === e.target.value)?.id,
               },
             });
           }}
         />
-        <Edit
-          caption="Stawka godzinowa netto"
-          value={salary.stawka}
-          name="stawka"
-        />
-        <Edit
-          caption="Dni robocze w miesiącu"
-          value={salary.dniRoboczych}
-          name="dniRoboczych"
-        />
+        <Edit caption="Stawka godzinowa netto" value={salary.stawka} name="stawka" />
+        <Edit caption="Dni robocze w miesiącu" value={salary.dniRoboczych} name="dniRoboczych" />
         <Combo
           caption="Forma opodatkowania"
           value={salary.idFormyOpodatkowania}
@@ -299,9 +280,7 @@ export function TakeSalary({ children }) {
           dictionary={formaOpodatkowania}
           defaultValue={0}
           onChange={(e) => {
-            const formaOpodatkowaniaTemp = formaOpodatkowania.find(
-              (obj) => obj.value === e.target.value
-            );
+            const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.value === e.target.value);
 
             dispatch({
               type: ACTION_TYPE.SET_SALARY,
@@ -313,73 +292,30 @@ export function TakeSalary({ children }) {
             });
           }}
         />
-        <Edit
-          caption="Dni przepracowane"
-          value={salary.dniPrzepracowanych}
-          name="dniPrzepracowanych"
-        />
-        <Edit
-          caption="Składka zdrowotna"
-          value={salary.skladkaZdrowotna}
-          name="skladkaZdrowotna"
-        />
+        <Edit caption="Dni przepracowane" value={salary.dniPrzepracowanych} name="dniPrzepracowanych" />
+        <Edit caption="Składka zdrowotna" value={salary.skladkaZdrowotna} name="skladkaZdrowotna" />
         <Edit caption="Składka ZUS" value={salary.zUS} name="zUS" />
         <Edit caption="Podatek" value={salary.podatek} name="podatek" />
         <Edit caption="Vat" value={salary.vat} name="vat" />
         <br />
-        <Edit
-          caption="Netto"
-          value={salary.netto}
-          name="netto"
-          readonly="true"
-        />
-        <Edit
-          caption="Pełne netto"
-          value={salary.pelneNetto}
-          name="pelneNetto"
-          readonly="true"
-        />
+        <Edit caption="Netto" value={salary.netto} name="netto" readonly="true" />
+        <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" />
         <Edit
           caption="Na urlopowo-chorobowe"
           value={salary.naUrlopowoChorobowe}
           name="naUrlopowoChorobowe"
           readonly="true"
         />
-        <Edit
-          caption="Do wypłaty"
-          value={salary.doWyplaty}
-          name="doWyplaty"
-          readonly="true"
-        />
-        <Edit
-          caption="Do rozdysponowania"
-          value={salary.doRozdysponowania}
-          name="doRozdysponowania"
-          readonly="true"
-        />
-        <button
-          type="submit"
-          onClick={() =>
-            dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.SAVE })
-          }
-        >
+        <Edit caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" />
+        <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" />
+        <button type="submit" onClick={() => dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.SAVE })}>
           Zapisz
         </button>
-        <button
-          type="submit"
-          onClick={() =>
-            dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.EVALUATE })
-          }
-        >
+        <button type="submit" onClick={() => dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.EVALUATE })}>
           Oblicz
         </button>
         {salary.id ? (
-          <button
-            type="submit"
-            onClick={() =>
-              dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.DELETE })
-            }
-          >
+          <button type="submit" onClick={() => dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.DELETE })}>
             Usuń
           </button>
         ) : (

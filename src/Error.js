@@ -16,10 +16,7 @@ function Error({ children }) {
       <button
         onClick={() => {
           setError(false);
-          if (
-            children.code === UNHANDLED_ERROR_CODE ||
-            (children.code > 400 && children.code < 404)
-          ) {
+          if (children.code === UNHANDLED_ERROR_CODE || (children.code > 400 && children.code < 404)) {
             navigate(FRONTEND_PATHS.login);
           }
         }}

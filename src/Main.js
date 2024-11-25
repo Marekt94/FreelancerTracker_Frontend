@@ -1,9 +1,8 @@
-import React, { useContext, useState } from "react";
 import SalaryList from "./SalaryList";
 import TakeSalary from "./Salary";
 import "./index.css";
 import { FRONTEND_PATHS } from "./SalaryClientURL";
-import { Routes, Route, generatePath, useNavigate, useSearchParams } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import { CookiesProvider } from "react-cookie";
 import YearSelector from "./YearSelector";
@@ -11,22 +10,20 @@ import { GlobalContextProvider, useGlobalContext } from "./GlobalContext";
 
 function Sidebar() {
   const navigate = useNavigate();
-  const {year} = useGlobalContext();
+  const { year } = useGlobalContext();
 
   return (
     //TODO - change to <NavLink> - nie da się, nieskończona pętla
     <ol>
       <ul onClick={() => navigate(FRONTEND_PATHS.login)}>Logowanie</ul>
-      <ul onClick={() => navigate(FRONTEND_PATHS.salariesPath + `?year=${year}`)}>
-        Wróć do listy odcinków
-      </ul>
+      <ul onClick={() => navigate(FRONTEND_PATHS.salariesPath + `?year=${year}`)}>Wróć do listy odcinków</ul>
       <ul onClick={() => navigate(FRONTEND_PATHS.newSalaryPath)}>Dodaj</ul>
     </ol>
   );
 }
 
 function Content() {
-  const {year, setYear} = useGlobalContext();
+  const { year, setYear } = useGlobalContext();
 
   return (
     <CookiesProvider>
@@ -35,10 +32,7 @@ function Content() {
           path={FRONTEND_PATHS.salariesPath}
           element={
             <SalaryList>
-              <YearSelector
-                currentYear={year}
-                onYearChange={setYear}
-              />
+              <YearSelector currentYear={year} onYearChange={setYear} />
             </SalaryList>
           }
         />
@@ -46,10 +40,7 @@ function Content() {
           path={FRONTEND_PATHS.salaryPath}
           element={
             <TakeSalary>
-              <YearSelector
-                currentYear={year}
-                onYearChange={setYear}
-              />
+              <YearSelector currentYear={year} onYearChange={setYear} />
             </TakeSalary>
           }
         />
@@ -57,10 +48,7 @@ function Content() {
           path={FRONTEND_PATHS.newSalaryPath}
           element={
             <TakeSalary>
-              <YearSelector
-                currentYear={year}
-                onYearChange={setYear}
-              />
+              <YearSelector currentYear={year} onYearChange={setYear} />
             </TakeSalary>
           }
         />

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { MONTHS } from "./Dictionaries";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import { BACKEND_PATHS } from "./SalaryClientURL";
 import Loading from "./Loading";
 import { useGlobalContext } from "./GlobalContext";
 
-function SalaryList({children}) {
+function SalaryList({ children }) {
   const { isLoading, setError, year } = useGlobalContext();
   const [salaries, setSalaries] = useState(undefined);
   const navigate = useNavigate();
@@ -26,17 +26,15 @@ function SalaryList({children}) {
 
   function onEditClick(event) {
     const id = event.target.getAttribute("id");
-    id
-      ? navigate(`${BACKEND_PATHS.salaryPath}/${id}`)
-      : navigate(`${BACKEND_PATHS.salaryPath}`);
+    id ? navigate(`${BACKEND_PATHS.salaryPath}/${id}`) : navigate(`${BACKEND_PATHS.salaryPath}`);
   }
 
   function createSalaryList(json) {
     let salary = json.sort((x, y) => x.miesiac - y.miesiac);
     return salary.map((obj) => (
       <ul id={obj.id} onClick={onEditClick} key={obj.id}>
-        {MONTHS.find((element) => element.id === obj.miesiac).value}: stawka
-        godzinowa - {obj.stawka}, netto = {obj.netto}
+        {MONTHS.find((element) => element.id === obj.miesiac).value}: stawka godzinowa - {obj.stawka}, netto ={" "}
+        {obj.netto}
       </ul>
     ));
   }

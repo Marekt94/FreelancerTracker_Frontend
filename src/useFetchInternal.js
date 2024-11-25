@@ -3,20 +3,13 @@ export const SERVER_ADRESS = process.env.REACT_APP_BACKEND_ADDRESS;
 
 export default function useFetchInternal(setError) {
   function createQueryString(paramsList) {
-    return (
-      "?" + paramsList.map((param) => `${param.name}=${param.value}`).join("&")
-    );
+    return "?" + paramsList.map((param) => `${param.name}=${param.value}`).join("&");
   }
 
   function generateURL(serverAdress, endpoint, params = "") {
-    const lServerAdress = serverAdress.endsWith("/")
-      ? serverAdress
-      : serverAdress + "/";
-    const lEndpoint = endpoint.startsWith("/")
-      ? endpoint.slice(1, endpoint.length)
-      : endpoint;
-    const lURL =
-      lServerAdress + lEndpoint + (params ? createQueryString(params) : "");
+    const lServerAdress = serverAdress.endsWith("/") ? serverAdress : serverAdress + "/";
+    const lEndpoint = endpoint.startsWith("/") ? endpoint.slice(1, endpoint.length) : endpoint;
+    const lURL = lServerAdress + lEndpoint + (params ? createQueryString(params) : "");
     console.log("URL: " + lURL);
     return lURL;
   }
@@ -26,7 +19,7 @@ export default function useFetchInternal(setError) {
       const opt = {
         ...requestOptions,
         credentials: "include",
-        mode: "cors",
+        // mode: "cors",
       };
       console.log(opt);
       const res = await fetch(URL, opt);
@@ -35,14 +28,10 @@ export default function useFetchInternal(setError) {
 
         return data;
       } else {
-        setError
-          ? setError({ code: res.status, statusText: res.statusText })
-          : alert(res);
+        setError ? setError({ code: res.status, statusText: res.statusText }) : alert(res);
       }
     } catch (e) {
-      setError
-        ? setError({ code: UNHANDLED_ERROR_CODE, statusText: e.message })
-        : alert(e);
+      setError ? setError({ code: UNHANDLED_ERROR_CODE, statusText: e.message }) : alert(e);
     }
   }
 

@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
-import Error from "./Error";
+import Error from "./components/Error";
 import { DEF_ERROR } from "./Const";
-import "./index.css";
-import { DEF_YEAR } from "./YearSelector";
+import "./css/index.css";
+import { DEF_YEAR } from "./components/YearSelector";
 import { useSearchParams } from "react-router-dom";
 
 const GlobalContext = createContext();
@@ -54,13 +54,13 @@ function GlobalContextProvider({ children }) {
     }
   }, [year, searchParams, stableSetSearchParams]);
 
-  function setLoadingState(state) {
+  const setLoadingState = useCallback((state) => {
     dispatch({ type: ACTION_TYPE.setIsLoading, payload: state });
-  }
+  }, []);
 
-  function setError(error) {
+  const setError = useCallback((error) => {
     dispatch({ type: ACTION_TYPE.setError, payload: error });
-  }
+  }, []);
 
   function setYear(year) {
     dispatch({ type: ACTION_TYPE.setYear, payload: year });

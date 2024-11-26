@@ -1,12 +1,12 @@
 import SalaryList from "./SalaryList";
 import TakeSalary from "./Salary";
-import "./index.css";
-import { FRONTEND_PATHS } from "./SalaryClientURL";
+import "../css/index.css";
+import { FRONTEND_PATHS } from "../Endpoints";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import { CookiesProvider } from "react-cookie";
 import YearSelector from "./YearSelector";
-import { GlobalContextProvider, useGlobalContext } from "./GlobalContext";
+import { GlobalContextProvider, useGlobalContext } from "../GlobalContext";
 
 function Sidebar() {
   const navigate = useNavigate();

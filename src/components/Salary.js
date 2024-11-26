@@ -1,47 +1,16 @@
 import React, { useCallback, useEffect, useReducer } from "react";
-import "./index.css";
+import "../css/index.css";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
-import { BACKEND_PATHS } from "./SalaryClientURL";
-import { defDict } from "./Dictionaries";
-import { useSalary } from "./useSalary";
-import { MONTHS } from "./Dictionaries";
+import { BACKEND_PATHS } from "../Endpoints";
+import { useSalary } from "../useSalary";
+import { MONTHS, DEF_DICT } from "../Const";
 import Loading from "./Loading";
-import { useGlobalContext } from "./GlobalContext";
+import { useGlobalContext } from "../GlobalContext";
+import { DEF_SALARY } from "../Const";
 
-// TODO - może trzeba do sobnego pliku?
 //TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
-const defSalary = {
-  id: null,
-  idFormyOpodatkowania: 0,
-  formaOpodatkowania: {
-    id: 0,
-    nazwa: "",
-    wysokoscPodatkuList: [
-      {
-        id: 0,
-        stwka: 0,
-        formaOpodatkowaniaId: 0,
-      },
-    ],
-  },
-  miesiac: 0,
-  stawka: 0,
-  dniRoboczych: 0,
-  dniPrzepracowanych: 0,
-  skladkaZdrowotna: 0,
-  zUS: 0,
-  netto: 0,
-  pelneNetto: 0,
-  doWyplaty: 0,
-  doRozdysponowania: 0,
-  naUrlopowoChorobowe: 0,
-  zablokowane: false,
-  brutto: 0,
-  vat: 0,
-  podatek: 0,
-};
 
 const TASK = {
   SAVE: "save",
@@ -58,9 +27,9 @@ const ACTION_TYPE = {
 };
 
 const initialState = {
-  salary: defSalary,
-  miesiace: defDict,
-  formaOpodatkowania: defDict,
+  salary: DEF_SALARY,
+  miesiace: DEF_DICT,
+  formaOpodatkowania: DEF_DICT,
   task: null,
   readyToExecute: false,
 };
@@ -132,7 +101,7 @@ export function TakeSalary({ children }) {
 
     async function fetchData(id) {
       const dataForNewSalary = await fetchDataForNewSalary(year);
-      const salary = id ? await fetchSalary(id) : defSalary;
+      const salary = id ? await fetchSalary(id) : DEF_SALARY;
       const action = {
         type: ACTION_TYPE.INIT,
         payload: {
@@ -144,7 +113,7 @@ export function TakeSalary({ children }) {
     }
 
     fetchData(initID);
-  }, [year, initID]);
+  }, [year, initID, getDataForNewSalary, getSalary]);
 
   const DeleteSalary = useCallback(
     async (id) => {

@@ -1,35 +1,47 @@
 import { useGlobalContext } from "./GlobalContext";
-import { BACKEND_PATHS } from "./SalaryClientURL";
-import useFetchInternal, { SERVER_ADRESS } from "./useFetchInternal";
+import { BACKEND_PATHS } from "./Endpoints";
+import internalFetch, { SERVER_ADRESS, generateURL } from "./useFetchInternal";
+import { useCallback } from "react";
 
 export function useSalary(setError) {
   const { setLoadingState } = useGlobalContext();
-  const { internalFetch, generateURL } = useFetchInternal(setError);
 
-  async function internalSalaryFetch(URL, requestOptions) {
-    setLoadingState(true);
-    const data = await internalFetch(URL, requestOptions);
-    setLoadingState(false);
-    return data;
-  }
+  const internalSalaryFetch = useCallback(
+    async (URL, requestOptions) => {
+      setLoadingState(true);
+      const data = await internalFetch(URL, requestOptions, setError);
+      setLoadingState(false);
+      return data;
+    },
+    [setLoadingState, setError]
+  );
 
-  async function getSalaries(params) {
-    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salariesPath, params);
-    const data = await internalSalaryFetch(URL);
-    return data;
-  }
+  const getSalaries = useCallback(
+    async (params) => {
+      const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salariesPath, params);
+      const data = await internalSalaryFetch(URL);
+      return data;
+    },
+    [internalSalaryFetch]
+  );
 
-  async function getSalary(id) {
-    const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salaryPath + (id ? `/${id}` : "`/0"));
-    const data = await internalSalaryFetch(URL);
-    return data;
-  }
+  const getSalary = useCallback(
+    async (id) => {
+      const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.salaryPath + (id ? `/${id}` : "`/0"));
+      const data = await internalSalaryFetch(URL);
+      return data;
+    },
+    [internalSalaryFetch]
+  );
 
-  async function getDataForNewSalary(year) {
-    const URL = generateURL(SERVER_ADRESS, `${BACKEND_PATHS.getDataForNewSalary}/${year}`);
-    const data = await internalSalaryFetch(URL);
-    return data;
-  }
+  const getDataForNewSalary = useCallback(
+    async (year) => {
+      const URL = generateURL(SERVER_ADRESS, `${BACKEND_PATHS.getDataForNewSalary}/${year}`);
+      const data = await internalSalaryFetch(URL);
+      return data;
+    },
+    [internalSalaryFetch]
+  );
 
   async function saveSalary(salary) {
     const requestOptions = {

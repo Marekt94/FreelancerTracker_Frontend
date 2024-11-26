@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
-import { MONTHS } from "./Dictionaries";
+import "../css/index.css";
+import { MONTHS } from "../Const";
 import { useNavigate } from "react-router-dom";
-import { useSalary } from "./useSalary";
-import { BACKEND_PATHS } from "./SalaryClientURL";
+import { useSalary } from "../useSalary";
+import { BACKEND_PATHS } from "../Endpoints";
 import Loading from "./Loading";
-import { useGlobalContext } from "./GlobalContext";
+import { useGlobalContext } from "../GlobalContext";
 
 function SalaryList({ children }) {
   const { isLoading, setError, year } = useGlobalContext();
@@ -22,7 +22,7 @@ function SalaryList({ children }) {
     }
 
     fetchSalaries();
-  }, [year]);
+  }, [year, getSalaries]);
 
   function onEditClick(event) {
     const id = event.target.getAttribute("id");

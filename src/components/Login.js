@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Edit } from "./MyComponents";
 import { hashSync } from "bcryptjs";
 import { useCookies } from "react-cookie";
-import { useAuthorize } from "./useAuthorize";
+import { useAuthorize } from "../useAuthorize";
 import Loading from "./Loading";
-import { useGlobalContext } from "./GlobalContext";
+import { useGlobalContext } from "../GlobalContext";
 
 export default function Login() {
   const [cookies] = useCookies();

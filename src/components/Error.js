@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { UNHANDLED_ERROR_CODE } from "./Const";
-import { useGlobalContext } from "./GlobalContext";
-import "./index.css";
-import { FRONTEND_PATHS } from "./SalaryClientURL";
+import { UNHANDLED_ERROR_CODE } from "../Const";
+import { useGlobalContext } from "../GlobalContext";
+import "../css/index.css";
+import { FRONTEND_PATHS } from "../Endpoints";
 
 function Error({ children }) {
   const { setError } = useGlobalContext();

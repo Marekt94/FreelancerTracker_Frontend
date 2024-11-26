@@ -1,14 +1,13 @@
-import useFetchInternal, { SERVER_ADRESS } from "./useFetchInternal";
-import { BACKEND_PATHS } from "./SalaryClientURL";
+import internalFetch, { SERVER_ADRESS, generateURL } from "./useFetchInternal";
+import { BACKEND_PATHS } from "./Endpoints";
 import { useGlobalContext } from "./GlobalContext";
 
 export function useAuthorize(setError) {
   const { setLoadingState } = useGlobalContext();
-  const { internalFetch, generateURL } = useFetchInternal(setError);
 
   async function internalAuthFetch(URL, requestOptions) {
     setLoadingState(true);
-    const dat = await internalFetch(URL, requestOptions);
+    const dat = await internalFetch(URL, requestOptions, setError);
     setLoadingState(false);
     return dat;
   }

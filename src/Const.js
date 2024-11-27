@@ -14,6 +14,7 @@ export const DEF_SALARY = {
     ],
   },
   miesiac: 0,
+  rok: 0,
   stawka: 0,
   dniRoboczych: 0,
   dniPrzepracowanych: 0,

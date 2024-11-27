@@ -32,6 +32,7 @@ const initialState = {
   formaOpodatkowania: DEF_DICT,
   task: null,
   readyToExecute: false,
+  year: 0,
 };
 
 function reducer(state, action) {
@@ -41,7 +42,7 @@ function reducer(state, action) {
         id: obj.iD,
         value: obj.monthName,
       }));
-      if (action.payload.salary.miesiac) {
+      if (action.payload.year === action.payload.salary.rok && action.payload.salary.miesiac) {
         const currMiesiac = MONTHS.find((obj) => obj.id === action.payload.salary.miesiac);
         miesiace = [...miesiace, { id: currMiesiac.id, value: currMiesiac.value }];
       }
@@ -105,8 +106,9 @@ export function TakeSalary({ children }) {
       const action = {
         type: ACTION_TYPE.INIT,
         payload: {
-          salary: salary,
-          dataForNewSalary: dataForNewSalary,
+          salary,
+          dataForNewSalary,
+          year,
         },
       };
       dispatch(action);
@@ -195,6 +197,7 @@ export function TakeSalary({ children }) {
       ...salary,
       id,
       miesiac: miesiacTemp?.id,
+      rok: year,
       idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
       formaOpodatkowania: {
         id: formaOpodatkowaniaTemp?.id,

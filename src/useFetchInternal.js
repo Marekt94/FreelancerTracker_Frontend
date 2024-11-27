@@ -18,7 +18,7 @@ export default async function internalFetch(URL, requestOptions, setError) {
     const opt = {
       ...requestOptions,
       credentials: "include",
-      // mode: "cors",
+      mode: "cors",
     };
     console.log(opt);
     const res = await fetch(URL, opt);

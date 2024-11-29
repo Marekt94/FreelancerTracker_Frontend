@@ -26,8 +26,8 @@
       "podatek": 0
     },
     {
-      "id": "2023",
-      "miesiac": 8,
+      "id": "2024",
+      "miesiac": 2,
       "rok": 2022,
       "idFormyOpodatkowania": 3,
       "formaOpodatkowania": {
@@ -36,8 +36,8 @@
         "nazwa": ""
       },
       "stawka": 165,
-      "dniRoboczych": 22,
-      "dniPrzepracowanych": 22,
+      "dniRoboczych": 23,
+      "dniPrzepracowanych": 19,
       "skladkaZdrowotna": 335.940002441406,
       "zUS": 0,
       "netto": 29040,
@@ -359,39 +359,108 @@
       "brutto": 0,
       "vat": "",
       "podatek": ""
+    },
+    {
+      "id": "",
+      "formaOpodatkowania": {},
+      "stawka": "",
+      "dniRoboczych": "",
+      "dniPrzepracowanych": "",
+      "skladkaZdrowotna": "",
+      "zUS": "",
+      "netto": "",
+      "pelneNetto": "",
+      "doWyplaty": "",
+      "doRozdysponowania": "",
+      "naUrlopowoChorobowe": "",
+      "zablokowane": false,
+      "brutto": 0,
+      "vat": "",
+      "podatek": ""
+    },
+    {
+      "id": "",
+      "formaOpodatkowania": {},
+      "stawka": "",
+      "dniRoboczych": "",
+      "dniPrzepracowanych": "",
+      "skladkaZdrowotna": "",
+      "zUS": "",
+      "netto": "",
+      "pelneNetto": "",
+      "doWyplaty": "",
+      "doRozdysponowania": "",
+      "naUrlopowoChorobowe": "",
+      "zablokowane": false,
+      "brutto": 0,
+      "vat": "",
+      "podatek": ""
     }
   ],
-  "salary": {
-    "id": 25,
-    "miesiac": 5,
-    "rok": 2023,
-    "idFormyOpodatkowania": 3,
-    "formaOpodatkowania": {
-      "id": 3,
-      "wysokoscPodatkuList": [
-        {
-          "id": 1,
-          "stawka": 12,
-          "formaOpodatkowaniaId": 3
-        }
-      ],
-      "nazwa": "rycza�t"
+  "salary": [
+    {
+      "id": "2023",
+      "miesiac": 5,
+      "rok": 2023,
+      "idFormyOpodatkowania": 3,
+      "formaOpodatkowania": {
+        "id": 3,
+        "wysokoscPodatkuList": [
+          {
+            "id": 1,
+            "stawka": 12,
+            "formaOpodatkowaniaId": 3
+          }
+        ],
+        "nazwa": "rycza�t"
+      },
+      "stawka": 165,
+      "dniRoboczych": 21,
+      "dniPrzepracowanych": 21,
+      "skladkaZdrowotna": 626.929992675781,
+      "zUS": 305.609985351563,
+      "netto": 27720,
+      "pelneNetto": 27720,
+      "doWyplaty": 23461.060546875,
+      "doRozdysponowania": 19782.66015625,
+      "zablokowane": false,
+      "naUrlopowoChorobowe": 3678.400390625,
+      "brutto": 0,
+      "vat": 0,
+      "podatek": 0
     },
-    "stawka": 165,
-    "dniRoboczych": 21,
-    "dniPrzepracowanych": 21,
-    "skladkaZdrowotna": 626.929992675781,
-    "zUS": 305.609985351563,
-    "netto": 27720,
-    "pelneNetto": 27720,
-    "doWyplaty": 23461.060546875,
-    "doRozdysponowania": 19782.66015625,
-    "zablokowane": false,
-    "naUrlopowoChorobowe": 3678.400390625,
-    "brutto": 0,
-    "vat": 0,
-    "podatek": 0
-  },
+    {
+      "id": "2024",
+      "miesiac": 5,
+      "rok": 2023,
+      "idFormyOpodatkowania": 3,
+      "formaOpodatkowania": {
+        "id": 3,
+        "wysokoscPodatkuList": [
+          {
+            "id": 1,
+            "stawka": 12,
+            "formaOpodatkowaniaId": 3
+          }
+        ],
+        "nazwa": "rycza�t"
+      },
+      "stawka": 165,
+      "dniRoboczych": 21,
+      "dniPrzepracowanych": 21,
+      "skladkaZdrowotna": 626.929992675781,
+      "zUS": 305.609985351563,
+      "netto": 27720,
+      "pelneNetto": 27720,
+      "doWyplaty": 23461.060546875,
+      "doRozdysponowania": 19782.66015625,
+      "zablokowane": false,
+      "naUrlopowoChorobowe": 3678.400390625,
+      "brutto": 0,
+      "vat": 0,
+      "podatek": 0
+    }
+  ],
   "save_salary": [
     {
       "id": "6611",
@@ -594,7 +663,50 @@
       "vat": "",
       "podatek": "",
       "rok": "2023"
+    },
+    {
+      "id": "",
+      "formaOpodatkowania": {},
+      "stawka": "",
+      "dniRoboczych": "",
+      "dniPrzepracowanych": "",
+      "skladkaZdrowotna": "",
+      "zUS": "",
+      "netto": "",
+      "pelneNetto": "",
+      "doWyplaty": "",
+      "doRozdysponowania": "",
+      "naUrlopowoChorobowe": "",
+      "zablokowane": false,
+      "brutto": 0,
+      "vat": "",
+      "podatek": "",
+      "rok": 2023
+    },
+    {
+      "id": "",
+      "formaOpodatkowania": {},
+      "stawka": "",
+      "dniRoboczych": "",
+      "dniPrzepracowanych": "",
+      "skladkaZdrowotna": "",
+      "zUS": "",
+      "netto": "",
+      "pelneNetto": "",
+      "doWyplaty": "",
+      "doRozdysponowania": "",
+      "naUrlopowoChorobowe": "",
+      "zablokowane": false,
+      "brutto": 0,
+      "vat": "",
+      "podatek": "",
+      "rok": 2023
     }
+  ],
+  "delete_salary":[{
+    "id":"2023"
+  },
+  {"id":"2024"}
   ],
   "get_data_for_new_salary": [
     {
@@ -652,5 +764,11 @@
         }
       ]
     }
-  ]
+  ],
+  "login":{
+
+  },
+  "logout":{
+
+  }
 }

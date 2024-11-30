@@ -221,7 +221,7 @@ export function TakeSalary({ children }) {
     dispatch({ type: ACTION_TYPE.SUBMIT, payload: newSalary });
   }
 
-  return !isLoading ? (
+  return (
     <>
       {children}
       <form onSubmit={handleSubmit}>
@@ -232,7 +232,7 @@ export function TakeSalary({ children }) {
           name="miesiac"
           dictionary={miesiace}
           defaultValue={0}
-          readonly="true"
+          readonly={isLoading}
           onChange={(e) => {
             dispatch({
               type: ACTION_TYPE.SET_SALARY,
@@ -243,14 +243,15 @@ export function TakeSalary({ children }) {
             });
           }}
         />
-        <Edit caption="Stawka godzinowa netto" value={salary.stawka} name="stawka" />
-        <Edit caption="Dni robocze w miesiącu" value={salary.dniRoboczych} name="dniRoboczych" />
+        <Edit caption="Stawka godzinowa netto" value={salary.stawka} name="stawka" readonly={isLoading} />
+        <Edit caption="Dni robocze w miesiącu" value={salary.dniRoboczych} name="dniRoboczych" readonly={isLoading} />
         <Combo
           caption="Forma opodatkowania"
           value={salary.idFormyOpodatkowania}
           name="idFormyOpodatkowania"
           dictionary={formaOpodatkowania}
           defaultValue={0}
+          readonly={isLoading}
           onChange={(e) => {
             const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.value === e.target.value);
 
@@ -264,11 +265,21 @@ export function TakeSalary({ children }) {
             });
           }}
         />
-        <Edit caption="Dni przepracowane" value={salary.dniPrzepracowanych} name="dniPrzepracowanych" />
-        <Edit caption="Składka zdrowotna" value={salary.skladkaZdrowotna} name="skladkaZdrowotna" />
-        <Edit caption="Składka ZUS" value={salary.zUS} name="zUS" />
-        <Edit caption="Podatek" value={salary.podatek} name="podatek" />
-        <Edit caption="Vat" value={salary.vat} name="vat" />
+        <Edit
+          caption="Dni przepracowane"
+          value={salary.dniPrzepracowanych}
+          name="dniPrzepracowanych"
+          readonly={isLoading}
+        />
+        <Edit
+          caption="Składka zdrowotna"
+          value={salary.skladkaZdrowotna}
+          name="skladkaZdrowotna"
+          readonly={isLoading}
+        />
+        <Edit caption="Składka ZUS" value={salary.zUS} name="zUS" readonly={isLoading} />
+        <Edit caption="Podatek" value={salary.podatek} name="podatek" readonly={isLoading} />
+        <Edit caption="Vat" value={salary.vat} name="vat" readonly={isLoading} />
         <br />
         <Edit caption="Netto" value={salary.netto} name="netto" readonly="true" />
         <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" />
@@ -294,9 +305,8 @@ export function TakeSalary({ children }) {
           <></>
         )}
       </form>
+      {isLoading && <Loading></Loading>}
     </>
-  ) : (
-    <Loading />
   );
 }
 

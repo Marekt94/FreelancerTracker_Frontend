@@ -5,7 +5,7 @@
   --background-color-active: grey;
   --font-color-active: white;
 
-  --input-font-size: 16px;
+  --input-font-size: 1rem;
   --input-background-color: #f2f2f2;
 
   --background-color-readonly: #e0e0e0;
@@ -31,7 +31,7 @@ body {
   text-align: center;
   background-color: var(--background-color-standby);
   padding: 5px;
-  font-size: 48px;
+  font-size: 3rem;
   box-shadow: 6px 6px 12px var(--background-color-standby), -6px -6px 12px var(--font-color-active);
 }
 
@@ -49,7 +49,7 @@ body {
 .content {
   padding: 5px;
   margin: 6px;
-  font-size: 24px;
+  font-size: 1.5rem;
   background-color: var(--background-color-standby);
   border: 1px solid var(--background-color-active);
   border-radius: 10px;
@@ -64,7 +64,7 @@ select {
   margin: 5px;
   color: #090909;
   padding: 4px;
-  font-size: var(--input-font-size);
+  font-size: 1rem;
   border-radius: 0.5em;
   background-color: var(--input-background-color);
   border: 1px solid black;
@@ -115,7 +115,7 @@ button {
   margin: 10px;
   color: #090909;
   padding: 10px;
-  font-size: var(--input-font-size);
+  font-size: 1rem;
   border-radius: 0.5em;
   background: var(--background-color-standby);
   border: 1px solid black;
@@ -137,7 +137,7 @@ input{
   margin-left: 5px;
   background: var(--input-background-color);
   vertical-align: 0%;
-  font-size: var(--input-font-size);
+  font-size: 1rem;
   box-shadow: 6px 6px 12px var(--background-color-active);
   border: 1px solid black;
   cursor: text;
@@ -153,5 +153,5 @@ select:disabled {
 }
 
 label {
-  font-size: var(--input-font-size);
+  font-size: 1rem;
 }

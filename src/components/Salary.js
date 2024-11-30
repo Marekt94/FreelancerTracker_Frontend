@@ -137,7 +137,9 @@ export function TakeSalary({ children }) {
       type: ACTION_TYPE.SET_SALARY,
       payload: { ...salary, id: data.id },
     });
-    navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`);
+    if (Number(salary.id) !== Number(data.id)) {
+      navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
+    }
   }, [navigate, salary, saveSalary, year]);
 
   useEffect(() => {

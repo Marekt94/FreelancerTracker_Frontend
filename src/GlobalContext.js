@@ -40,7 +40,7 @@ function GlobalContextProvider({ children }) {
 
   const stableSetSearchParams = useCallback(
     (params) => {
-      setSearchParams(params);
+      setSearchParams(params, { replace: true });
     },
     [setSearchParams]
   );

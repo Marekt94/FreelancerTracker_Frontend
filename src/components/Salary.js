@@ -42,7 +42,7 @@ function reducer(state, action) {
         id: obj.iD,
         value: obj.monthName,
       }));
-      if (action.payload.year === action.payload.salary.rok && action.payload.salary.miesiac) {
+      if (Number(action.payload.year) === action.payload.salary.rok && action.payload.salary.miesiac) {
         const currMiesiac = MONTHS.find((obj) => obj.id === action.payload.salary.miesiac);
         miesiace = [...miesiace, { id: currMiesiac.id, value: currMiesiac.value }];
       }

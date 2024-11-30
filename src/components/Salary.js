@@ -58,7 +58,7 @@ function reducer(state, action) {
         ...state,
         salary: action.payload.salary,
         miesiace: miesiace,
-        formaOpodatkowania: formaOpodatkowania,
+        formaOpodatkowania: [DEF_DICT, ...formaOpodatkowania],
       };
 
     case ACTION_TYPE.SET_SALARY: {

@@ -10,7 +10,6 @@ export function Edit({ caption, value, name, readonly = false, onChange = null, 
         name={name}
         defaultValue={value ? value : undefined}
         onChange={onChange}
-        className={"input" + readonly ? ":read-only" : ""}
       />
     </div>
   );
@@ -22,7 +21,6 @@ export function Combo({ caption, value, name, dictionary, readonly = false, onCh
     <div style={{ flexDirection: "row" }}>
       <label>{caption}</label>
       <select
-        className={"select" + readonly ? ":read-only" : ""}
         name={name}
         disabled={readonly}
         onChange={onChange}

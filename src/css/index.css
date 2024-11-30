@@ -66,10 +66,11 @@ select {
   padding: 4px;
   font-size: var(--input-font-size);
   border-radius: 0.5em;
-  background: var(--input-background-color);
+  background-color: var(--input-background-color);
   border: 1px solid black;
   transition: all 0.3s;
   box-shadow: 6px 6px 12px var(--background-color-active);
+  cursor: default;
 }
 
 ul {
@@ -131,8 +132,7 @@ button:hover {
   background: var(--background-color-active);
 }
 
-input,
-select {
+input{
   margin: 5px;
   margin-left: 5px;
   background: var(--input-background-color);
@@ -148,9 +148,8 @@ input:read-only {
   cursor: default;
 }
 
-select:read-only {
-  background: var(--background-color-readonly); /* Lekko szary kolor */
-  cursor: default;
+select:disabled {
+  background: var(--background-color-readonly);
 }
 
 label {

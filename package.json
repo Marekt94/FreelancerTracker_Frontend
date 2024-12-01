@@ -23,7 +23,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "fake-server": "json-server -p 8080 -h www.localhost fake_api/fake_api.json"
+    "fake-server": "json-server -p 8080 -h www.localhost fake_api/fake_api.json",
+    "serve": "serve -p 443 -s C:\\Repo\\FreelancerTracker_Frontend\\build --ssl-key C:\\Repo\\FreelancerTracker_Frontend\\moj_klucz.pem --ssl-cert C:\\Repo\\FreelancerTracker_Frontend\\moj_cert.pem"
   },
   "eslintConfig": {
     "extends": "react-app",

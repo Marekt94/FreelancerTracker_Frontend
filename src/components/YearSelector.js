@@ -1,5 +1,5 @@
-export const YEARS = [{ year: 2022 }, { year: 2023 }, { year: 2024 }];
-export const DEF_YEAR = YEARS[1].year;
+export const YEARS = [{ year: 2022 }, { year: 2023 }, { year: 2024 }, { year: 2025 }];
+export const DEF_YEAR = YEARS[2].year;
 
 export default function YearSelector({ currentYear, onYearChange }) {
   return (

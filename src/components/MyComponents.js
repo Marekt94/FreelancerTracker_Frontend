@@ -20,7 +20,12 @@ export function Combo({ caption, value, name, dictionary, readonly = false, onCh
   return (
     <div style={{ flexDirection: "row" }}>
       <label>{caption}</label>
-      <select name={name} readOnly={readonly} onChange={onChange} value={dictPosition?.value || DEF_DICT}>
+      <select
+        name={name}
+        disabled={readonly}
+        onChange={onChange}
+        value={dictPosition?.value || DEF_DICT}
+      >
         {dictionary.map((slownik) => (
           <option>{slownik.value}</option>
         ))}

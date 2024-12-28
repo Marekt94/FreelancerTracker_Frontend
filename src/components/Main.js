@@ -2,7 +2,7 @@ import SalaryList from "./SalaryList";
 import TakeSalary from "./Salary";
 import "../css/index.css";
 import { FRONTEND_PATHS } from "../Endpoints";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, NavLink } from "react-router-dom";
 import Login from "./Login";
 import { CookiesProvider } from "react-cookie";
 import YearSelector from "./YearSelector";
@@ -15,9 +15,9 @@ function Sidebar() {
   return (
     //TODO - change to <NavLink> - nie da się, nieskończona pętla
     <ol>
-      <ul onClick={() => navigate(FRONTEND_PATHS.login)}>Logowanie</ul>
-      <ul onClick={() => navigate(FRONTEND_PATHS.salariesPath + `?year=${year}`)}>Wróć do listy odcinków</ul>
-      <ul onClick={() => navigate(FRONTEND_PATHS.newSalaryPath)}>Dodaj</ul>
+      <li><NavLink className="navlink" to={FRONTEND_PATHS.login}>Logowanie</NavLink></li>
+      <li><NavLink className="navlink" to={FRONTEND_PATHS.salariesPath + `?year=${year}`}>Wróć do listy odcinków</NavLink></li>
+      <li><NavLink className="navlink" to={FRONTEND_PATHS.newSalaryPath}>Dodaj</NavLink></li>
     </ol>
   );
 }

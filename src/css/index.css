@@ -91,6 +91,34 @@ ul:hover {
   text-shadow: none;
 }
 
+.navlink {
+  display: grid;
+  margin: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.navlink:hover {
+  background-color: var(--background-color-active);
+  color: var(--font-color-active);
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: grab;
+  transition: all 0.3s;
+  box-shadow: 6px 6px 12px var(--background-color-active);
+  text-shadow: none;
+}
+
+.navlink:active{
+  color: black;
+}
+
+li{
+  list-style-type: none;
+}
+
 .sidebar > ol {
   margin-left: auto;
   margin-right: auto;
@@ -101,12 +129,12 @@ ul:hover {
   justify-content: center;
 }
 
-.sidebar > ol > ul {
+.sidebar > ol > li {
   border-left: solid;
   width: 300px;
 }
 
-.sidebar > ol > ul:last-child {
+.sidebar > ol > li:last-child {
   border-right: solid;
 }
 

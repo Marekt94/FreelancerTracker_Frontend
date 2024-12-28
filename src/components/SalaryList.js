@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/index.css";
 import { MONTHS } from "../Const";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSalary } from "../useSalary";
 import { BACKEND_PATHS } from "../Endpoints";
 import Loading from "./Loading";
@@ -32,10 +32,12 @@ function SalaryList({ children }) {
   function createSalaryList(json) {
     let salary = json.sort((x, y) => x.miesiac - y.miesiac);
     return salary.map((obj) => (
-      <ul id={obj.id} onClick={onEditClick} key={obj.id}>
-        {MONTHS.find((element) => element.id === obj.miesiac).value}: stawka godzinowa - {obj.stawka}, netto ={" "}
-        {obj.netto}
-      </ul>
+      <li>
+        <NavLink className="navlink" to={`${BACKEND_PATHS.salaryPath}/${obj.id}`}>
+          {MONTHS.find((element) => element.id === obj.miesiac).value}: stawka godzinowa - {obj.stawka}, netto ={" "}
+          {obj.netto}        
+        </NavLink>
+      </li>
     ));
   }
 

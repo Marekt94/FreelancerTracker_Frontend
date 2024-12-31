@@ -9,6 +9,7 @@ import { MONTHS, DEF_DICT } from "../Const";
 import Loading from "./Loading";
 import { useGlobalContext } from "../GlobalContext";
 import { DEF_SALARY } from "../Const";
+import YearSelectorWithContext from "./YearSelectorWithContext";
 
 //TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
 
@@ -225,6 +226,7 @@ export function TakeSalary({ children }) {
 
   return (
     <>
+      <YearSelectorWithContext/>
       {children}
       <form onSubmit={handleSubmit}>
         <Edit caption="Id" value={salary.id} name="id" readonly="true" />

@@ -6,6 +6,7 @@ import { useSalary } from "../useSalary";
 import { BACKEND_PATHS } from "../Endpoints";
 import Loading from "./Loading";
 import { useGlobalContext } from "../GlobalContext";
+import YearSelectorWithContext from "./YearSelectorWithContext";
 
 function SalaryList({ children }) {
   const { isLoading, setError, year } = useGlobalContext();
@@ -48,6 +49,7 @@ function SalaryList({ children }) {
 
   return !isLoading ? (
     <>
+      <YearSelectorWithContext/>
       {children}
       <ol>{updateSalaries(salaries)}</ol>
     </>

@@ -48,3 +48,4 @@ export const MONTHS = [
 export const DEF_DICT = [{ id: 0, value: "" }];
 
 export const UNHANDLED_ERROR_CODE = "unhandled";
+export const FATAL_ERROR_CODE = "FATAL ERROR";

@@ -1,5 +1,5 @@
 import { useNavigate, useRouteError } from "react-router-dom";
-import { UNHANDLED_ERROR_CODE } from "../Const";
+import { DEF_ERROR, UNHANDLED_ERROR_CODE, FATAL_ERROR_CODE } from "../Const";
 import { useGlobalContext } from "../GlobalContext";
 import "../css/index.css";
 import { FRONTEND_PATHS } from "../Endpoints";
@@ -8,16 +8,16 @@ function Error() {
   const { error: errorContext, setError } = useGlobalContext();
   const errorRouter = useRouteError();
   const navigate = useNavigate();
-  const error = {};
+  let error = {};
 
-  if (!errorRouter){
-    error.statusText = errorContext?.statusText;
-    error.code = UNHANDLED_ERROR_CODE;
+  if (errorContext && (errorContext !== DEF_ERROR)){
+    error = errorContext;
   }
-  else
-  {
-    error.statusText = errorRouter.data;
-    error.code = errorRouter.status;
+  else if (errorRouter){
+    error = {statusText: errorRouter.data, code: UNHANDLED_ERROR_CODE} 
+  }
+  else{
+    error = {statusText: "Error is not catch neither by error mechanism nor errorElement", code: FATAL_ERROR_CODE} 
   }
 
   return (

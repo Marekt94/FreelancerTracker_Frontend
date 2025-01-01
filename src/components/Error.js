@@ -1,12 +1,24 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRouteError } from "react-router-dom";
 import { UNHANDLED_ERROR_CODE } from "../Const";
 import { useGlobalContext } from "../GlobalContext";
 import "../css/index.css";
 import { FRONTEND_PATHS } from "../Endpoints";
 
 function Error() {
-  const { error, setError } = useGlobalContext();
+  const { error: errorContext, setError } = useGlobalContext();
+  const errorRouter = useRouteError();
   const navigate = useNavigate();
+  const error = {};
+
+  if (!errorRouter){
+    error.statusText = errorContext?.statusText;
+    error.code = UNHANDLED_ERROR_CODE;
+  }
+  else
+  {
+    error.statusText = errorRouter.data;
+    error.code = errorRouter.status;
+  }
 
   return (
     <div className="content">

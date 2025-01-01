@@ -5,6 +5,7 @@ import SalaryList from "./SalaryList";
 import TakeSalary from "./Salary";
 import AppLayout from "./AppLayout";
 import { FRONTEND_PATHS } from "../Endpoints";
+import Error from "../components/Error"
 
 import { GlobalContextProvider } from "../GlobalContext";
 
@@ -38,8 +39,9 @@ const router = createBrowserRouter([
       {
         path: FRONTEND_PATHS.login,
         element: <Login />,
-      }, 
-    ]
+      },
+    ],
+    errorElement: <Error/>
   }   
 ]);
 

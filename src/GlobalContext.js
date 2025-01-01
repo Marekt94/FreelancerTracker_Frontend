@@ -49,8 +49,8 @@ function GlobalContextProvider({ children }) {
   }
 
   return (
-    <GlobalContext.Provider value={{ isLoading, year, setLoadingState, setError, setYear }}>
-      {!error.code ? children : <Error className="content">{error}</Error>}
+    <GlobalContext.Provider value={{ isLoading, year, error, setLoadingState, setError, setYear }}>
+      {children}
     </GlobalContext.Provider>
   );
 }

@@ -3,7 +3,7 @@ export const DEF_YEAR = YEARS[2].year;
 
 export default function YearSelector({ currentYear, onYearChange }) {
   return (
-    <select class="select" align="center" defaultValue={currentYear} onChange={(e) => onYearChange(e.target.value)}>
+    <select classname="select" align="center" defaultValue={currentYear} onChange={(e) => onYearChange(e.target.value)}>
       {YEARS.map((obj) => (
         <option>{obj.year}</option>
       ))}

@@ -2,6 +2,7 @@ import { FRONTEND_PATHS } from "../Endpoints";
 import { CookiesProvider } from "react-cookie";
 import { useGlobalContext } from "../GlobalContext";
 import { NavLink, Outlet } from "react-router-dom";
+import Error from "./Error";
 
 function Sidebar() {
     const { year } = useGlobalContext();
@@ -24,7 +25,12 @@ function Content() {
 }
   
 export default function AppLayout(){
+    const {error} = useGlobalContext();
+    
     return(
+        error?.code ? 
+        <Error className="content"/>
+        :
         <>
             <div className="sidebar">
                 <Sidebar />
@@ -32,6 +38,5 @@ export default function AppLayout(){
             <div className="content">
                 <Content />
             </div>
-        </>
-    )
+        </>)
 }

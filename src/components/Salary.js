@@ -229,13 +229,12 @@ export function TakeSalary({ children }) {
       <YearSelectorWithContext/>
       {children}
       <form onSubmit={handleSubmit}>
-        <Edit caption="Id" value={salary.id} name="id" readonly="true" />
+        <Edit caption="Id" value={salary.id} name="id" readonly="true" type="number"/>
         <Combo
           caption="Miesiąc"
           value={salary.miesiac}
           name="miesiac"
           dictionary={miesiace}
-          defaultValue={0}
           readonly={isLoading}
           onChange={(e) => {
             dispatch({
@@ -247,8 +246,8 @@ export function TakeSalary({ children }) {
             });
           }}
         />
-        <Edit caption="Stawka godzinowa netto" value={salary.stawka} name="stawka" readonly={isLoading} />
-        <Edit caption="Dni robocze w miesiącu" value={salary.dniRoboczych} name="dniRoboczych" readonly={isLoading} />
+        <Edit autoComplete="off" type="number" caption="Stawka godzinowa netto" value={salary.stawka} name="stawka" readonly={isLoading} required={true}/>
+        <Edit autoComplete="off"type="number" caption="Dni robocze w miesiącu" value={salary.dniRoboczych} name="dniRoboczych" readonly={isLoading} required={true}/>
         <Combo
           caption="Forma opodatkowania"
           value={salary.idFormyOpodatkowania}
@@ -256,6 +255,7 @@ export function TakeSalary({ children }) {
           dictionary={formaOpodatkowania}
           defaultValue={0}
           readonly={isLoading}
+          required={true}
           onChange={(e) => {
             const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.value === e.target.value);
 
@@ -270,31 +270,38 @@ export function TakeSalary({ children }) {
           }}
         />
         <Edit
+          autoComplete="off"
+          type="number"
           caption="Dni przepracowane"
           value={salary.dniPrzepracowanych}
           name="dniPrzepracowanych"
           readonly={isLoading}
+          required={true}
         />
         <Edit
+          autoComplete="off"
+          type="number"
           caption="Składka zdrowotna"
           value={salary.skladkaZdrowotna}
           name="skladkaZdrowotna"
           readonly={isLoading}
         />
-        <Edit caption="Składka ZUS" value={salary.zUS} name="zUS" readonly={isLoading} />
-        <Edit caption="Podatek" value={salary.podatek} name="podatek" readonly={isLoading} />
-        <Edit caption="Vat" value={salary.vat} name="vat" readonly={isLoading} />
+        <Edit autoComplete="off" type="number" caption="Składka ZUS" value={salary.zUS} name="zUS" readonly={isLoading} />
+        <Edit autoComplete="off" type="number" caption="Podatek" value={salary.podatek} name="podatek" readonly={isLoading} />
+        <Edit autoComplete="off" type="number" caption="Vat" value={salary.vat} name="vat" readonly={isLoading} />
         <br />
-        <Edit caption="Netto" value={salary.netto} name="netto" readonly="true" />
-        <Edit caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" />
+        <Edit autoComplete="off" type="number" caption="Netto" value={salary.netto} name="netto" readonly="true" />
+        <Edit autoComplete="off" type="number" caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" />
         <Edit
+          autoComplete="off"
+          type="number"
           caption="Na urlopowo-chorobowe"
           value={salary.naUrlopowoChorobowe}
           name="naUrlopowoChorobowe"
           readonly="true"
         />
-        <Edit caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" />
-        <Edit caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" />
+        <Edit autoComplete="off" type="number" caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" />
+        <Edit autoComplete="off" type="number" caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" />
         <button type="submit" onClick={() => dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.SAVE })}>
           Zapisz
         </button>

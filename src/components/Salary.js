@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import "../css/index.css";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
 import { BACKEND_PATHS } from "../Endpoints";
 import { useSalary } from "../useSalary";
-import { MONTHS, DEF_DICT } from "../Const";
+import { MONTHS, DEF_DICT, DEF_DICT_VALUE } from "../Const";
 import Loading from "./Loading";
 import { useGlobalContext } from "../GlobalContext";
 import { DEF_SALARY } from "../Const";
@@ -13,26 +13,15 @@ import YearSelectorWithContext from "./YearSelectorWithContext";
 
 //TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
 
-const TASK = {
-  SAVE: "save",
-  EVALUATE: "evaluate",
-  DELETE: "delete",
-};
-
 const ACTION_TYPE = {
   INIT: "init",
   SET_SALARY: "setSalary",
-  SET_TASK: "setTask",
-  SUBMIT: "submit",
-  AFTER_SUBMIT: "afterSubmit",
 };
 
 const initialState = {
   salary: DEF_SALARY,
   miesiace: DEF_DICT,
   formaOpodatkowania: DEF_DICT,
-  task: null,
-  readyToExecute: false,
   year: 0,
 };
 
@@ -58,24 +47,12 @@ function reducer(state, action) {
       return {
         ...state,
         salary: action.payload.salary,
-        miesiace: miesiace,
-        formaOpodatkowania: [DEF_DICT, ...formaOpodatkowania],
+        miesiace: [DEF_DICT_VALUE, ...miesiace],
+        formaOpodatkowania: [DEF_DICT_VALUE, ...formaOpodatkowania],
       };
 
     case ACTION_TYPE.SET_SALARY: {
       return { ...state, salary: action.payload };
-    }
-
-    case ACTION_TYPE.SET_TASK: {
-      return { ...state, task: action.payload };
-    }
-
-    case ACTION_TYPE.SUBMIT: {
-      return { ...state, readyToExecute: true, salary: action.payload };
-    }
-
-    case ACTION_TYPE.AFTER_SUBMIT: {
-      return { ...state, readyToExecute: false };
     }
 
     default:
@@ -118,65 +95,33 @@ export function TakeSalary({ children }) {
     fetchData(initID);
   }, [year, initID, getDataForNewSalary, getSalary]);
 
-  const DeleteSalary = useCallback(
-    async (id) => {
-      await deleteSalary(id);
-      navigate(BACKEND_PATHS.salariesPath);
-    },
-    [deleteSalary, navigate]
-  );
+  async function DeleteSalary(){
+    await deleteSalary(salary.id);
+    navigate(BACKEND_PATHS.salariesPath);
+  }
 
-  const Evaluate = useCallback(async () => {
+  async function Evaluate(formData){
+    const salary = PackSalary(formData);
     const data = await evaluate(salary);
-    dispatch({ type: ACTION_TYPE.SET_SALARY, payload: data });
-  }, [evaluate, dispatch, salary]);
-
-  const Save = useCallback(async () => {
-    salary.rok = year;
-    const data = await saveSalary(salary);
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
-      payload: { ...salary, id: data.id },
-    });
+      payload: data,  
+    })
+  }
+
+  async function Save(formData){
+    const salary = PackSalary(formData);
+    salary.rok = year;
+    const data = await saveSalary(salary);
     if (Number(salary.id) !== Number(data.id)) {
-      navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
-    }
-  }, [navigate, salary, saveSalary, year]);
+      navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true })};
+    dispatch({
+      type: ACTION_TYPE.SET_SALARY,
+      payload: data,  
+    })        
+  }
 
-  useEffect(() => {
-    function execute() {
-      if (readyToExecute) {
-        switch (task) {
-          case TASK.DELETE:
-            console.log("delete");
-            DeleteSalary(salary.id);
-            dispatch({ type: ACTION_TYPE.AFTER_SUBMIT });
-            return 0;
-          case TASK.EVALUATE:
-            console.log("evaluate");
-            Evaluate();
-            dispatch({ type: ACTION_TYPE.AFTER_SUBMIT });
-            return 0;
-          case TASK.SAVE:
-            console.log("save");
-            Save();
-            dispatch({ type: ACTION_TYPE.AFTER_SUBMIT });
-            return 0;
-          default:
-            return 0;
-        }
-      }
-    }
-
-    execute();
-  }, [readyToExecute, task, salary.id, DeleteSalary, Evaluate, Save]);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    console.log("handleSubmit " + task);
-
-    const formData = new FormData(e.target);
-
+  function PackSalary(formData) {
     const id = formData.get("id");
     const miesiac = formData.get("miesiac");
     const currFormaOpodatkowania = formData.get("idFormyOpodatkowania");
@@ -220,15 +165,15 @@ export function TakeSalary({ children }) {
       doWyplaty,
       doRozdysponowania,
     };
-    console.log(`New salary: ${newSalary}`);
-    dispatch({ type: ACTION_TYPE.SUBMIT, payload: newSalary });
+
+    return newSalary;
   }
 
   return (
     <>
       <YearSelectorWithContext/>
       {children}
-      <form onSubmit={handleSubmit}>
+      <form action={Save}>
         <Edit caption="Id" value={salary.id} name="id" readonly="true" type="number"/>
         <Combo
           caption="Miesiąc"
@@ -302,14 +247,14 @@ export function TakeSalary({ children }) {
         />
         <Edit autoComplete="off" type="number" caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" />
         <Edit autoComplete="off" type="number" caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" />
-        <button type="submit" onClick={() => dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.SAVE })}>
+        <button>
           Zapisz
         </button>
-        <button type="submit" onClick={() => dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.EVALUATE })}>
+        <button formAction={Evaluate}>
           Oblicz
         </button>
         {salary.id ? (
-          <button type="submit" onClick={() => dispatch({ type: ACTION_TYPE.SET_TASK, payload: TASK.DELETE })}>
+          <button formAction={DeleteSalary}>
             Usuń
           </button>
         ) : (

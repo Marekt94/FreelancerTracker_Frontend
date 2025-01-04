@@ -763,7 +763,54 @@
           "nazwa": "liniowy"
         }
       ]
-    }
+    },
+    {
+      "id": "2024",
+      "miesiace": [
+        {
+          "iD": 6,
+          "monthName": "czerwiec"
+        },
+        {
+          "iD": 7,
+          "monthName": "lipiec"
+        }
+      ],
+      "formaOpodatkowania": [
+        {
+          "id": 3,
+          "wysokoscPodatkuList": [
+            {
+              "id": 1,
+              "stawka": 12,
+              "formaOpodatkowaniaId": 3
+            }
+          ],
+          "nazwa": "rycza�t"
+        },
+        {
+          "id": 4,
+          "wysokoscPodatkuList": [
+            {
+              "id": 2,
+              "stawka": 12,
+              "formaOpodatkowaniaId": 4
+            },
+            {
+              "id": 3,
+              "stawka": 32,
+              "formaOpodatkowaniaId": 4
+            }
+          ],
+          "nazwa": "skala podatkowa"
+        },
+        {
+          "id": 5,
+          "wysokoscPodatkuList": [],
+          "nazwa": "liniowy"
+        }
+      ]
+    }    
   ],
   "login":{
 

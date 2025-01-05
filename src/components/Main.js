@@ -1,48 +1,44 @@
 import "../css/index.css";
-import { createBrowserRouter, RouterProvider} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Login";
 import SalaryList from "./SalaryList";
 import TakeSalary from "./Salary";
 import AppLayout from "./AppLayout";
 import { FRONTEND_PATHS } from "../Endpoints";
-import Error from "../components/Error"
+import Error from "../components/Error";
 
 import { GlobalContextProvider } from "../GlobalContext";
 
 //TODO oprogramować error
 //TODO oprogramowac loader
 const router = createBrowserRouter([
-  { 
-    path:'/',
-    element:<AppLayout/>,
-    children:[
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
       {
         path: "/",
-        element: <Login/>,
+        element: <Login />,
       },
       {
         path: FRONTEND_PATHS.salariesPath,
-        element: 
-          <SalaryList/>
+        element: <SalaryList />,
       },
       {
         path: FRONTEND_PATHS.salaryPath,
-        element: 
-          <TakeSalary/>
+        element: <TakeSalary />,
       },
       {
         path: FRONTEND_PATHS.newSalaryPath,
-        element:
-          <TakeSalary/>
-        
+        element: <TakeSalary />,
       },
       {
         path: FRONTEND_PATHS.login,
         element: <Login />,
       },
     ],
-    errorElement: <Error/>
-  }   
+    errorElement: <Error />,
+  },
 ]);
 
 export default function MainView() {
@@ -51,7 +47,7 @@ export default function MainView() {
       <header className="myheader">Lista odcinków wypłat</header>
       <div className="workspace">
         <GlobalContextProvider>
-          <RouterProvider router={router}/>
+          <RouterProvider router={router} />
         </GlobalContextProvider>
       </div>
     </>

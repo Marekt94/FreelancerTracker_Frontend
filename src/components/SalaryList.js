@@ -26,15 +26,17 @@ function SalaryList({ children }) {
   }, [year, getSalaries]);
 
   function createSalaryList(json) {
-    let salary = json.sort((x, y) => x.miesiac - y.miesiac);
-    return salary.map((obj) => (
-      <li>
-        <NavLink className="navlink" to={`${BACKEND_PATHS.salaryPath}/${obj.id}`}>
-          {MONTHS.find((element) => element.id === obj.miesiac).value}: stawka godzinowa - {obj.stawka}, netto ={" "}
-          {obj.netto}        
-        </NavLink>
-      </li>
-    ));
+    const salary = json.sort((x, y) => x.miesiac - y.miesiac);
+    return salary.map((obj) => {
+      let month = MONTHS.find((element) => element.id === obj.miesiac);
+      return (
+        <li>
+          <NavLink className="navlink" to={`${BACKEND_PATHS.salaryPath}/${obj.id}`}>
+            {month ? `${month.value}: ` : ""}stawka godzinowa - {obj.stawka}, netto = {obj.netto}
+          </NavLink>
+        </li>
+      );
+    });
   }
 
   function updateSalaries(json) {
@@ -44,7 +46,7 @@ function SalaryList({ children }) {
 
   return !isLoading ? (
     <>
-      <YearSelectorWithContext/>
+      <YearSelectorWithContext />
       {children}
       <ol>{updateSalaries(salaries)}</ol>
     </>

@@ -10,14 +10,12 @@ function Error() {
   const navigate = useNavigate();
   let error = {};
 
-  if (errorContext && (errorContext !== DEF_ERROR)){
+  if (errorContext && errorContext !== DEF_ERROR) {
     error = errorContext;
-  }
-  else if (errorRouter){
-    error = {statusText: errorRouter.data, code: UNHANDLED_ERROR_CODE} 
-  }
-  else{
-    error = {statusText: "Error is not catch neither by error mechanism nor errorElement", code: FATAL_ERROR_CODE} 
+  } else if (errorRouter) {
+    error = { statusText: errorRouter.data, code: UNHANDLED_ERROR_CODE };
+  } else {
+    error = { statusText: "Error is not catch neither by error mechanism nor errorElement", code: FATAL_ERROR_CODE };
   }
 
   return (

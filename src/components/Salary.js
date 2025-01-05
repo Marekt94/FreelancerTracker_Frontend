@@ -95,30 +95,31 @@ export function TakeSalary({ children }) {
     fetchData(initID);
   }, [year, initID, getDataForNewSalary, getSalary]);
 
-  async function DeleteSalary(){
+  async function DeleteSalary() {
     await deleteSalary(salary.id);
     navigate(BACKEND_PATHS.salariesPath);
   }
 
-  async function Evaluate(formData){
+  async function Evaluate(formData) {
     const salary = PackSalary(formData);
     const data = await evaluate(salary);
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
-      payload: data,  
-    })
+      payload: data,
+    });
   }
 
-  async function Save(formData){
+  async function Save(formData) {
     const salary = PackSalary(formData);
     salary.rok = year;
     const data = await saveSalary(salary);
     if (Number(salary.id) !== Number(data.id)) {
-      navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true })};
+      navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
+    }
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
-      payload: data,  
-    })        
+      payload: data,
+    });
   }
 
   function PackSalary(formData) {
@@ -168,10 +169,10 @@ export function TakeSalary({ children }) {
 
   return (
     <>
-      <YearSelectorWithContext/>
+      <YearSelectorWithContext />
       {children}
       <form action={Save}>
-        <Edit caption="Id" value={salary.id} name="id" readonly="true" type="number"/>
+        <Edit caption="Id" value={salary.id} name="id" readonly="true" type="number" />
         <Combo
           caption="Miesiąc"
           value={salary.miesiac}
@@ -189,8 +190,24 @@ export function TakeSalary({ children }) {
             });
           }}
         />
-        <Edit autoComplete="off" type="number" caption="Stawka godzinowa netto" defaultValue={salary.stawka} name="stawka" readonly={isLoading} required={true}/>
-        <Edit autoComplete="off"type="number" caption="Dni robocze w miesiącu" defaultValue={salary.dniRoboczych} name="dniRoboczych" readonly={isLoading} required={true}/>
+        <Edit
+          autoComplete="off"
+          type="number"
+          caption="Stawka godzinowa netto"
+          defaultValue={salary.stawka}
+          name="stawka"
+          readonly={isLoading}
+          required={true}
+        />
+        <Edit
+          autoComplete="off"
+          type="number"
+          caption="Dni robocze w miesiącu"
+          defaultValue={salary.dniRoboczych}
+          name="dniRoboczych"
+          readonly={isLoading}
+          required={true}
+        />
         <Combo
           caption="Forma opodatkowania"
           value={salary.idFormyOpodatkowania}
@@ -211,7 +228,7 @@ export function TakeSalary({ children }) {
           }}
         />
         <Edit
-          roundNumberDigit={3} 
+          roundNumberDigit={3}
           autoComplete="off"
           type="number"
           caption="Dni przepracowane"
@@ -221,7 +238,7 @@ export function TakeSalary({ children }) {
           required={true}
         />
         <Edit
-          roundNumberDigit={2} 
+          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Składka zdrowotna"
@@ -229,14 +246,54 @@ export function TakeSalary({ children }) {
           name="skladkaZdrowotna"
           readonly={isLoading}
         />
-        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Składka ZUS" defaultValue={salary.zUS} name="zUS" readonly={isLoading} />
-        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Podatek" defaultValue={salary.podatek} name="podatek" readonly={isLoading} />
-        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Vat" defaultValue={salary.vat} name="vat" readonly={isLoading} />
-        <br />
-        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Netto" defaultValue={salary.netto} name="netto" readonly="true" />
-        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Pełne netto" defaultValue={salary.pelneNetto} name="pelneNetto" readonly="true" />
         <Edit
-          roundNumberDigit={2} 
+          roundNumberDigit={2}
+          autoComplete="off"
+          type="number"
+          caption="Składka ZUS"
+          defaultValue={salary.zUS}
+          name="zUS"
+          readonly={isLoading}
+        />
+        <Edit
+          roundNumberDigit={2}
+          autoComplete="off"
+          type="number"
+          caption="Podatek"
+          defaultValue={salary.podatek}
+          name="podatek"
+          readonly={isLoading}
+        />
+        <Edit
+          roundNumberDigit={2}
+          autoComplete="off"
+          type="number"
+          caption="Vat"
+          defaultValue={salary.vat}
+          name="vat"
+          readonly={isLoading}
+        />
+        <br />
+        <Edit
+          roundNumberDigit={2}
+          autoComplete="off"
+          type="number"
+          caption="Netto"
+          defaultValue={salary.netto}
+          name="netto"
+          readonly="true"
+        />
+        <Edit
+          roundNumberDigit={2}
+          autoComplete="off"
+          type="number"
+          caption="Pełne netto"
+          defaultValue={salary.pelneNetto}
+          name="pelneNetto"
+          readonly="true"
+        />
+        <Edit
+          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Na urlopowo-chorobowe"
@@ -244,21 +301,27 @@ export function TakeSalary({ children }) {
           name="naUrlopowoChorobowe"
           readonly="true"
         />
-        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Do wypłaty" defaultValue={salary.doWyplaty} name="doWyplaty" readonly="true" />
-        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Do rozdysponowania" defaultValue={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" />
-        <button>
-          Zapisz
-        </button>
-        <button formAction={Evaluate}>
-          Oblicz
-        </button>
-        {salary.id ? (
-          <button formAction={DeleteSalary}>
-            Usuń
-          </button>
-        ) : (
-          <></>
-        )}
+        <Edit
+          roundNumberDigit={2}
+          autoComplete="off"
+          type="number"
+          caption="Do wypłaty"
+          defaultValue={salary.doWyplaty}
+          name="doWyplaty"
+          readonly="true"
+        />
+        <Edit
+          roundNumberDigit={2}
+          autoComplete="off"
+          type="number"
+          caption="Do rozdysponowania"
+          defaultValue={salary.doRozdysponowania}
+          name="doRozdysponowania"
+          readonly="true"
+        />
+        <button>Zapisz</button>
+        <button formAction={Evaluate}>Oblicz</button>
+        {salary.id ? <button formAction={DeleteSalary}>Usuń</button> : <></>}
       </form>
       {isLoading && <Loading></Loading>}
     </>

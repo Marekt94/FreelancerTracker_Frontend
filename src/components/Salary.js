@@ -47,8 +47,8 @@ function reducer(state, action) {
       return {
         ...state,
         salary: action.payload.salary,
-        miesiace: [DEF_DICT_VALUE, ...miesiace],
-        formaOpodatkowania: [DEF_DICT_VALUE, ...formaOpodatkowania],
+        miesiace,
+        formaOpodatkowania,
       };
 
     case ACTION_TYPE.SET_SALARY: {
@@ -63,7 +63,7 @@ function reducer(state, action) {
 export function TakeSalary({ children }) {
   const { isLoading, setError, year } = useGlobalContext();
   const initID = useParams().id;
-  const [{ salary, formaOpodatkowania, miesiace, task, readyToExecute }, dispatch] = useReducer(reducer, initialState);
+  const [{ salary, formaOpodatkowania, miesiace }, dispatch] = useReducer(reducer, initialState);
   const { getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary } = useSalary(setError);
   const navigate = useNavigate();
 
@@ -124,7 +124,7 @@ export function TakeSalary({ children }) {
   function PackSalary(formData) {
     const id = formData.get("id");
     const miesiac = formData.get("miesiac");
-    const currFormaOpodatkowania = formData.get("idFormyOpodatkowania");
+    const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.id === formData.get("idFormyOpodatkowania"));
     const stawka = formData.get("stawka");
     const dniRoboczych = formData.get("dniRoboczych");
     const dniPrzepracowanych = formData.get("dniPrzepracowanych");
@@ -138,13 +138,10 @@ export function TakeSalary({ children }) {
     const doWyplaty = formData.get("doWyplaty");
     const doRozdysponowania = formData.get("doRozdysponowania");
 
-    const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.value === currFormaOpodatkowania);
-    const miesiacTemp = miesiace.find((obj) => obj.value === miesiac);
-
     const newSalary = {
       ...salary,
       id,
-      miesiac: miesiacTemp?.id,
+      miesiac,
       rok: year,
       idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
       formaOpodatkowania: {
@@ -181,29 +178,28 @@ export function TakeSalary({ children }) {
           name="miesiac"
           dictionary={miesiace}
           readonly={isLoading}
+          withEmptyOption={false}
           onChange={(e) => {
             dispatch({
               type: ACTION_TYPE.SET_SALARY,
               payload: {
                 ...salary,
-                miesiac: miesiace.find((obj) => obj.value === e.target.value)?.id,
+                miesiac: Number(e.target.value),
               },
             });
           }}
         />
-        <Edit autoComplete="off" type="number" caption="Stawka godzinowa netto" value={salary.stawka} name="stawka" readonly={isLoading} required={true}/>
-        <Edit autoComplete="off"type="number" caption="Dni robocze w miesiącu" value={salary.dniRoboczych} name="dniRoboczych" readonly={isLoading} required={true}/>
+        <Edit autoComplete="off" type="number" caption="Stawka godzinowa netto" defaultValue={salary.stawka} name="stawka" readonly={isLoading} required={true}/>
+        <Edit autoComplete="off"type="number" caption="Dni robocze w miesiącu" defaultValue={salary.dniRoboczych} name="dniRoboczych" readonly={isLoading} required={true}/>
         <Combo
           caption="Forma opodatkowania"
           value={salary.idFormyOpodatkowania}
           name="idFormyOpodatkowania"
           dictionary={formaOpodatkowania}
-          defaultValue={0}
           readonly={isLoading}
           required={true}
           onChange={(e) => {
-            const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.value === e.target.value);
-
+            const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.id === Number(e.target.value));
             dispatch({
               type: ACTION_TYPE.SET_SALARY,
               payload: {
@@ -215,38 +211,41 @@ export function TakeSalary({ children }) {
           }}
         />
         <Edit
+          roundNumberDigit={3} 
           autoComplete="off"
           type="number"
           caption="Dni przepracowane"
-          value={salary.dniPrzepracowanych}
+          defaultValue={salary.dniPrzepracowanych}
           name="dniPrzepracowanych"
           readonly={isLoading}
           required={true}
         />
         <Edit
+          roundNumberDigit={2} 
           autoComplete="off"
           type="number"
           caption="Składka zdrowotna"
-          value={salary.skladkaZdrowotna}
+          defaultValue={salary.skladkaZdrowotna}
           name="skladkaZdrowotna"
           readonly={isLoading}
         />
-        <Edit autoComplete="off" type="number" caption="Składka ZUS" value={salary.zUS} name="zUS" readonly={isLoading} />
-        <Edit autoComplete="off" type="number" caption="Podatek" value={salary.podatek} name="podatek" readonly={isLoading} />
-        <Edit autoComplete="off" type="number" caption="Vat" value={salary.vat} name="vat" readonly={isLoading} />
+        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Składka ZUS" defaultValue={salary.zUS} name="zUS" readonly={isLoading} />
+        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Podatek" defaultValue={salary.podatek} name="podatek" readonly={isLoading} />
+        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Vat" defaultValue={salary.vat} name="vat" readonly={isLoading} />
         <br />
-        <Edit autoComplete="off" type="number" caption="Netto" value={salary.netto} name="netto" readonly="true" />
-        <Edit autoComplete="off" type="number" caption="Pełne netto" value={salary.pelneNetto} name="pelneNetto" readonly="true" />
+        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Netto" defaultValue={salary.netto} name="netto" readonly="true" />
+        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Pełne netto" defaultValue={salary.pelneNetto} name="pelneNetto" readonly="true" />
         <Edit
+          roundNumberDigit={2} 
           autoComplete="off"
           type="number"
           caption="Na urlopowo-chorobowe"
-          value={salary.naUrlopowoChorobowe}
+          defaultValue={salary.naUrlopowoChorobowe}
           name="naUrlopowoChorobowe"
           readonly="true"
         />
-        <Edit autoComplete="off" type="number" caption="Do wypłaty" value={salary.doWyplaty} name="doWyplaty" readonly="true" />
-        <Edit autoComplete="off" type="number" caption="Do rozdysponowania" value={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" />
+        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Do wypłaty" defaultValue={salary.doWyplaty} name="doWyplaty" readonly="true" />
+        <Edit roundNumberDigit={2} autoComplete="off" type="number" caption="Do rozdysponowania" defaultValue={salary.doRozdysponowania} name="doRozdysponowania" readonly="true" />
         <button>
           Zapisz
         </button>

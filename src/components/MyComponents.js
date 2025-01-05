@@ -1,14 +1,24 @@
 import { DEF_DICT } from "../Const";
 
-export function Edit({ caption, value, name, type="text", readonly = false, onChange = null, required = false, autoComplete = "on" }) {
+export function Edit({ caption, value, defaultValue, name, onChange = undefined, type="text", readonly = false, required = false, autoComplete = "on", roundNumberDigit=0 }) {
+  function round(value){
+    if ((type === "number") && (roundNumberDigit !== 0)){
+      return Number(value).toFixed(roundNumberDigit);
+    }
+    else{
+      return Number(value);
+    }
+  }
   return (
     <div>
       <label>{caption}</label>
       <input
+        step="any"
         type={type}
         readOnly={readonly}
         name={name}
-        defaultValue={value ? value : undefined}
+        value={value ? round(value) : undefined}
+        defaultValue={defaultValue  ? round(defaultValue) : undefined}
         onChange={onChange}
         required={required}
         autoComplete={autoComplete}
@@ -17,8 +27,7 @@ export function Edit({ caption, value, name, type="text", readonly = false, onCh
   );
 }
 
-export function Combo({ caption, value, name, dictionary, readonly = false, onChange = null, required=false }) {
-  const dictPosition = dictionary.find((obj) => obj.id === value);
+export function Combo({ caption, value, defaultValue, name, dictionary, withEmptyOption = true, onChange = undefined, readonly = false, required=false }) {
   return (
     <div style={{ flexDirection: "row" }}>
       <label>{caption}</label>
@@ -26,11 +35,13 @@ export function Combo({ caption, value, name, dictionary, readonly = false, onCh
         name={name}
         disabled={readonly}
         onChange={onChange}
-        defaultValue={dictPosition?.value || DEF_DICT}
         required={required}
+        value={value || undefined}
+        defaultValue={defaultValue || undefined}
       >
+        {withEmptyOption ? <option key={undefined}></option>:<></>}
         {dictionary.map((slownik) => (
-          <option>{slownik.value}</option>
+          <option key={slownik?.id} value={slownik?.id}>{slownik?.value}</option>
         ))}
       </select>
     </div>

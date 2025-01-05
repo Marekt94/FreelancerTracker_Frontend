@@ -25,11 +25,6 @@ function SalaryList({ children }) {
     fetchSalaries();
   }, [year, getSalaries]);
 
-  function onEditClick(event) {
-    const id = event.target.getAttribute("id");
-    id ? navigate(`${BACKEND_PATHS.salaryPath}/${id}`) : navigate(`${BACKEND_PATHS.salaryPath}`);
-  }
-
   function createSalaryList(json) {
     let salary = json.sort((x, y) => x.miesiac - y.miesiac);
     return salary.map((obj) => (

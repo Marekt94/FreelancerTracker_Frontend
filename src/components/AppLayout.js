@@ -3,6 +3,8 @@ import { CookiesProvider } from "react-cookie";
 import { useGlobalContext } from "../GlobalContext";
 import { NavLink, Outlet } from "react-router-dom";
 import Error from "./Error";
+import Loading from "./Loading";
+import { createPortal } from "react-dom";
 
 function Sidebar() {
   const { year } = useGlobalContext();
@@ -29,9 +31,11 @@ function Sidebar() {
 }
 
 function Content() {
+  const { isLoading } = useGlobalContext();
   return (
     <CookiesProvider>
       <Outlet />
+      {isLoading ? createPortal(<Loading />, document.getElementById("root")) : <></>}
     </CookiesProvider>
   );
 }

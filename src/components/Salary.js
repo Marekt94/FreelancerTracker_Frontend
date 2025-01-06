@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { Edit, Combo } from "./MyComponents";
 import { BACKEND_PATHS } from "../Endpoints";
 import { useSalary } from "../useSalary";
-import { MONTHS, DEF_DICT, DEF_DICT_VALUE } from "../Const";
+import { MONTHS, DEF_DICT } from "../Const";
 import Loading from "./Loading";
 import { useGlobalContext } from "../GlobalContext";
 import { DEF_SALARY } from "../Const";
 import YearSelectorWithContext from "./YearSelectorWithContext";
+import { createPortal } from "react-dom";
 
 //TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
 
@@ -323,7 +324,7 @@ export function TakeSalary({ children }) {
         <button formAction={Evaluate}>Oblicz</button>
         {salary.id ? <button formAction={DeleteSalary}>Usuń</button> : <></>}
       </form>
-      {isLoading && <Loading></Loading>}
+      {isLoading ? createPortal(<Loading />, document.getElementById("root")) : <></>}
     </>
   );
 }

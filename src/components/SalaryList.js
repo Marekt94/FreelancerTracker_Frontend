@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "../css/index.css";
 import { MONTHS } from "../Const";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useSalary } from "../useSalary";
 import { BACKEND_PATHS } from "../Endpoints";
-import Loading from "./Loading";
 import { useGlobalContext } from "../GlobalContext";
 import YearSelectorWithContext from "./YearSelectorWithContext";
 
 function SalaryList({ children }) {
-  const { isLoading, setError, year } = useGlobalContext();
+  const { setError, year } = useGlobalContext();
   const [salaries, setSalaries] = useState(undefined);
-  const navigate = useNavigate();
   const { getSalaries } = useSalary(setError);
 
   useEffect(() => {
@@ -44,14 +42,12 @@ function SalaryList({ children }) {
     return json ? createSalaryList(json) : <></>;
   }
 
-  return !isLoading ? (
+  return (
     <>
       <YearSelectorWithContext />
       {children}
       <ol>{updateSalaries(salaries)}</ol>
     </>
-  ) : (
-    <Loading />
   );
 }
 

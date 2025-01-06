@@ -41,7 +41,7 @@ function Content() {
 }
 
 export default function AppLayout() {
-  const { error } = useGlobalContext();
+  const { error, isLoading } = useGlobalContext();
 
   return error?.code ? (
     <Error className="content" />
@@ -50,7 +50,7 @@ export default function AppLayout() {
       <div className="sidebar">
         <Sidebar />
       </div>
-      <div className="content">
+      <div className={isLoading ? "content-blur" : "content"}>
         <Content />
       </div>
     </>

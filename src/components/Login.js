@@ -8,7 +8,7 @@ import { useGlobalContext } from "../GlobalContext";
 
 export default function Login() {
   const [cookies] = useCookies();
-  const { isLoading, setError } = useGlobalContext();
+  const { setError } = useGlobalContext();
   const [authorized, setAuthorized] = useState(cookies.sessionId);
   const { authorize, logout } = useAuthorize(setError);
 
@@ -34,7 +34,7 @@ export default function Login() {
     authorized ? Logout() : AuthorizateUser(login, haslo);
   }
 
-  return !isLoading ? (
+  return (
     <form action={(e) => AuthorizeOrLogout(e, authorized)}>
       <Edit caption="Login" name="login" required="true" />
       <Edit caption="Hasło" name="haslo" type="password" />
@@ -45,9 +45,5 @@ export default function Login() {
         </div>
       )}
     </form>
-  ) : (
-    <>
-      <Loading />
-    </>
-  );
+  )
 }

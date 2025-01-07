@@ -324,7 +324,6 @@ export function TakeSalary({ children }) {
         <button formAction={Evaluate}>Oblicz</button>
         {salary.id ? <button formAction={DeleteSalary}>Usuń</button> : <></>}
       </form>
-      {isLoading ? createPortal(<Loading />, document.getElementById("root")) : <></>}
     </>
   );
 }

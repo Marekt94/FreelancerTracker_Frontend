@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../css/index.css";
 import { MONTHS } from "../Const";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useSalary } from "../useSalary";
 import { BACKEND_PATHS } from "../Endpoints";
-import Loading from "./Loading";
 import { useGlobalContext } from "../GlobalContext";
+import YearSelectorWithContext from "./YearSelectorWithContext";
 
 function SalaryList({ children }) {
-  const { isLoading, setError, year } = useGlobalContext();
+  const { setError, year } = useGlobalContext();
   const [salaries, setSalaries] = useState(undefined);
-  const navigate = useNavigate();
   const { getSalaries } = useSalary(setError);
 
   useEffect(() => {
-    console.log("useEffect in Salaries");
     async function fetchSalaries() {
       const params = [{ name: "year", value: year }];
       const temp = await getSalaries(params);
@@ -24,19 +22,18 @@ function SalaryList({ children }) {
     fetchSalaries();
   }, [year, getSalaries]);
 
-  function onEditClick(event) {
-    const id = event.target.getAttribute("id");
-    id ? navigate(`${BACKEND_PATHS.salaryPath}/${id}`) : navigate(`${BACKEND_PATHS.salaryPath}`);
-  }
-
   function createSalaryList(json) {
-    let salary = json.sort((x, y) => x.miesiac - y.miesiac);
-    return salary.map((obj) => (
-      <ul id={obj.id} onClick={onEditClick} key={obj.id}>
-        {MONTHS.find((element) => element.id === obj.miesiac).value}: stawka godzinowa - {obj.stawka}, netto ={" "}
-        {obj.netto}
-      </ul>
-    ));
+    const salary = json.sort((x, y) => x.miesiac - y.miesiac);
+    return salary.map((obj) => {
+      let month = MONTHS.find((element) => element.id === obj.miesiac);
+      return (
+        <li>
+          <NavLink className="navlink" to={`${BACKEND_PATHS.salaryPath}/${obj.id}`}>
+            {month ? `${month.value}: ` : ""}stawka godzinowa - {obj.stawka}, netto = {obj.netto}
+          </NavLink>
+        </li>
+      );
+    });
   }
 
   function updateSalaries(json) {
@@ -44,13 +41,12 @@ function SalaryList({ children }) {
     return json ? createSalaryList(json) : <></>;
   }
 
-  return !isLoading ? (
+  return (
     <>
+      <YearSelectorWithContext />
       {children}
       <ol>{updateSalaries(salaries)}</ol>
     </>
-  ) : (
-    <Loading />
   );
 }
 

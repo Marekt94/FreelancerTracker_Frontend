@@ -1,9 +1,8 @@
-import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
+import { createContext, useCallback, useContext, useReducer } from "react";
 import Error from "./components/Error";
 import { DEF_ERROR } from "./Const";
 import "./css/index.css";
 import { DEF_YEAR } from "./components/YearSelector";
-import { useSearchParams } from "react-router-dom";
 
 const GlobalContext = createContext();
 
@@ -30,29 +29,12 @@ function reduce(state, action) {
 }
 
 function GlobalContextProvider({ children }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const yearTemp = searchParams.get("year") || DEF_YEAR;
+  const yearTemp = DEF_YEAR;
   const [{ isLoading, error, year }, dispatch] = useReducer(reduce, {
     isLoading: false,
     error: DEF_ERROR,
     year: yearTemp,
   });
-
-  const stableSetSearchParams = useCallback(
-    (params) => {
-      setSearchParams(params, { replace: true });
-    },
-    [setSearchParams]
-  );
-
-  useEffect(() => {
-    const currentYearInParams = searchParams.get("year");
-    const yearToSet = year || DEF_YEAR;
-
-    if (currentYearInParams !== yearToSet) {
-      stableSetSearchParams({ year: yearToSet });
-    }
-  }, [year, searchParams, stableSetSearchParams]);
 
   const setLoadingState = useCallback((state) => {
     dispatch({ type: ACTION_TYPE.setIsLoading, payload: state });
@@ -67,8 +49,8 @@ function GlobalContextProvider({ children }) {
   }
 
   return (
-    <GlobalContext.Provider value={{ isLoading, year, setLoadingState, setError, setYear }}>
-      {!error.code ? children : <Error className="content">{error}</Error>}
+    <GlobalContext.Provider value={{ isLoading, year, error, setLoadingState, setError, setYear }}>
+      {children}
     </GlobalContext.Provider>
   );
 }

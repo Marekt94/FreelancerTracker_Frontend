@@ -1,5 +1,9 @@
 function Loading() {
-  return <div>Loading...</div>;
+  return (
+    <div className="modal">
+      <div className="myContainer">Loading...</div>
+    </div>
+  );
 }
 
 export default Loading;

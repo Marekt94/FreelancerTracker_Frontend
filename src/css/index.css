@@ -25,6 +25,18 @@ body {
   margin-right: 5%;
 }
 
+.myContainer {
+  font-size: 2rem;
+  padding: 2rem;
+  background-color: var(--background-color-standby);
+  color: black;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 6px 6px 12px var(--background-color-active);
+  text-shadow: 2px 2px var(--input-background-color);
+  border: 1px solid var(--background-color-active);
+}
+
 .myheader {
   margin-bottom: 12px;
   border: 1px solid var(--background-color-active);
@@ -44,6 +56,21 @@ body {
   border-radius: 10px;
   min-height: 0px;
   box-shadow: 6px 6px 12px var(--background-color-standby);
+}
+
+.content-blur {
+  padding: 5px;
+  margin: 6px;
+  font-size: 1.5rem;
+  background-color: var(--background-color-standby);
+  border: 1px solid var(--background-color-active);
+  border-radius: 10px;
+  flex-grow: 1;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+  box-shadow: 6px 6px 12px var(--background-color-standby);
+  filter: blur(5px);
 }
 
 .content {
@@ -91,6 +118,34 @@ ul:hover {
   text-shadow: none;
 }
 
+.navlink {
+  display: grid;
+  margin: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.navlink:hover {
+  background-color: var(--background-color-active);
+  color: var(--font-color-active);
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: grab;
+  transition: all 0.3s;
+  box-shadow: 6px 6px 12px var(--background-color-active);
+  text-shadow: none;
+}
+
+.navlink:active {
+  color: black;
+}
+
+li {
+  list-style-type: none;
+}
+
 .sidebar > ol {
   margin-left: auto;
   margin-right: auto;
@@ -101,12 +156,12 @@ ul:hover {
   justify-content: center;
 }
 
-.sidebar > ol > ul {
+.sidebar > ol > li {
   border-left: solid;
   width: 300px;
 }
 
-.sidebar > ol > ul:last-child {
+.sidebar > ol > li:last-child {
   border-right: solid;
 }
 
@@ -132,7 +187,7 @@ button:hover {
   background: var(--background-color-active);
 }
 
-input{
+input {
   margin: 5px;
   margin-left: 5px;
   background: var(--input-background-color);
@@ -154,4 +209,19 @@ select:disabled {
 
 label {
   font-size: 1rem;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--background-color-active);
+  text-shadow: 2px 2px var(--font-color-active);
 }

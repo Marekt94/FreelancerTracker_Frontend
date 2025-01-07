@@ -45,6 +45,8 @@ export const MONTHS = [
   { id: 12, value: "grudzień" },
 ];
 
-export const DEF_DICT = [{ id: 0, value: "" }];
+export const DEF_DICT_VALUE = { id: 0, value: "" };
+export const DEF_DICT = [DEF_DICT_VALUE];
 
 export const UNHANDLED_ERROR_CODE = "unhandled";
+export const FATAL_ERROR_CODE = "FATAL ERROR";

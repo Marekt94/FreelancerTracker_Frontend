@@ -3,12 +3,11 @@ import { Edit } from "./MyComponents";
 import { hashSync } from "bcryptjs";
 import { useCookies } from "react-cookie";
 import { useAuthorize } from "../useAuthorize";
-import Loading from "./Loading";
 import { useGlobalContext } from "../GlobalContext";
 
 export default function Login() {
   const [cookies] = useCookies();
-  const { isLoading, setError } = useGlobalContext();
+  const { setError } = useGlobalContext();
   const [authorized, setAuthorized] = useState(cookies.sessionId);
   const { authorize, logout } = useAuthorize(setError);
 
@@ -27,8 +26,6 @@ export default function Login() {
   }
 
   function AuthorizeOrLogout(e, authorized) {
-    e.preventDefault();
-
     const formData = new FormData(e.target);
     const login = formData.get("login");
     const haslo = formData.get("haslo");
@@ -36,10 +33,10 @@ export default function Login() {
     authorized ? Logout() : AuthorizateUser(login, haslo);
   }
 
-  return !isLoading ? (
-    <form onSubmit={(e) => AuthorizeOrLogout(e, authorized)}>
-      <Edit caption="Login" name="login" />
-      <Edit caption="Hasło" name="haslo" password="true" />
+  return (
+    <form action={(e) => AuthorizeOrLogout(e, authorized)}>
+      <Edit caption="Login" name="login" required="true" />
+      <Edit caption="Hasło" name="haslo" type="password" />
       <button type="submit">{authorized ? "Wyloguj" : "Zaloguj"}</button>
       {authorized && (
         <div>
@@ -47,9 +44,5 @@ export default function Login() {
         </div>
       )}
     </form>
-  ) : (
-    <>
-      <Loading />
-    </>
   );
 }

@@ -330,7 +330,6 @@ export function Salary({ children }) {
         <button formAction={evaluate}>Oblicz</button>
         {salary.id ? <button formAction={deleteSalary}>Usuń</button> : <></>}
       </form>
-      {isLoading ? createPortal(<Loading />, document.getElementById("root")) : <></>}
     </>
   );
 }

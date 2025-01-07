@@ -6,11 +6,9 @@ import { Edit, Combo } from "./MyComponents";
 import { BACKEND_PATHS } from "../Endpoints";
 import { useSalary } from "../useSalary";
 import { MONTHS, DEF_DICT } from "../Const";
-import Loading from "./Loading";
 import { useGlobalContext } from "../GlobalContext";
 import { DEF_SALARY } from "../Const";
 import YearSelectorWithContext from "./YearSelectorWithContext";
-import { createPortal } from "react-dom";
 
 //TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
 

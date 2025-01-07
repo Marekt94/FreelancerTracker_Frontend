@@ -13,7 +13,6 @@ export function useAuthorize(setError) {
   }
 
   async function authorize(login, password) {
-    console.log(`login ${login} haslo ${password}`);
     const URL = generateURL(SERVER_ADRESS, BACKEND_PATHS.login);
 
     const requestOptions = {

@@ -1,5 +1,3 @@
-import { DEF_DICT } from "../Const";
-
 export function Edit({
   caption,
   value,

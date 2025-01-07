@@ -5,7 +5,9 @@ export default function YearSelector({ currentYear, onYearChange }) {
   return (
     <select className="select" align="center" defaultValue={currentYear} onChange={(e) => onYearChange(e.target.value)}>
       {YEARS.map((obj) => (
-        <option key={obj.year}>{obj.year}</option>
+        <option id={obj.year} key={obj.year}>
+          {obj.year}
+        </option>
       ))}
     </select>
   );

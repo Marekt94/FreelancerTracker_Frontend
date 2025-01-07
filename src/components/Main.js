@@ -2,15 +2,12 @@ import "../css/index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Login";
 import SalaryList from "./SalaryList";
-import TakeSalary from "./Salary";
+import Salary from "./Salary";
 import AppLayout from "./AppLayout";
 import { FRONTEND_PATHS } from "../Endpoints";
 import Error from "../components/Error";
-
 import { GlobalContextProvider } from "../GlobalContext";
 
-//TODO oprogramować error
-//TODO oprogramowac loader
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,11 +23,11 @@ const router = createBrowserRouter([
       },
       {
         path: FRONTEND_PATHS.salaryPath,
-        element: <TakeSalary />,
+        element: <Salary />,
       },
       {
         path: FRONTEND_PATHS.newSalaryPath,
-        element: <TakeSalary />,
+        element: <Salary />,
       },
       {
         path: FRONTEND_PATHS.login,

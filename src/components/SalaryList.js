@@ -13,7 +13,6 @@ function SalaryList({ children }) {
   const { getSalaries } = useSalary(setError);
 
   useEffect(() => {
-    console.log("useEffect in Salaries");
     async function fetchSalaries() {
       const params = [{ name: "year", value: year }];
       const temp = await getSalaries(params);

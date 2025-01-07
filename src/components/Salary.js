@@ -61,11 +61,17 @@ function reducer(state, action) {
   }
 }
 
-export function TakeSalary({ children }) {
+export function Salary({ children }) {
   const { isLoading, setError, year } = useGlobalContext();
   const initID = useParams().id;
   const [{ salary, formaOpodatkowania, miesiace }, dispatch] = useReducer(reducer, initialState);
-  const { getSalary, getDataForNewSalary, saveSalary, evaluate, deleteSalary } = useSalary(setError);
+  const {
+    getSalary,
+    getDataForNewSalary,
+    saveSalary: saveSalaryInt,
+    evaluate: evaluateInt,
+    deleteSalary: deleteSalaryInt,
+  } = useSalary(setError);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,24 +102,24 @@ export function TakeSalary({ children }) {
     fetchData(initID);
   }, [year, initID, getDataForNewSalary, getSalary]);
 
-  async function DeleteSalary() {
-    await deleteSalary(salary.id);
+  async function deleteSalary() {
+    await deleteSalaryInt(salary.id);
     navigate(BACKEND_PATHS.salariesPath);
   }
 
-  async function Evaluate(formData) {
-    const salary = PackSalary(formData);
-    const data = await evaluate(salary);
+  async function evaluate(formData) {
+    const salary = packSalary(formData);
+    const data = await evaluateInt(salary);
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
       payload: data,
     });
   }
 
-  async function Save(formData) {
-    const salary = PackSalary(formData);
+  async function saveSalary(formData) {
+    const salary = packSalary(formData);
     salary.rok = year;
-    const data = await saveSalary(salary);
+    const data = await saveSalaryInt(salary);
     if (Number(salary.id) !== Number(data.id)) {
       navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
     }
@@ -123,7 +129,7 @@ export function TakeSalary({ children }) {
     });
   }
 
-  function PackSalary(formData) {
+  function packSalary(formData) {
     const id = formData.get("id");
     const miesiac = formData.get("miesiac");
     const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.id === formData.get("idFormyOpodatkowania"));
@@ -172,7 +178,7 @@ export function TakeSalary({ children }) {
     <>
       <YearSelectorWithContext />
       {children}
-      <form action={Save}>
+      <form action={saveSalary}>
         <Edit caption="Id" value={salary.id} name="id" readonly="true" type="number" />
         <Combo
           caption="Miesiąc"
@@ -321,12 +327,12 @@ export function TakeSalary({ children }) {
           readonly="true"
         />
         <button>Zapisz</button>
-        <button formAction={Evaluate}>Oblicz</button>
-        {salary.id ? <button formAction={DeleteSalary}>Usuń</button> : <></>}
+        <button formAction={evaluate}>Oblicz</button>
+        {salary.id ? <button formAction={deleteSalary}>Usuń</button> : <></>}
       </form>
       {isLoading ? createPortal(<Loading />, document.getElementById("root")) : <></>}
     </>
   );
 }
 
-export default TakeSalary;
+export default Salary;

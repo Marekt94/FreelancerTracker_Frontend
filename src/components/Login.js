@@ -25,8 +25,7 @@ export default function Login() {
     await logout();
   }
 
-  function AuthorizeOrLogout(e, authorized) {
-    const formData = new FormData(e.target);
+  function AuthorizeOrLogout(formData, authorized) {
     const login = formData.get("login");
     const haslo = formData.get("haslo");
 
@@ -35,7 +34,7 @@ export default function Login() {
 
   return (
     <form action={(e) => AuthorizeOrLogout(e, authorized)}>
-      <Edit caption="Login" name="login" required="true" />
+      <Edit caption="Login" name="login" required={!authorized} />
       <Edit caption="Hasło" name="haslo" type="password" />
       <button type="submit">{authorized ? "Wyloguj" : "Zaloguj"}</button>
       {authorized && (

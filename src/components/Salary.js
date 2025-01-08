@@ -130,7 +130,9 @@ export function Salary({ children }) {
   function packSalary(formData) {
     const id = formData.get("id");
     const miesiac = formData.get("miesiac");
-    const formaOpodatkowaniaTemp = formaOpodatkowania.find((obj) => obj.id === formData.get("idFormyOpodatkowania"));
+    const formaOpodatkowaniaTemp = formaOpodatkowania.find(
+      (obj) => obj.id === Number(formData.get("idFormyOpodatkowania"))
+    );
     const stawka = formData.get("stawka");
     const dniRoboczych = formData.get("dniRoboczych");
     const dniPrzepracowanych = formData.get("dniPrzepracowanych");

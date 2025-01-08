@@ -20,7 +20,6 @@ export default async function internalFetch(URL, requestOptions, setError) {
       credentials: "include",
       mode: "cors",
     };
-    console.log(opt);
     const res = await fetch(URL, opt);
     if (res.status >= 200 && res.status <= 299) {
       const data = await res.json();

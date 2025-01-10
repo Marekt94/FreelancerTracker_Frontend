@@ -30,6 +30,7 @@ function reduce(state, action) {
 
 function GlobalContextProvider({ children }) {
   const yearTemp = DEF_YEAR;
+  console.log("init global context");
   const [{ isLoading, error, year }, dispatch] = useReducer(reduce, {
     isLoading: false,
     error: DEF_ERROR,
@@ -44,9 +45,10 @@ function GlobalContextProvider({ children }) {
     dispatch({ type: ACTION_TYPE.setError, payload: error });
   }, []);
 
-  function setYear(year) {
+  const setYear = useCallback((year) => {
+    console.log("dispach year" + year);
     dispatch({ type: ACTION_TYPE.setYear, payload: year });
-  }
+  }, []);
 
   return (
     <GlobalContext.Provider value={{ isLoading, year, error, setLoadingState, setError, setYear }}>

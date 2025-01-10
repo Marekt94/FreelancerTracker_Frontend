@@ -18,7 +18,6 @@ function SalaryList({ children }) {
       const temp = await getSalaries(params);
       setSalaries(temp);
     }
-
     fetchSalaries();
   }, [year, getSalaries]);
 
@@ -27,7 +26,7 @@ function SalaryList({ children }) {
     return salary.map((obj) => {
       let month = MONTHS.find((element) => element.id === obj.miesiac);
       return (
-        <li>
+        <li key={obj.id}>
           <NavLink className="navlink" to={`${BACKEND_PATHS.salaryPath}/${obj.id}`}>
             {month ? `${month.value}: ` : ""}stawka godzinowa - {obj.stawka}, netto = {obj.netto}
           </NavLink>
@@ -37,7 +36,6 @@ function SalaryList({ children }) {
   }
 
   function updateSalaries(json) {
-    console.log(`json: ${json}`);
     return json ? createSalaryList(json) : <></>;
   }
 

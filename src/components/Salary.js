@@ -328,7 +328,13 @@ export function Salary({ children }) {
         />
         <button>Zapisz</button>
         <button formAction={evaluate}>Oblicz</button>
-        {salary.id ? <button formAction={deleteSalary}>Usuń</button> : <></>}
+        {salary.id ? (
+          <button formAction={deleteSalary} formNoValidate={true}>
+            Usuń
+          </button>
+        ) : (
+          <></>
+        )}
       </form>
     </>
   );

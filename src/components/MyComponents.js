@@ -50,6 +50,7 @@ export function Combo({
     <div style={{ flexDirection: "row" }}>
       <label>{caption}</label>
       <select
+        key={crypto.randomUUID()}
         name={name}
         disabled={readonly}
         onChange={onChange}

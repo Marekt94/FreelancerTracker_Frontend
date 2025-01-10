@@ -179,14 +179,14 @@ export function Salary({ children }) {
       <YearSelectorWithContext />
       {children}
       <form action={saveSalary}>
-        <Edit caption="Id" value={salary.id} name="id" readonly="true" type="number" />
+        <Edit caption="Id" defaultValue={salary.id} name="id" readonly="true" type="number" />
         <Combo
           caption="Miesiąc"
           value={salary.miesiac}
           name="miesiac"
           dictionary={miesiace}
           readonly={isLoading}
-          withEmptyOption={false}
+          withEmptyOption={true}
           onChange={(e) => {
             dispatch({
               type: ACTION_TYPE.SET_SALARY,
@@ -228,14 +228,13 @@ export function Salary({ children }) {
               type: ACTION_TYPE.SET_SALARY,
               payload: {
                 ...salary,
-                idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
+                idFormyOpodatkowania: Number(formaOpodatkowaniaTemp?.id),
                 formaOpodatkowania: formaOpodatkowaniaTemp,
               },
             });
           }}
         />
         <Edit
-          roundNumberDigit={3}
           autoComplete="off"
           type="number"
           caption="Dni przepracowane"

@@ -179,7 +179,7 @@ export function Salary({ children }) {
       <YearSelectorWithContext />
       {children}
       <form action={saveSalary}>
-        <Edit caption="Id" defaultValue={salary.id} name="id" readonly="true" type="number" />
+<Edit caption="Id" defaultValue={salary.id} name="id" readonly={true} type="number" />
         <Combo
           caption="Miesiąc"
           value={salary.miesiac}
@@ -287,7 +287,7 @@ export function Salary({ children }) {
           caption="Netto"
           defaultValue={salary.netto}
           name="netto"
-          readonly="true"
+          readonly={true}
         />
         <Edit
           roundNumberDigit={2}
@@ -296,7 +296,7 @@ export function Salary({ children }) {
           caption="Pełne netto"
           defaultValue={salary.pelneNetto}
           name="pelneNetto"
-          readonly="true"
+          readonly={true}
         />
         <Edit
           roundNumberDigit={2}
@@ -305,7 +305,7 @@ export function Salary({ children }) {
           caption="Na urlopowo-chorobowe"
           defaultValue={salary.naUrlopowoChorobowe}
           name="naUrlopowoChorobowe"
-          readonly="true"
+          readonly={true}
         />
         <Edit
           roundNumberDigit={2}
@@ -314,7 +314,7 @@ export function Salary({ children }) {
           caption="Do wypłaty"
           defaultValue={salary.doWyplaty}
           name="doWyplaty"
-          readonly="true"
+          readonly={true}
         />
         <Edit
           roundNumberDigit={2}
@@ -323,7 +323,7 @@ export function Salary({ children }) {
           caption="Do rozdysponowania"
           defaultValue={salary.doRozdysponowania}
           name="doRozdysponowania"
-          readonly="true"
+          readonly={true}
         />
         <button>Zapisz</button>
         <button formAction={evaluate}>Oblicz</button>

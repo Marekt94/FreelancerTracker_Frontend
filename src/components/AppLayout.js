@@ -7,8 +7,6 @@ import Loading from "./Loading";
 import { createPortal } from "react-dom";
 
 function Sidebar() {
-  const { year } = useGlobalContext();
-
   return (
     <ol>
       <li>
@@ -17,7 +15,7 @@ function Sidebar() {
         </NavLink>
       </li>
       <li>
-        <NavLink className="navlink" to={FRONTEND_PATHS.salariesPath + `?year=${year}`}>
+        <NavLink className="navlink" to={FRONTEND_PATHS.salariesPath}>
           Wróć do listy odcinków
         </NavLink>
       </li>

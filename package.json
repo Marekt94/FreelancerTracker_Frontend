@@ -17,6 +17,7 @@
     "web-vitals": "^4.0.0"
   },
   "scripts": {
+    "startSecured": "set HTTPS=true&&set SSL_CRT_FILE=C:\\Repo\\FreelancerTracker_Frontend\\moj_cert.pem&&set SSL_KEY_FILE=C:\\Repo\\FreelancerTracker_Frontend\\moj_klucz.pem&&react-scripts start",
     "start": "react-scripts start",
     "start:dev": "cross-env BROWSER='none' react-scripts start",
     "start:browser": "start chrome.exe --disable-web-security --disable-gpu --user-data-dir=C:\\Users\\mtomas\\AppData\\Local\\Google\\chromeTemp http://localhost:3000/",

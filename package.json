@@ -17,7 +17,7 @@
     "web-vitals": "^4.0.0"
   },
   "scripts": {
-    "startSecured": "set HTTPS=true&&set SSL_CRT_FILE=C:\\Repo\\FreelancerTracker_Frontend\\moj_cert.pem&&set SSL_KEY_FILE=C:\\Repo\\FreelancerTracker_Frontend\\moj_klucz.pem&&react-scripts start",
+    "startSecured": "set HTTPS=true&&set SSL_CRT_FILE=.\\moj_cert.pem&&set SSL_KEY_FILE=.\\moj_klucz.pem&&react-scripts start",
     "start": "react-scripts start",
     "start:dev": "cross-env BROWSER='none' react-scripts start",
     "start:browser": "start chrome.exe --disable-web-security --disable-gpu --user-data-dir=C:\\Users\\mtomas\\AppData\\Local\\Google\\chromeTemp http://localhost:3000/",
@@ -25,7 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "fake-server": "json-server -p 8080 -h www.localhost fake_api/fake_api.json",
-    "serve": "serve -p 443 -s C:\\Repo\\FreelancerTracker_Frontend\\build --ssl-key C:\\Repo\\FreelancerTracker_Frontend\\moj_klucz.pem --ssl-cert C:\\Repo\\FreelancerTracker_Frontend\\moj_cert.pem"
+    "serve": "serve -p 443 -s \\build --ssl-key .\\moj_klucz.pem --ssl-cert .\\moj_cert.pem"
   },
   "eslintConfig": {
     "extends": "react-app",

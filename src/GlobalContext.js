@@ -2,7 +2,6 @@ import { createContext, useCallback, useContext, useReducer } from "react";
 import Error from "./components/Error";
 import { DEF_ERROR } from "./Const";
 import "./css/index.css";
-import { DEF_YEAR } from "./components/YearSelector";
 
 const GlobalContext = createContext();
 
@@ -25,8 +24,7 @@ function reduce(state, action) {
 }
 
 function GlobalContextProvider({ children }) {
-  const yearTemp = DEF_YEAR;
-  const [{ isLoading, error, year }, dispatch] = useReducer(reduce, {
+  const [{ isLoading, error }, dispatch] = useReducer(reduce, {
     isLoading: false,
     error: DEF_ERROR,
   });
@@ -40,9 +38,7 @@ function GlobalContextProvider({ children }) {
   }, []);
 
   return (
-    <GlobalContext.Provider value={{ isLoading, error, setLoadingState, setError }}>
-      {children}
-    </GlobalContext.Provider>
+    <GlobalContext.Provider value={{ isLoading, error, setLoadingState, setError }}>{children}</GlobalContext.Provider>
   );
 }
 

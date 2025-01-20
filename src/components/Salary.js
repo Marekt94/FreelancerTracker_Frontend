@@ -8,7 +8,7 @@ import { useSalary } from "../useSalary";
 import { MONTHS, DEF_DICT } from "../Const";
 import { useGlobalContext } from "../GlobalContext";
 import { DEF_SALARY } from "../Const";
-import YearSelectorWithContext from "./YearSelectorWithContext";
+import YearSelectorWithContext, { useYear } from "./YearSelectorDecorator";
 
 //TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
 
@@ -60,7 +60,8 @@ function reducer(state, action) {
 }
 
 export function Salary({ children }) {
-  const { isLoading, setError, year } = useGlobalContext();
+  const { year } = useYear();
+  const { isLoading, setError } = useGlobalContext();
   const initID = useParams().id;
   const [{ salary, formaOpodatkowania, miesiace }, dispatch] = useReducer(reducer, initialState);
   const {
@@ -179,7 +180,7 @@ export function Salary({ children }) {
       <YearSelectorWithContext />
       {children}
       <form action={saveSalary}>
-<Edit caption="Id" defaultValue={salary.id} name="id" readonly={true} type="number" />
+        <Edit caption="Id" defaultValue={salary.id} name="id" readonly={true} type="number" />
         <Combo
           caption="Miesiąc"
           value={salary.miesiac}

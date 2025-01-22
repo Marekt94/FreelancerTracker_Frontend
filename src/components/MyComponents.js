@@ -8,15 +8,7 @@ export function Edit({
   readonly = false,
   required = false,
   autoComplete = "on",
-  roundNumberDigit = 0,
 }) {
-  function round(value) {
-    if (type === "number" && roundNumberDigit !== 0) {
-      return Number(value).toFixed(roundNumberDigit);
-    } else {
-      return Number(value);
-    }
-  }
   return (
     <div>
       <label>{caption}</label>
@@ -25,8 +17,8 @@ export function Edit({
         type={type}
         readOnly={readonly}
         name={name}
-        value={value ? round(value) : undefined}
-        defaultValue={defaultValue ? round(defaultValue) : undefined}
+        value={value}
+        defaultValue={defaultValue}
         onChange={onChange}
         required={required}
         autoComplete={autoComplete}

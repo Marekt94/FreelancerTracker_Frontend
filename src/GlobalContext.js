@@ -1,13 +1,16 @@
-import { createContext, useCallback, useContext, useReducer } from "react";
+import { act, createContext, useCallback, useContext, useReducer } from "react";
 import Error from "./components/Error";
 import { DEF_ERROR } from "./Const";
 import "./css/index.css";
+import { DEF_YEAR } from "./components/YearSelector";
+import { type } from "@testing-library/user-event/dist/cjs/utility/type.js";
 
 const GlobalContext = createContext();
 
 const ACTION_TYPE = {
   setIsLoading: "setIsLoading",
   setError: "setError",
+  setYear: "setYear",
 };
 
 function reduce(state, action) {
@@ -18,15 +21,19 @@ function reduce(state, action) {
     case ACTION_TYPE.setError: {
       return { ...state, error: action.payload };
     }
+    case ACTION_TYPE.setYear: {
+      return { ...state, year: action.payload };
+    }
     default:
       return state;
   }
 }
 
 function GlobalContextProvider({ children }) {
-  const [{ isLoading, error }, dispatch] = useReducer(reduce, {
+  const [{ isLoading, error, year }, dispatch] = useReducer(reduce, {
     isLoading: false,
     error: DEF_ERROR,
+    year: DEF_YEAR,
   });
 
   const setLoadingState = useCallback((state) => {
@@ -37,8 +44,14 @@ function GlobalContextProvider({ children }) {
     dispatch({ type: ACTION_TYPE.setError, payload: error });
   }, []);
 
+  const setYear = useCallback((year) => {
+    dispatch({ type: ACTION_TYPE.setYear, payload: year });
+  }, []);
+
   return (
-    <GlobalContext.Provider value={{ isLoading, error, setLoadingState, setError }}>{children}</GlobalContext.Provider>
+    <GlobalContext.Provider value={{ isLoading, error, setLoadingState, setError, year, setYear }}>
+      {children}
+    </GlobalContext.Provider>
   );
 }
 

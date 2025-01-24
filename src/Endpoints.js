@@ -1,3 +1,5 @@
+import { DEF_ID } from "./Const";
+
 export const SALARY_API_VERSION = process.env.REACT_APP_SALARY_API_VERSION;
 
 const SALARY_VERSION = SALARY_API_VERSION ? `/${SALARY_API_VERSION}` : "";
@@ -14,7 +16,7 @@ export const BACKEND_PATHS = {
 
 export const FRONTEND_PATHS = {
   salaryPath: BACKEND_PATHS.salaryPath + "/:id",
-  newSalaryPath: BACKEND_PATHS.salaryPath + "/0",
+  newSalaryPath: BACKEND_PATHS.salaryPath + "/" + DEF_ID,
   salariesPath: BACKEND_PATHS.salariesPath,
   login: BACKEND_PATHS.login,
   logout: BACKEND_PATHS.logout,

@@ -109,6 +109,13 @@ export function Salary({ children }) {
 
   async function evaluate() {
     salary.rok = year;
+    salary.brutto = 0;
+    salary.netto = 0;
+    salary.pelneNetto = 0;
+    salary.doWyplaty = 0;
+    salary.doRozdysponowania = 0;
+    salary.naUrlopowoChorobowe = 0;
+    console.log("evaluate " + JSON.stringify(salary));
     const data = await evaluateInt(salary);
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
@@ -118,13 +125,14 @@ export function Salary({ children }) {
 
   async function saveSalary() {
     salary.rok = year;
+    console.log("save salary " + JSON.stringify(salary));
     const data = await saveSalaryInt(salary);
-    if (Number(salary.id) !== Number(data.id)) {
+    if (salary && Number(salary?.id) !== Number(data.id)) {
       navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
     }
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
-      payload: data,
+      payload: { ...salary, id: data.id },
     });
   }
 
@@ -132,18 +140,21 @@ export function Salary({ children }) {
     const field = obj.target.name;
     const value = obj.target.value;
     const newSalary = { ...salary, [field]: value };
-    console.log("onChange salary: " + JSON.stringify(newSalary));
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
       payload: newSalary,
     });
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
   return (
     <>
       <YearSelectorWithContext />
       {children}
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit}>
         <Edit caption="id" onChange={onChange} value={salary.id} name="id" readonly={true} type="number" />
         <Combo
           caption="Miesiąc"
@@ -212,7 +223,6 @@ export function Salary({ children }) {
           required={true}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Składka zdrowotna"
@@ -222,7 +232,6 @@ export function Salary({ children }) {
           readonly={isLoading}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Składka ZUS"
@@ -232,7 +241,6 @@ export function Salary({ children }) {
           readonly={isLoading}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Podatek"
@@ -242,7 +250,6 @@ export function Salary({ children }) {
           readonly={isLoading}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Vat"
@@ -253,7 +260,6 @@ export function Salary({ children }) {
         />
         <br />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Netto"
@@ -293,7 +299,6 @@ export function Salary({ children }) {
           readonly={true}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Do rozdysponowania"
@@ -305,7 +310,7 @@ export function Salary({ children }) {
         <button onClick={saveSalary}>Zapisz</button>
         <button onClick={evaluate}>Oblicz</button>
         {salary.id ? (
-          <button formAction={deleteSalary} formNoValidate={true}>
+          <button onClick={deleteSalary} formNoValidate={true}>
             Usuń
           </button>
         ) : (

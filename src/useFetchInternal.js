@@ -21,12 +21,12 @@ export default async function internalFetch(URL, requestOptions, setError) {
       mode: "cors",
     };
     const res = await fetch(URL, opt);
+    const data = await res.json();
     if (res.ok) {
-      const data = await res.json();
-
       return data;
     } else {
-      setError ? setError({ code: res.status, statusText: res.statusText }) : alert(res);
+      const error = data.erro || res.statusText;
+      setError ? setError({ code: res.status, statusText: error }) : alert(res);
     }
   } catch (e) {
     setError ? setError({ code: UNHANDLED_ERROR_CODE, statusText: e.message }) : alert(e);

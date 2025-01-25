@@ -8,9 +8,7 @@ import { useSalary } from "../useSalary";
 import { MONTHS, DEF_DICT } from "../Const";
 import { useGlobalContext } from "../GlobalContext";
 import { DEF_SALARY } from "../Const";
-import YearSelectorWithContext from "./YearSelectorWithContext";
-
-//TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
+import YearSelectorWithContext, { useYear } from "./YearSelectorDecorator";
 
 const ACTION_TYPE = {
   INIT: "init",
@@ -42,7 +40,6 @@ function reducer(state, action) {
         value: obj.nazwa,
         wysokoscPodatku: obj.wysokoscPodatkuList,
       }));
-
       return {
         ...state,
         salary: action.payload.salary,
@@ -60,7 +57,8 @@ function reducer(state, action) {
 }
 
 export function Salary({ children }) {
-  const { isLoading, setError, year } = useGlobalContext();
+  const { year } = useYear();
+  const { isLoading, setError } = useGlobalContext();
   const initID = useParams().id;
   const [{ salary, formaOpodatkowania, miesiace }, dispatch] = useReducer(reducer, initialState);
   const {
@@ -105,8 +103,14 @@ export function Salary({ children }) {
     navigate(BACKEND_PATHS.salariesPath);
   }
 
-  async function evaluate(formData) {
-    const salary = packSalary(formData);
+  async function evaluate() {
+    salary.rok = year;
+    salary.brutto = 0;
+    salary.netto = 0;
+    salary.pelneNetto = 0;
+    salary.doWyplaty = 0;
+    salary.doRozdysponowania = 0;
+    salary.naUrlopowoChorobowe = 0;
     const data = await evaluateInt(salary);
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
@@ -114,72 +118,40 @@ export function Salary({ children }) {
     });
   }
 
-  async function saveSalary(formData) {
-    const salary = packSalary(formData);
+  async function saveSalary() {
     salary.rok = year;
     const data = await saveSalaryInt(salary);
-    if (Number(salary.id) !== Number(data.id)) {
-      navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
+    if (data) {
+      if (salary && Number(salary.id) !== Number(data.id)) {
+        navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
+      }
+      dispatch({
+        type: ACTION_TYPE.SET_SALARY,
+        payload: { ...salary, id: data.id },
+      });
     }
+  }
+
+  function onChange(obj) {
+    const field = obj.target.name;
+    const value = obj.target.value;
+    const newSalary = { ...salary, [field]: value };
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
-      payload: data,
+      payload: newSalary,
     });
   }
 
-  function packSalary(formData) {
-    const id = formData.get("id");
-    const miesiac = formData.get("miesiac");
-    const formaOpodatkowaniaTemp = formaOpodatkowania.find(
-      (obj) => obj.id === Number(formData.get("idFormyOpodatkowania"))
-    );
-    const stawka = formData.get("stawka");
-    const dniRoboczych = formData.get("dniRoboczych");
-    const dniPrzepracowanych = formData.get("dniPrzepracowanych");
-    const skladkaZdrowotna = formData.get("skladkaZdrowotna");
-    const zUS = formData.get("zUS");
-    const podatek = formData.get("podatek");
-    const vat = formData.get("vat");
-    const netto = formData.get("netto");
-    const pelneNetto = formData.get("pelneNetto");
-    const naUrlopowoChorobowe = formData.get("naUrlopowoChorobowe");
-    const doWyplaty = formData.get("doWyplaty");
-    const doRozdysponowania = formData.get("doRozdysponowania");
-
-    const newSalary = {
-      ...salary,
-      id,
-      miesiac,
-      rok: year,
-      idFormyOpodatkowania: formaOpodatkowaniaTemp?.id,
-      formaOpodatkowania: {
-        id: formaOpodatkowaniaTemp?.id,
-        nazwa: formaOpodatkowaniaTemp?.value,
-        wysokoscPodatkuList: formaOpodatkowaniaTemp?.wysokoscPodatku,
-      },
-      stawka,
-      dniRoboczych,
-      dniPrzepracowanych,
-      skladkaZdrowotna,
-      zUS,
-      podatek,
-      vat,
-      netto,
-      pelneNetto,
-      naUrlopowoChorobowe,
-      doWyplaty,
-      doRozdysponowania,
-    };
-
-    return newSalary;
+  function handleSubmit(e) {
+    e.preventDefault();
   }
 
   return (
     <>
       <YearSelectorWithContext />
       {children}
-      <form action={saveSalary}>
-<Edit caption="Id" defaultValue={salary.id} name="id" readonly={true} type="number" />
+      <form onSubmit={handleSubmit}>
+        <Edit caption="id" onChange={onChange} value={salary.id} name="id" readonly={true} type="number" />
         <Combo
           caption="Miesiąc"
           value={salary.miesiac}
@@ -201,7 +173,8 @@ export function Salary({ children }) {
           autoComplete="off"
           type="number"
           caption="Stawka godzinowa netto"
-          defaultValue={salary.stawka}
+          onChange={onChange}
+          value={salary.stawka}
           name="stawka"
           readonly={isLoading}
           required={true}
@@ -210,7 +183,8 @@ export function Salary({ children }) {
           autoComplete="off"
           type="number"
           caption="Dni robocze w miesiącu"
-          defaultValue={salary.dniRoboczych}
+          onChange={onChange}
+          value={salary.dniRoboczych}
           name="dniRoboczych"
           readonly={isLoading}
           required={true}
@@ -238,54 +212,55 @@ export function Salary({ children }) {
           autoComplete="off"
           type="number"
           caption="Dni przepracowane"
-          defaultValue={salary.dniPrzepracowanych}
+          onChange={onChange}
+          value={salary.dniPrzepracowanych}
           name="dniPrzepracowanych"
           readonly={isLoading}
           required={true}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Składka zdrowotna"
-          defaultValue={salary.skladkaZdrowotna}
+          onChange={onChange}
+          value={salary.skladkaZdrowotna}
           name="skladkaZdrowotna"
           readonly={isLoading}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Składka ZUS"
-          defaultValue={salary.zUS}
+          onChange={onChange}
+          value={salary.zUS}
           name="zUS"
           readonly={isLoading}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Podatek"
-          defaultValue={salary.podatek}
+          onChange={onChange}
+          value={salary.podatek}
           name="podatek"
           readonly={isLoading}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Vat"
-          defaultValue={salary.vat}
+          onChange={onChange}
+          value={salary.vat}
           name="vat"
           readonly={isLoading}
         />
         <br />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Netto"
-          defaultValue={salary.netto}
+          onChange={onChange}
+          value={salary.netto}
           name="netto"
           readonly={true}
         />
@@ -294,7 +269,8 @@ export function Salary({ children }) {
           autoComplete="off"
           type="number"
           caption="Pełne netto"
-          defaultValue={salary.pelneNetto}
+          onChange={onChange}
+          value={salary.pelneNetto}
           name="pelneNetto"
           readonly={true}
         />
@@ -303,7 +279,8 @@ export function Salary({ children }) {
           autoComplete="off"
           type="number"
           caption="Na urlopowo-chorobowe"
-          defaultValue={salary.naUrlopowoChorobowe}
+          onChange={onChange}
+          value={salary.naUrlopowoChorobowe}
           name="naUrlopowoChorobowe"
           readonly={true}
         />
@@ -312,23 +289,24 @@ export function Salary({ children }) {
           autoComplete="off"
           type="number"
           caption="Do wypłaty"
-          defaultValue={salary.doWyplaty}
+          onChange={onChange}
+          value={salary.doWyplaty}
           name="doWyplaty"
           readonly={true}
         />
         <Edit
-          roundNumberDigit={2}
           autoComplete="off"
           type="number"
           caption="Do rozdysponowania"
-          defaultValue={salary.doRozdysponowania}
+          onChange={onChange}
+          value={salary.doRozdysponowania}
           name="doRozdysponowania"
           readonly={true}
         />
-        <button>Zapisz</button>
-        <button formAction={evaluate}>Oblicz</button>
+        <button onClick={saveSalary}>Zapisz</button>
+        <button onClick={evaluate}>Oblicz</button>
         {salary.id ? (
-          <button formAction={deleteSalary} formNoValidate={true}>
+          <button onClick={deleteSalary} formNoValidate={true}>
             Usuń
           </button>
         ) : (

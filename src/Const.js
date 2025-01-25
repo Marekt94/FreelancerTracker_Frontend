@@ -1,6 +1,7 @@
 export const DEF_ERROR = { code: 0, statusText: "" };
+export const DEF_ID = 0;
 export const DEF_SALARY = {
-  id: null,
+  id: DEF_ID,
   idFormyOpodatkowania: 0,
   formaOpodatkowania: {
     id: 0,

@@ -5,10 +5,11 @@ import { NavLink } from "react-router-dom";
 import { useSalary } from "../useSalary";
 import { BACKEND_PATHS } from "../Endpoints";
 import { useGlobalContext } from "../GlobalContext";
-import YearSelectorWithContext from "./YearSelectorWithContext";
+import YearSelectorWithContext, { useYear } from "./YearSelectorDecorator";
 
 function SalaryList({ children }) {
-  const { setError, year } = useGlobalContext();
+  const { year } = useYear();
+  const { setError } = useGlobalContext();
   const [salaries, setSalaries] = useState(undefined);
   const { getSalaries } = useSalary(setError);
 

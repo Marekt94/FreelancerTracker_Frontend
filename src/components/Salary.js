@@ -42,7 +42,6 @@ function reducer(state, action) {
         value: obj.nazwa,
         wysokoscPodatku: obj.wysokoscPodatkuList,
       }));
-      console.log("init salary: " + JSON.stringify(action.payload.salary));
       return {
         ...state,
         salary: action.payload.salary,
@@ -51,7 +50,6 @@ function reducer(state, action) {
       };
 
     case ACTION_TYPE.SET_SALARY: {
-      console.log("set_salary: " + JSON.stringify(action.payload));
       return { ...state, salary: action.payload };
     }
 
@@ -115,7 +113,6 @@ export function Salary({ children }) {
     salary.doWyplaty = 0;
     salary.doRozdysponowania = 0;
     salary.naUrlopowoChorobowe = 0;
-    console.log("evaluate " + JSON.stringify(salary));
     const data = await evaluateInt(salary);
     dispatch({
       type: ACTION_TYPE.SET_SALARY,
@@ -125,15 +122,16 @@ export function Salary({ children }) {
 
   async function saveSalary() {
     salary.rok = year;
-    console.log("save salary " + JSON.stringify(salary));
     const data = await saveSalaryInt(salary);
-    if (salary && Number(salary?.id) !== Number(data.id)) {
-      navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
+    if (data) {
+      if (salary && Number(salary.id) !== Number(data.id)) {
+        navigate(`${BACKEND_PATHS.salaryPath}/${data.id}`, { replace: true });
+      }
+      dispatch({
+        type: ACTION_TYPE.SET_SALARY,
+        payload: { ...salary, id: data.id },
+      });
     }
-    dispatch({
-      type: ACTION_TYPE.SET_SALARY,
-      payload: { ...salary, id: data.id },
-    });
   }
 
   function onChange(obj) {

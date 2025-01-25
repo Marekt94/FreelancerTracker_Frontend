@@ -9,7 +9,6 @@ export function useYear() {
 
   useEffect(() => {
     searchParams.get("year") || setSearchParams({ year }, { replace: true });
-    console.log("useEffect in year");
   }, [searchParams, setSearchParams, year]);
 
   function setYear(year) {
@@ -22,7 +21,6 @@ export function useYear() {
 
 export default function YearSelectorWithContext() {
   const { year, setYear } = useYear();
-  console.log("year: " + year);
 
   return <YearSelector currentYear={year} onYearChange={setYear}></YearSelector>;
 }

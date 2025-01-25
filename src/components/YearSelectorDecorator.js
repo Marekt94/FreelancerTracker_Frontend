@@ -1,4 +1,4 @@
-import YearSelector, { DEF_YEAR } from "./YearSelector";
+import YearSelector from "./YearSelector";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useGlobalContext } from "../GlobalContext";

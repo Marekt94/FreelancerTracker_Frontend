@@ -10,8 +10,6 @@ import { useGlobalContext } from "../GlobalContext";
 import { DEF_SALARY } from "../Const";
 import YearSelectorWithContext, { useYear } from "./YearSelectorDecorator";
 
-//TODO - gdy robie zapis, odswieza sie strona i scrolluje do góry
-
 const ACTION_TYPE = {
   INIT: "init",
   SET_SALARY: "setSalary",

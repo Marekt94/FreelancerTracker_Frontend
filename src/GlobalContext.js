@@ -1,9 +1,8 @@
-import { act, createContext, useCallback, useContext, useReducer } from "react";
+import { createContext, useCallback, useContext, useReducer } from "react";
 import Error from "./components/Error";
 import { DEF_ERROR } from "./Const";
 import "./css/index.css";
 import { DEF_YEAR } from "./components/YearSelector";
-import { type } from "@testing-library/user-event/dist/cjs/utility/type.js";
 
 const GlobalContext = createContext();
 

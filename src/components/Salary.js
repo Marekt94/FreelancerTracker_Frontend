@@ -34,12 +34,12 @@ function reducer(state, action) {
         miesiace = [...miesiace, { id: currMiesiac.id, value: currMiesiac.value }];
       }
       miesiace.sort((a, b) => a.id - b.id);
-
       const formaOpodatkowania = action.payload.dataForNewSalary.formaOpodatkowania.map((obj) => ({
         id: obj.id,
         value: obj.nazwa,
-        wysokoscPodatku: obj.wysokoscPodatkuList,
+        wysokoscPodatku: obj.wysokoscPodatku,
       }));
+
       return {
         ...state,
         salary: action.payload.salary,
@@ -203,7 +203,11 @@ export function Salary({ children }) {
               payload: {
                 ...salary,
                 idFormyOpodatkowania: Number(formaOpodatkowaniaTemp?.id),
-                formaOpodatkowania: formaOpodatkowaniaTemp,
+                formaOpodatkowania: {
+                  id: formaOpodatkowaniaTemp.id,
+                  nazwa: formaOpodatkowaniaTemp.value,
+                  wysokoscPodatku: formaOpodatkowaniaTemp.wysokoscPodatku,
+                },
               },
             });
           }}
